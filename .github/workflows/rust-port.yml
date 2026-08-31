@@ -10,6 +10,16 @@ on:
       - 'Cargo.lock'
       - 'crates/workflow-world/**'
       - 'rust/conformance/**'
+      - 'rust/test-port-manifest.json'
+      - 'scripts/rust-port-test-inventory.mjs'
+      - '**/*.test.ts'
+      - '**/*.test.tsx'
+      - '**/*.test.mts'
+      - '**/*.test.cts'
+      - '**/*.spec.ts'
+      - '**/*.spec.tsx'
+      - '**/*.spec.mts'
+      - '**/*.spec.cts'
       - 'packages/errors/src/**'
       - 'packages/serde/src/**'
       - 'packages/utils/src/time*'
@@ -27,6 +37,44 @@ permissions:
   contents: read
 
 jobs:
+  test-inventory:
+    name: TypeScript test corpus inventory
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 22.x
+
+      - name: Generate deterministic test inventory
+        run: |
+          node scripts/rust-port-test-inventory.mjs \
+            --write-json /tmp/rust-port-test-inventory.json \
+            --write-markdown /tmp/rust-port-test-inventory.md
+
+      - name: Validate checked-in test-port manifest
+        run: |
+          if [[ -f rust/test-port-manifest.json ]]; then
+            node scripts/rust-port-test-inventory.mjs \
+              --check rust/test-port-manifest.json
+          else
+            echo '::notice::rust/test-port-manifest.json has not been bootstrapped yet'
+          fi
+
+      - name: Upload test inventory
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: rust-port-test-inventory-${{ github.sha }}
+          path: |
+            /tmp/rust-port-test-inventory.json
+            /tmp/rust-port-test-inventory.md
+          if-no-files-found: error
+          retention-days: 7
+
   rustfmt-snapshot:
     name: Canonical Rust 1.87 formatting snapshot
     runs-on: ubuntu-24.04
