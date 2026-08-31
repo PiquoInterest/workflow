@@ -100,11 +100,7 @@ pub fn parse_step_state(value: &Value) -> ValidationResult<StepState> {
             })
         }
         "running" => {
-            reject_fields(
-                object,
-                "running",
-                &["output", "completedAt", "retryAfter"],
-            )?;
+            reject_fields(object, "running", &["output", "completedAt", "retryAfter"])?;
             Ok(StepState::Running { common, error })
         }
         "completed" => {
@@ -213,9 +209,7 @@ fn optional_protocol_version(
     let value = value
         .as_f64()
         .filter(|value| {
-            value.is_finite()
-                && value.fract() == 0.0
-                && (1.0..=u32::MAX as f64).contains(value)
+            value.is_finite() && value.fract() == 0.0 && (1.0..=u32::MAX as f64).contains(value)
         })
         .map(|value| value as u32)
         .ok_or_else(|| invalid_step_state(format!("{key} must be a positive 32-bit integer")))?;
