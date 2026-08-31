@@ -1,0 +1,67 @@
+name: Rust test manifest bootstrap
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/rust-test-manifest.yml'
+      - 'scripts/rust-port-test-inventory.mjs'
+      - 'scripts/bootstrap-rust-test-port-manifest.mjs'
+      - 'rust/test-port-manifest.json'
+      - '**/*.test.ts'
+      - '**/*.test.tsx'
+      - '**/*.test.mts'
+      - '**/*.test.cts'
+      - '**/*.spec.ts'
+      - '**/*.spec.tsx'
+      - '**/*.spec.mts'
+      - '**/*.spec.cts'
+
+concurrency:
+  group: rust-test-manifest-${{ github.event.pull_request.head.ref }}
+  cancel-in-progress: true
+
+jobs:
+  refresh:
+    name: Refresh checked-in test manifest
+    if: >-
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.event.pull_request.head.ref == 'pro/rust-repository-port'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout exact migration branch
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: pro/rust-repository-port
+          fetch-depth: 0
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 22.x
+
+      - name: Generate and validate manifest
+        run: |
+          node scripts/rust-port-test-inventory.mjs \
+            --write-json /tmp/rust-port-test-inventory.json
+          node scripts/bootstrap-rust-test-port-manifest.mjs \
+            /tmp/rust-port-test-inventory.json \
+            rust/test-port-manifest.json
+          node scripts/rust-port-test-inventory.mjs \
+            --check rust/test-port-manifest.json
+
+      - name: Commit only an actual manifest change
+        run: |
+          if [[ -z "$(git status --porcelain -- rust/test-port-manifest.json)" ]]; then
+            echo 'Test-port manifest is already current.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add rust/test-port-manifest.json
+          git commit --signoff -m 'test(rust-port): refresh TypeScript test manifest'
+          git push origin HEAD:pro/rust-repository-port
