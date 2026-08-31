@@ -3,54 +3,37 @@
   "cases": [
     {
       "typescript": "packages/utils/src/pluralize.test.ts",
-      "command": [
-        "cargo",
-        "test",
-        "--locked",
-        "--manifest-path",
-        "rust/tdd/workflow-utils/Cargo.toml",
-        "--test",
-        "pluralize"
-      ],
+      "command": ["cargo", "test", "--locked", "--manifest-path", "rust/tdd/workflow-utils/Cargo.toml", "--test", "pluralize"],
       "failureMarker": "TDD RED: packages/utils/src/pluralize.test.ts implementation pending"
     },
     {
       "typescript": "packages/utils/src/workflow-routes.test.ts",
-      "command": [
-        "cargo",
-        "test",
-        "--locked",
-        "--manifest-path",
-        "rust/tdd/workflow-utils/Cargo.toml",
-        "--test",
-        "workflow_routes"
-      ],
+      "command": ["cargo", "test", "--locked", "--manifest-path", "rust/tdd/workflow-utils/Cargo.toml", "--test", "workflow_routes"],
       "failureMarker": "TDD RED: packages/utils/src/workflow-routes.test.ts implementation pending"
     },
     {
       "typescript": "packages/utils/src/world-target.test.ts",
-      "command": [
-        "cargo",
-        "test",
-        "--locked",
-        "--manifest-path",
-        "rust/tdd/workflow-utils/Cargo.toml",
-        "--test",
-        "world_target"
-      ],
+      "command": ["cargo", "test", "--locked", "--manifest-path", "rust/tdd/workflow-utils/Cargo.toml", "--test", "world_target"],
       "failureMarker": "TDD RED: packages/utils/src/world-target.test.ts implementation pending"
     },
     {
       "typescript": "packages/utils/src/parse-name.test.ts",
-      "command": [
-        "cargo",
-        "test",
-        "--locked",
-        "--manifest-path",
-        "rust/tdd/workflow-utils/Cargo.toml",
-        "--test",
-        "parse_name"
-      ],
+      "command": ["cargo", "test", "--locked", "--manifest-path", "rust/tdd/workflow-utils/Cargo.toml", "--test", "parse_name"],
+      "failureMarker": "TDD RED: packages/utils/src/parse-name.test.ts implementation pending"
+    },
+    {
+      "typescript": "packages/utils/src/global-singleton.test.ts",
+      "command": ["cargo", "test", "--locked", "--manifest-path", "rust/tdd/workflow-utils/Cargo.toml", "--test", "global_singleton"],
+      "failureMarker": "TDD RED: packages/utils/src/global-singleton.test.ts implementation pending"
+    },
+    {
+      "typescript": "packages/utils/src/promise.test.ts",
+      "command": ["cargo", "test", "--locked", "--manifest-path", "rust/tdd/workflow-utils/Cargo.toml", "--test", "promise"],
+      "failureMarker": "TDD RED: packages/utils/src/promise.test.ts implementation pending"
+    },
+    {
+      "typescript": "packages/utils/src/re-exports.test.ts",
+      "command": ["cargo", "test", "--locked", "--manifest-path", "rust/tdd/workflow-utils/Cargo.toml", "--test", "re_exports"],
       "failureMarker": "TDD RED: packages/utils/src/parse-name.test.ts implementation pending"
     }
   ]

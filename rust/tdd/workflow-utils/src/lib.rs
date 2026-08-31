@@ -1,6 +1,8 @@
 #![forbid(unsafe_code)]
 
 use std::collections::BTreeMap;
+use std::marker::PhantomData;
+use std::sync::Arc;
 
 /// Test-first API skeleton for the TypeScript `pluralize` contract.
 ///
@@ -117,4 +119,104 @@ pub fn step_display_name(name: &str) -> String {
 pub fn workflow_display_name(name: &str) -> String {
     let _ = name;
     panic!("TDD RED: packages/utils/src/parse-name.test.ts implementation pending")
+}
+
+/// Planned process-wide, versioned registry corresponding to the JavaScript
+/// `globalThis` singleton helper. Rust unit tests cover registry semantics;
+/// JavaScript binding tests must still prove cross-module realm sharing.
+#[derive(Debug, Default)]
+pub struct GlobalSingletonRegistry;
+
+impl GlobalSingletonRegistry {
+    #[must_use]
+    pub fn new() -> Self {
+        Self
+    }
+
+    pub fn global_singleton<T, F>(&self, name: &str, shape_version: u32, create: F) -> Arc<T>
+    where
+        T: Send + Sync + 'static,
+        F: FnOnce() -> T,
+    {
+        let _ = (name, shape_version, create);
+        panic!("TDD RED: packages/utils/src/global-singleton.test.ts implementation pending")
+    }
+
+    pub fn get<T>(&self, name: &str, shape_version: u32) -> Option<Arc<T>>
+    where
+        T: Send + Sync + 'static,
+    {
+        let _ = (name, shape_version);
+        panic!("TDD RED: packages/utils/src/global-singleton.test.ts implementation pending")
+    }
+
+    pub fn reset_for_test(&self, name: &str, shape_version: u32) {
+        let _ = (name, shape_version);
+        panic!("TDD RED: packages/utils/src/global-singleton.test.ts implementation pending")
+    }
+}
+
+/// Planned resolver/promise core. The eventual JavaScript binding must expose
+/// native Promise semantics on top of this one-shot state transition.
+#[derive(Debug)]
+pub struct Deferred<T> {
+    marker: PhantomData<T>,
+}
+
+impl<T> Deferred<T> {
+    #[must_use]
+    pub fn new() -> Self {
+        panic!("TDD RED: packages/utils/src/promise.test.ts implementation pending")
+    }
+
+    #[must_use]
+    pub fn is_pending(&self) -> bool {
+        let _ = &self.marker;
+        panic!("TDD RED: packages/utils/src/promise.test.ts implementation pending")
+    }
+
+    pub fn resolve(&self, value: T) {
+        let _ = value;
+        panic!("TDD RED: packages/utils/src/promise.test.ts implementation pending")
+    }
+
+    pub fn reject(&self, reason: impl Into<String>) {
+        let _ = reason.into();
+        panic!("TDD RED: packages/utils/src/promise.test.ts implementation pending")
+    }
+
+    pub fn wait(self) -> Result<T, String> {
+        panic!("TDD RED: packages/utils/src/promise.test.ts implementation pending")
+    }
+}
+
+impl<T> Default for Deferred<T> {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+#[derive(Debug)]
+pub struct OnceValue<T, F> {
+    marker: PhantomData<(T, F)>,
+}
+
+#[must_use]
+pub fn once<T, F>(initializer: F) -> OnceValue<T, F>
+where
+    F: FnOnce() -> T,
+{
+    let _ = initializer;
+    panic!("TDD RED: packages/utils/src/promise.test.ts implementation pending")
+}
+
+impl<T, F> OnceValue<T, F>
+where
+    F: FnOnce() -> T,
+{
+    #[must_use]
+    pub fn value(&self) -> &T {
+        let _ = &self.marker;
+        panic!("TDD RED: packages/utils/src/promise.test.ts implementation pending")
+    }
 }

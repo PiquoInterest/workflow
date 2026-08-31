@@ -4,34 +4,44 @@
     {
       "typescript": "packages/utils/src/pluralize.test.ts",
       "status": "red",
-      "rustTests": [
-        "rust/tdd/workflow-utils/tests/pluralize.rs"
-      ],
+      "rustTests": ["rust/tdd/workflow-utils/tests/pluralize.rs"],
       "notes": "All four TypeScript assertions are translated. The Rust API skeleton intentionally panics until the implementation phase begins."
     },
     {
       "typescript": "packages/utils/src/workflow-routes.test.ts",
       "status": "red",
-      "rustTests": [
-        "rust/tdd/workflow-utils/tests/workflow_routes.rs"
-      ],
+      "rustTests": ["rust/tdd/workflow-utils/tests/workflow_routes.rs"],
       "notes": "All three route assertions are translated, including configured base paths and rejection of the retired standalone step route."
     },
     {
       "typescript": "packages/utils/src/world-target.test.ts",
       "status": "red",
-      "rustTests": [
-        "rust/tdd/workflow-utils/tests/world_target.rs"
-      ],
+      "rustTests": ["rust/tdd/workflow-utils/tests/world_target.rs"],
       "notes": "All ten environment-resolution assertions are translated with explicit maps rather than process-global mutation."
     },
     {
       "typescript": "packages/utils/src/parse-name.test.ts",
       "status": "red",
-      "rustTests": [
-        "rust/tdd/workflow-utils/tests/parse_name.rs"
-      ],
+      "rustTests": ["rust/tdd/workflow-utils/tests/parse_name.rs"],
       "notes": "All 35 parsing, formatting, default-export, nested-function, sanitized-name, and fallback assertions are translated."
+    },
+    {
+      "typescript": "packages/utils/src/global-singleton.test.ts",
+      "status": "red",
+      "rustTests": ["rust/tdd/workflow-utils/tests/global_singleton.rs"],
+      "notes": "All nine sharing, versioning, mutation, lookup, and reset assertions are represented against the planned process registry. Final GREEN additionally requires a JavaScript binding test proving globalThis and duplicated-module behavior."
+    },
+    {
+      "typescript": "packages/utils/src/promise.test.ts",
+      "status": "red",
+      "rustTests": ["rust/tdd/workflow-utils/tests/promise.rs"],
+      "notes": "All five one-shot resolver and lazy memoization assertions are represented. Final GREEN additionally requires the JavaScript binding to expose native Promise behavior."
+    },
+    {
+      "typescript": "packages/utils/src/re-exports.test.ts",
+      "status": "red",
+      "rustTests": ["rust/tdd/workflow-utils/tests/re_exports.rs"],
+      "notes": "All three crate-root export assertions are translated and intentionally depend on the still-RED parse-name contract."
     }
   ]
 }
