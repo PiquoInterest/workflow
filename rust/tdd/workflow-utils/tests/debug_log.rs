@@ -1,7 +1,5 @@
 use std::collections::BTreeMap;
-use workflow_utils_tdd::{
-    DebugArgument, DebugSink, debug_log, is_workflow_debug_enabled,
-};
+use workflow_utils_tdd::{DebugArgument, DebugSink, debug_log, is_workflow_debug_enabled};
 
 #[derive(Debug, Default)]
 struct RecordingSink {
@@ -71,10 +69,7 @@ fn writes_nothing_when_debugging_is_disabled() {
     let mut sink = RecordingSink::default();
     let arguments = [
         DebugArgument::Text("a breadcrumb".to_owned()),
-        DebugArgument::Fields(BTreeMap::from([(
-            "runId".to_owned(),
-            "wrun_1".to_owned(),
-        )])),
+        DebugArgument::Fields(BTreeMap::from([("runId".to_owned(), "wrun_1".to_owned())])),
     ];
 
     debug_log(Some(""), &arguments, &mut sink);
@@ -91,10 +86,7 @@ fn forwards_every_argument_to_the_debug_sink_when_enabled() {
     let mut sink = RecordingSink::default();
     let arguments = vec![
         DebugArgument::Text("a breadcrumb".to_owned()),
-        DebugArgument::Fields(BTreeMap::from([(
-            "runId".to_owned(),
-            "wrun_1".to_owned(),
-        )])),
+        DebugArgument::Fields(BTreeMap::from([("runId".to_owned(), "wrun_1".to_owned())])),
     ];
 
     debug_log(Some("workflow:*"), &arguments, &mut sink);

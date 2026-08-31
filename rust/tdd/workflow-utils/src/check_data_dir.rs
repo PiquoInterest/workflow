@@ -1,10 +1,7 @@
 use std::path::PathBuf;
 
-pub const POSSIBLE_WORKFLOW_DATA_PATHS: &[&str] = &[
-    ".next/workflow-data",
-    ".workflow-data",
-    "workflow-data",
-];
+pub const POSSIBLE_WORKFLOW_DATA_PATHS: &[&str] =
+    &[".next/workflow-data", ".workflow-data", "workflow-data"];
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct DataDirContext {
@@ -21,10 +18,7 @@ pub struct WorkflowDataDirResult {
 }
 
 #[must_use]
-pub fn find_workflow_data_dir(
-    input: &str,
-    context: &DataDirContext,
-) -> WorkflowDataDirResult {
+pub fn find_workflow_data_dir(input: &str, context: &DataDirContext) -> WorkflowDataDirResult {
     let _ = (input, context);
     panic!("TDD RED: packages/utils/src/check-data-dir.test.ts implementation pending")
 }

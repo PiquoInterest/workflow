@@ -41,7 +41,10 @@ fn discovers_the_bundled_runtime_packages_to_check() {
         .filter_map(|path| path.file_name()?.to_str())
         .collect();
     for required in ["world-local", "world-vercel", "core", "utils"] {
-        assert!(names.contains(&required), "missing bundled package {required}");
+        assert!(
+            names.contains(&required),
+            "missing bundled package {required}"
+        );
     }
 }
 
@@ -91,12 +94,7 @@ fn flags_a_field_written_through_a_member_chain() {
     let findings = scan_module_scope_sources(&one_source(
         "const state = { count: 0 };\nexport function bump() {\n  state.count += 1;\n}\n",
     ));
-    assert!(has_finding(
-        &findings,
-        "state",
-        None,
-        Some("field written")
-    ));
+    assert!(has_finding(&findings, "state", None, Some("field written")));
 }
 
 #[test]
@@ -197,12 +195,7 @@ fn flags_a_field_incremented_with_postfix_increment() {
     let findings = scan_module_scope_sources(&one_source(
         "const state = { count: 0 };\nexport function bump() {\n  state.count++;\n}\n",
     ));
-    assert!(has_finding(
-        &findings,
-        "state",
-        None,
-        Some("field written")
-    ));
+    assert!(has_finding(&findings, "state", None, Some("field written")));
 }
 
 #[test]
@@ -227,9 +220,8 @@ fn flags_an_exported_empty_collection_filled_from_another_file() {
 
 #[test]
 fn leaves_a_non_empty_exported_lookup_table_alone() {
-    let findings = scan_module_scope_sources(&one_source(
-        "export const LIMITS = new Map([['a', 1]]);\n",
-    ));
+    let findings =
+        scan_module_scope_sources(&one_source("export const LIMITS = new Map([['a', 1]]);\n"));
     assert!(findings.is_empty());
 }
 

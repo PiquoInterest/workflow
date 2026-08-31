@@ -35,11 +35,7 @@ fn parses_a_valid_workflow_name_with_module_specifier() {
 fn parses_a_valid_workflow_name_with_scoped_module_specifier() {
     assert_eq!(
         parse_workflow_name("workflow//@myorg/tasks@2.0.0//processOrder"),
-        Some(parsed(
-            "processOrder",
-            "@myorg/tasks@2.0.0",
-            "processOrder"
-        ))
+        Some(parsed("processOrder", "@myorg/tasks@2.0.0", "processOrder"))
     );
 }
 
@@ -141,11 +137,7 @@ fn accepts_a_step_name_with_an_empty_function_part() {
 fn parses_builtin_step_names() {
     assert_eq!(
         parse_step_name("step//builtin//__builtin_fetch"),
-        Some(parsed(
-            "__builtin_fetch",
-            "builtin",
-            "__builtin_fetch"
-        ))
+        Some(parsed("__builtin_fetch", "builtin", "__builtin_fetch"))
     );
 }
 
@@ -312,7 +304,10 @@ fn sanitized_default_exports_map_to_the_module_short_name() {
         workflow_display_name("workflow----src-jobs-order--default"),
         "order"
     );
-    assert_eq!(step_display_name("step----src-jobs-order--default"), "order");
+    assert_eq!(
+        step_display_name("step----src-jobs-order--default"),
+        "order"
+    );
     assert_eq!(
         workflow_display_name("workflow----src-jobs-order--__default"),
         "order"

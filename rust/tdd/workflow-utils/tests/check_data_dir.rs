@@ -281,7 +281,11 @@ fn handles_paths_with_trailing_separators() {
     let project = temp.path().join("trailing");
     let data = project.join(".workflow-data");
     fs::create_dir_all(&data).unwrap();
-    let input = format!("{}{separator}", project.display(), separator = std::path::MAIN_SEPARATOR);
+    let input = format!(
+        "{}{separator}",
+        project.display(),
+        separator = std::path::MAIN_SEPARATOR
+    );
     let result = find_workflow_data_dir(&input, &context(temp.path()));
     assert_found(&result, &project, &data);
 }
