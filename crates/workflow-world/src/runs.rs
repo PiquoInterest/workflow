@@ -141,12 +141,31 @@ pub struct BulkCancelWorkflowRunsResult {
 }
 
 impl BulkCancelWorkflowRunsResult {
-    /// Validates that summary counters are an exact projection of `results`.
-    ///
-    /// The TypeScript Zod shape checks field types but does not check these
-    /// cross-field invariants. Rust refuses internally inconsistent responses
-    /// before callers make retry or accounting decisions from them.
+    /// Validates the response collection and proves that its summary counters
+    /// are an exact projection of `results`.
     pub fn validate_consistency(&self) -> ValidationResult<()> {
+        if self.results.is_empty() {
+            return Err(ValidationError::new(
+                "bulk_cancel_results_empty",
+                "Bulk cancellation results must contain at least one run",
+            ));
+        }
+        if self.results.len() > BULK_CANCEL_MAX_RUN_IDS {
+            return Err(ValidationError::new(
+                "bulk_cancel_results_too_many",
+                "Bulk cancellation results exceed the request limit",
+            ));
+        }
+
+        let unique_run_ids: BTreeSet<&str> =
+            self.results.iter().map(|result| result.run_id()).collect();
+        if unique_run_ids.len() != self.results.len() {
+            return Err(ValidationError::new(
+                "bulk_cancel_results_duplicate",
+                "Bulk cancellation results must contain unique run IDs",
+            ));
+        }
+
         let mut actual = BulkCancelWorkflowRunsSummary {
             requested: self.results.len(),
             ..BulkCancelWorkflowRunsSummary::default()
@@ -168,10 +187,7 @@ impl BulkCancelWorkflowRunsResult {
         if self.summary != actual {
             return Err(ValidationError::new(
                 "bulk_cancel_summary_mismatch",
-                format!(
-                    "Bulk cancellation summary {:?} does not match result-derived summary {:?}",
-                    self.summary, actual
-                ),
+                "Bulk cancellation summary does not match the per-run results",
             ));
         }
         Ok(())
@@ -181,6 +197,30 @@ impl BulkCancelWorkflowRunsResult {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    fn valid_bulk_cancel_result() -> BulkCancelWorkflowRunsResult {
+        BulkCancelWorkflowRunsResult {
+            summary: BulkCancelWorkflowRunsSummary {
+                requested: 3,
+                cancelled: 1,
+                not_cancellable: 1,
+                not_found: 1,
+                ..BulkCancelWorkflowRunsSummary::default()
+            },
+            results: vec![
+                BulkCancelWorkflowRunResult::Cancelled {
+                    run_id: "wrun_cancelled".to_owned(),
+                },
+                BulkCancelWorkflowRunResult::NotCancellable {
+                    run_id: "wrun_terminal".to_owned(),
+                    status: "completed".to_owned(),
+                },
+                BulkCancelWorkflowRunResult::NotFound {
+                    run_id: "wrun_missing".to_owned(),
+                },
+            ],
+        }
+    }
 
     #[test]
     fn terminal_statuses_match_the_typescript_contract() {
@@ -236,23 +276,75 @@ mod tests {
     }
 
     #[test]
-    fn rejects_inconsistent_aggregate_summaries() {
-        let result = BulkCancelWorkflowRunsResult {
+    fn accepts_consistent_aggregate_summaries() {
+        assert!(valid_bulk_cancel_result().validate_consistency().is_ok());
+    }
+
+    #[test]
+    fn rejects_inconsistent_aggregate_summaries_without_reflecting_values() {
+        let mut result = valid_bulk_cancel_result();
+        result.summary.cancelled = 2;
+
+        let error = result.validate_consistency().unwrap_err();
+        assert_eq!(error.code(), "bulk_cancel_summary_mismatch");
+        assert_eq!(
+            error.message(),
+            "Bulk cancellation summary does not match the per-run results"
+        );
+    }
+
+    #[test]
+    fn rejects_empty_and_oversized_bulk_cancel_results() {
+        let empty = BulkCancelWorkflowRunsResult {
+            summary: BulkCancelWorkflowRunsSummary::default(),
+            results: Vec::new(),
+        };
+        assert_eq!(
+            empty.validate_consistency().unwrap_err().code(),
+            "bulk_cancel_results_empty"
+        );
+
+        let too_many_results: Vec<_> = (0..=BULK_CANCEL_MAX_RUN_IDS)
+            .map(|index| BulkCancelWorkflowRunResult::Cancelled {
+                run_id: format!("wrun_{index}"),
+            })
+            .collect();
+        let too_many = BulkCancelWorkflowRunsResult {
+            summary: BulkCancelWorkflowRunsSummary {
+                requested: too_many_results.len(),
+                cancelled: too_many_results.len(),
+                ..BulkCancelWorkflowRunsSummary::default()
+            },
+            results: too_many_results,
+        };
+        assert_eq!(
+            too_many.validate_consistency().unwrap_err().code(),
+            "bulk_cancel_results_too_many"
+        );
+    }
+
+    #[test]
+    fn rejects_duplicate_result_run_ids_without_reflecting_them() {
+        let sensitive_run_id = "sensitive-run-id";
+        let duplicate = BulkCancelWorkflowRunsResult {
             summary: BulkCancelWorkflowRunsSummary {
                 requested: 2,
-                cancelled: 2,
+                cancelled: 1,
+                not_found: 1,
                 ..BulkCancelWorkflowRunsSummary::default()
             },
             results: vec![
                 BulkCancelWorkflowRunResult::Cancelled {
-                    run_id: "a".to_owned(),
+                    run_id: sensitive_run_id.to_owned(),
                 },
                 BulkCancelWorkflowRunResult::NotFound {
-                    run_id: "b".to_owned(),
+                    run_id: sensitive_run_id.to_owned(),
                 },
             ],
         };
-        let error = result.validate_consistency().unwrap_err();
-        assert_eq!(error.code(), "bulk_cancel_summary_mismatch");
+
+        let error = duplicate.validate_consistency().unwrap_err();
+        assert_eq!(error.code(), "bulk_cancel_results_duplicate");
+        assert!(!error.message().contains(sensitive_run_id));
     }
 }
