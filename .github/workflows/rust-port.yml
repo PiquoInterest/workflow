@@ -23,6 +23,31 @@ permissions:
   contents: read
 
 jobs:
+  rustfmt-snapshot:
+    name: Canonical Rust 1.87 formatting snapshot
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Rust 1.87
+        uses: actions-rust-lang/setup-rust-toolchain@46268bd060767258de96ed93c1251119784f2ab6 # v1.16.1
+        with:
+          toolchain: 1.87.0
+          components: rustfmt
+
+      - name: Format migration crate
+        run: cargo fmt --package workflow-world
+
+      - name: Upload formatted crate
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: workflow-world-rustfmt-${{ github.sha }}
+          path: crates/workflow-world
+          if-no-files-found: error
+          retention-days: 1
+
   world-contract:
     name: World contract parity
     runs-on: ubuntu-latest
