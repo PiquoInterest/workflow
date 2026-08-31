@@ -17,7 +17,7 @@ pub struct HookResumeContext {
     pub deployment_id: String,
     pub workflow_name: String,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub run_spec_version: Option<f64>,
+    pub run_spec_version: Option<u32>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub workflow_core_version: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -25,14 +25,14 @@ pub struct HookResumeContext {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub encryption_public_key: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub hook_resume_input_version: Option<f64>,
+    pub hook_resume_input_version: Option<u32>,
 }
 
 /// Live backend capability attestation returned by a by-token lookup.
 #[derive(Debug, Clone, PartialEq, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct HookResumeCapabilities {
-    pub hook_resume_dedup_version: f64,
+    pub hook_resume_dedup_version: u32,
 }
 
 /// Hook protocol fields permitted in persistent storage.
@@ -73,11 +73,11 @@ pub fn parse_hook_resume_context(value: Value) -> ValidationResult<HookResumeCon
     Ok(HookResumeContext {
         deployment_id: required_string(object, "deploymentId")?,
         workflow_name: required_string(object, "workflowName")?,
-        run_spec_version: optional_number(object, "runSpecVersion")?,
+        run_spec_version: optional_protocol_version(object, "runSpecVersion")?,
         workflow_core_version: optional_string(object, "workflowCoreVersion")?,
         trace_carrier: optional_string_map(object, "traceCarrier")?,
         encryption_public_key: optional_string(object, "encryptionPublicKey")?,
-        hook_resume_input_version: optional_number(object, "hookResumeInputVersion")?,
+        hook_resume_input_version: optional_protocol_version(object, "hookResumeInputVersion")?,
     })
 }
 
@@ -85,7 +85,7 @@ pub fn parse_hook_resume_context(value: Value) -> ValidationResult<HookResumeCon
 pub fn parse_hook_resume_capabilities(value: Value) -> ValidationResult<HookResumeCapabilities> {
     let object = expect_object(&value, "hook resume capabilities")?;
     Ok(HookResumeCapabilities {
-        hook_resume_dedup_version: required_number(object, "hookResumeDedupVersion")?,
+        hook_resume_dedup_version: required_protocol_version(object, "hookResumeDedupVersion")?,
     })
 }
 
@@ -116,23 +116,44 @@ fn optional_string(object: &Map<String, Value>, key: &str) -> ValidationResult<O
     }
 }
 
-fn required_number(object: &Map<String, Value>, key: &str) -> ValidationResult<f64> {
+fn required_protocol_version(
+    object: &Map<String, Value>,
+    key: &str,
+) -> ValidationResult<u32> {
     object
         .get(key)
-        .and_then(Value::as_f64)
-        .filter(|value| value.is_finite())
-        .ok_or_else(|| invalid_field(key, "a finite number"))
+        .and_then(parse_protocol_version)
+        .ok_or_else(|| invalid_field(key, "a positive 32-bit integer"))
 }
 
-fn optional_number(object: &Map<String, Value>, key: &str) -> ValidationResult<Option<f64>> {
+fn optional_protocol_version(
+    object: &Map<String, Value>,
+    key: &str,
+) -> ValidationResult<Option<u32>> {
     match object.get(key) {
         None => Ok(None),
-        Some(value) => value
-            .as_f64()
-            .filter(|value| value.is_finite())
+        Some(value) => parse_protocol_version(value)
             .map(Some)
-            .ok_or_else(|| invalid_field(key, "a finite number")),
+            .ok_or_else(|| invalid_field(key, "a positive 32-bit integer")),
     }
+}
+
+fn parse_protocol_version(value: &Value) -> Option<u32> {
+    if let Some(value) = value.as_u64() {
+        return u32::try_from(value).ok().filter(|value| *value > 0);
+    }
+    if let Some(value) = value.as_i64() {
+        return u32::try_from(value).ok().filter(|value| *value > 0);
+    }
+
+    let value = value.as_f64()?;
+    if !value.is_finite()
+        || value.fract() != 0.0
+        || !(1.0..=u32::MAX as f64).contains(&value)
+    {
+        return None;
+    }
+    Some(value as u32)
 }
 
 fn optional_string_map(
@@ -174,6 +195,41 @@ mod tests {
             "runSpecVersion": null,
         });
         assert!(parse_hook_resume_context(input).is_err());
+    }
+
+    #[test]
+    fn protocol_versions_are_bounded_integers() {
+        for invalid in [
+            json!(0),
+            json!(-1),
+            json!(1.5),
+            json!(u64::from(u32::MAX) + 1),
+        ] {
+            assert!(
+                parse_hook_resume_context(json!({
+                    "deploymentId": "deployment_1",
+                    "workflowName": "processOrder",
+                    "runSpecVersion": invalid.clone(),
+                }))
+                .is_err()
+            );
+            assert!(
+                parse_hook_resume_capabilities(json!({
+                    "hookResumeDedupVersion": invalid,
+                }))
+                .is_err()
+            );
+        }
+
+        let context = parse_hook_resume_context(json!({
+            "deploymentId": "deployment_1",
+            "workflowName": "processOrder",
+            "runSpecVersion": u32::MAX,
+            "hookResumeInputVersion": 1.0,
+        }))
+        .unwrap();
+        assert_eq!(context.run_spec_version, Some(u32::MAX));
+        assert_eq!(context.hook_resume_input_version, Some(1));
     }
 
     #[test]
