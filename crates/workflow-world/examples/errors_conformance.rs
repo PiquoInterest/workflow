@@ -102,19 +102,13 @@ fn duration_input(input: &Value) -> ValidationResult<DurationInput> {
             .as_str()
             .map(|value| DurationInput::String(value.to_owned()))
             .ok_or_else(|| {
-                ValidationError::new(
-                    "invalid_duration",
-                    "value must be a string for kind=string",
-                )
+                ValidationError::new("invalid_duration", "value must be a string for kind=string")
             }),
         "number" => value
             .as_f64()
             .map(DurationInput::Milliseconds)
             .ok_or_else(|| {
-                ValidationError::new(
-                    "invalid_duration",
-                    "value must be a number for kind=number",
-                )
+                ValidationError::new("invalid_duration", "value must be a number for kind=number")
             }),
         "date" => value
             .as_f64()

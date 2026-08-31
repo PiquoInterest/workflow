@@ -19,10 +19,7 @@ pub enum DurationInput {
 /// The result follows JavaScript `Date` TimeClip behavior by truncating
 /// fractional milliseconds toward zero, while rejecting invalid or overflowing
 /// dates instead of allowing an unusable timestamp into persistent state.
-pub fn parse_duration_to_unix_ms(
-    input: DurationInput,
-    now_ms: f64,
-) -> ValidationResult<i64> {
+pub fn parse_duration_to_unix_ms(input: DurationInput, now_ms: f64) -> ValidationResult<i64> {
     if !now_ms.is_finite() || now_ms.abs() > MAX_DATE_MS {
         return Err(ValidationError::new(
             "invalid_clock",

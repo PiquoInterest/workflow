@@ -33,18 +33,17 @@ fn error_constructors_match_public_names_messages_and_fields() {
 
     let corrupted = corrupted_event_log_error("event mismatch");
     assert_eq!(corrupted.name, "CorruptedEventLogError");
-    assert!(corrupted.message.ends_with(
-        "╰▶ docs: https://workflow-sdk.dev/err/corrupted-event-log"
-    ));
+    assert!(
+        corrupted
+            .message
+            .ends_with("╰▶ docs: https://workflow-sdk.dev/err/corrupted-event-log")
+    );
 
     let divergence = replay_divergence_error("consumer mismatch", "event-1");
     assert_eq!(divergence.fields.get("eventId"), Some(&json!("event-1")));
 
     let build = workflow_build_error("Build failed", Some("run pnpm install"));
-    assert_eq!(
-        build.message,
-        "Build failed\n╰▶ hint: run pnpm install"
-    );
+    assert_eq!(build.message, "Build failed\n╰▶ hint: run pnpm install");
     assert_eq!(build.fields.get("hint"), Some(&json!("run pnpm install")));
 
     let unsupported = run_not_supported_error(8, 7);
@@ -64,10 +63,16 @@ fn fatal_classification_is_strict() {
 #[test]
 fn deployment_mismatch_pluralization_matches_typescript() {
     let one = workflow_deployment_mismatch_error("run-1", "dpl-a", "dpl-b", 1);
-    assert!(one.message.contains("1 time and it kept arriving elsewhere"));
+    assert!(
+        one.message
+            .contains("1 time and it kept arriving elsewhere")
+    );
 
     let many = workflow_deployment_mismatch_error("run-1", "dpl-a", "dpl-b", 2);
-    assert!(many.message.contains("2 times and it kept arriving elsewhere"));
+    assert!(
+        many.message
+            .contains("2 times and it kept arriving elsewhere")
+    );
 }
 
 #[test]
@@ -88,15 +93,12 @@ fn duration_parser_matches_retry_scheduling_and_rejects_invalid_dates() {
         )
         .is_err()
     );
-    assert!(
-        parse_duration_to_unix_ms(DurationInput::Milliseconds(f64::MAX), now).is_err()
-    );
+    assert!(parse_duration_to_unix_ms(DurationInput::Milliseconds(f64::MAX), now).is_err());
 
-    let retry = retryable_error(
-        "try again",
-        Some(DurationInput::Milliseconds(250.0)),
-        now,
-    )
-    .unwrap();
-    assert_eq!(retry.fields.get("retryAfter"), Some(&json!(1_700_000_000_250_i64)));
+    let retry =
+        retryable_error("try again", Some(DurationInput::Milliseconds(250.0)), now).unwrap();
+    assert_eq!(
+        retry.fields.get("retryAfter"),
+        Some(&json!(1_700_000_000_250_i64))
+    );
 }

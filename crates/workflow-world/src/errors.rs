@@ -110,10 +110,7 @@ pub fn append_framed_details(title: &str, hint: Option<&str>, slug: Option<&str>
 }
 
 pub fn workflow_error(message: &str, slug: Option<&str>) -> WorkflowErrorDescriptor {
-    WorkflowErrorDescriptor::new(
-        "WorkflowError",
-        append_framed_details(message, None, slug),
-    )
+    WorkflowErrorDescriptor::new("WorkflowError", append_framed_details(message, None, slug))
 }
 
 pub fn workflow_world_error(
@@ -247,7 +244,11 @@ pub fn workflow_deployment_mismatch_error(
     recovery_attempts: u64,
 ) -> WorkflowErrorDescriptor {
     let recovery = if recovery_attempts > 0 {
-        let unit = if recovery_attempts == 1 { "time" } else { "times" };
+        let unit = if recovery_attempts == 1 {
+            "time"
+        } else {
+            "times"
+        };
         format!(
             " The runtime re-routed the message to \"{expected_deployment_id}\" {recovery_attempts} {unit} and it kept arriving elsewhere, so the run was stopped to protect against code-skew errors."
         )
@@ -609,10 +610,7 @@ fn optional_string(input: &Value, key: &str) -> ValidationResult<Option<String>>
         return Ok(None);
     }
     value.as_str().map(str::to_owned).map(Some).ok_or_else(|| {
-        ValidationError::new(
-            "invalid_string",
-            format!("{key} must be a string or null"),
-        )
+        ValidationError::new("invalid_string", format!("{key} must be a string or null"))
     })
 }
 
@@ -665,10 +663,7 @@ mod tests {
             run_error_codes::MAX_DELIVERIES_EXCEEDED,
             "MAX_DELIVERIES_EXCEEDED"
         );
-        assert_eq!(
-            run_error_codes::MAX_EVENTS_EXCEEDED,
-            "MAX_EVENTS_EXCEEDED"
-        );
+        assert_eq!(run_error_codes::MAX_EVENTS_EXCEEDED, "MAX_EVENTS_EXCEEDED");
         assert_eq!(run_error_codes::REPLAY_TIMEOUT, "REPLAY_TIMEOUT");
         assert_eq!(
             run_error_codes::WORLD_CONTRACT_ERROR,
