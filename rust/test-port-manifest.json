@@ -3,9 +3,9 @@
   "sourceCount": 334,
   "declaredTestCount": 5100,
   "statusCounts": {
-    "unported": 334,
+    "unported": 333,
     "partial": 0,
-    "red": 0,
+    "red": 1,
     "green": 0,
     "blocked": 0
   },
@@ -2118,9 +2118,11 @@
       "kind": "unit",
       "lineCount": 28,
       "declaredTestCount": 4,
-      "status": "unported",
-      "rustTests": [],
-      "notes": ""
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-utils/tests/pluralize.rs"
+      ],
+      "notes": "All four TypeScript assertions are translated. The Rust API skeleton intentionally panics until the implementation phase begins."
     },
     {
       "typescript": "packages/utils/src/promise.test.ts",
