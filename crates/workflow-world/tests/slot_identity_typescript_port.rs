@@ -3,8 +3,8 @@ use workflow_world::slot_identity::{
     is_slot_body, is_slot_event_id, number_to_event_id, slot_to_event_id,
 };
 use workflow_world::ulid::{
-    DEFAULT_TIMESTAMP_THRESHOLD_FUTURE_MS, DEFAULT_TIMESTAMP_THRESHOLD_PAST_MS,
-    ulid_timestamp_ms, validate_ulid_timestamp_at,
+    DEFAULT_TIMESTAMP_THRESHOLD_FUTURE_MS, DEFAULT_TIMESTAMP_THRESHOLD_PAST_MS, ulid_timestamp_ms,
+    validate_ulid_timestamp_at,
 };
 
 #[test]
@@ -25,7 +25,10 @@ fn mints_fixed_width_ids_whose_string_order_is_slot_order() {
 #[test]
 fn slot_ids_round_trip_through_event_id_to_slot() {
     for slot in [FIRST_EVENT_SLOT, 7, 12_345, MAX_EVENT_SLOT] {
-        assert_eq!(event_id_to_slot(&slot_to_event_id(slot).unwrap()), Some(slot));
+        assert_eq!(
+            event_id_to_slot(&slot_to_event_id(slot).unwrap()),
+            Some(slot)
+        );
     }
 }
 
@@ -64,7 +67,9 @@ fn never_mistakes_a_valid_ulid_for_a_slot() {
 
 #[test]
 fn rejects_slot_bodies_of_the_wrong_shape() {
-    assert!(!is_slot_body(&"0000000001".pad_end(EVENT_ID_BODY_LENGTH, '0')));
+    assert!(!is_slot_body(
+        &"0000000001".pad_end(EVENT_ID_BODY_LENGTH, '0')
+    ));
     assert!(!is_slot_body(&format!(
         "{}A",
         "0".repeat(EVENT_ID_BODY_LENGTH - 1)
@@ -120,7 +125,10 @@ trait PadEnd {
 impl PadEnd for str {
     fn pad_end(&self, width: usize, character: char) -> String {
         let mut output = self.to_owned();
-        output.extend(std::iter::repeat_n(character, width.saturating_sub(output.len())));
+        output.extend(std::iter::repeat_n(
+            character,
+            width.saturating_sub(output.len()),
+        ));
         output
     }
 }

@@ -86,7 +86,8 @@ fn parses_each_per_run_outcome_variant() {
     ];
 
     for fixture in fixtures {
-        let parsed = serde_json::from_value::<BulkCancelWorkflowRunResult>(fixture.clone()).unwrap();
+        let parsed =
+            serde_json::from_value::<BulkCancelWorkflowRunResult>(fixture.clone()).unwrap();
         assert_eq!(serde_json::to_value(parsed).unwrap(), fixture);
     }
 }

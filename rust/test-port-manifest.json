@@ -3,8 +3,8 @@
   "sourceCount": 334,
   "declaredTestCount": 5100,
   "statusCounts": {
-    "unported": 317,
-    "partial": 6,
+    "unported": 312,
+    "partial": 11,
     "red": 11,
     "green": 0,
     "blocked": 0
@@ -3470,9 +3470,12 @@
       "kind": "unit",
       "lineCount": 168,
       "declaredTestCount": 12,
-      "status": "unported",
-      "rustTests": [],
-      "notes": ""
+      "status": "partial",
+      "rustTests": [
+        "crates/workflow-world/tests/hooks_contract.rs",
+        "rust/conformance/hooks-parity.test.ts"
+      ],
+      "notes": "All 12 protocol-constant, context, capability, unknown-field, persistence-stripping, and bounded-version declarations are covered by direct and differential Rust tests. Pending consolidated branch confirmation."
     },
     {
       "typescript": "packages/world/src/node-http-flag.test.ts",
@@ -3525,9 +3528,11 @@
       "kind": "unit",
       "lineCount": 123,
       "declaredTestCount": 6,
-      "status": "unported",
-      "rustTests": [],
-      "notes": ""
+      "status": "partial",
+      "rustTests": [
+        "crates/workflow-world/tests/runs_security_typescript_port.rs"
+      ],
+      "notes": "All strict counter, exact summary, duplicate-ID, empty-result, and maximum-cardinality security cases are translated. The Rust test additionally proves diagnostics do not reflect a sensitive run ID. Pending CI confirmation."
     },
     {
       "typescript": "packages/world/src/runs.test.ts",
@@ -3536,9 +3541,11 @@
       "kind": "unit",
       "lineCount": 155,
       "declaredTestCount": 11,
-      "status": "unported",
-      "rustTests": [],
-      "notes": ""
+      "status": "partial",
+      "rustTests": [
+        "crates/workflow-world/tests/runs_typescript_port.rs"
+      ],
+      "notes": "All 11 request-boundary, outcome-variant, required-field, unknown-outcome, and aggregate declarations are translated. Pending Rustfmt, test, and Clippy confirmation."
     },
     {
       "typescript": "packages/world/src/shared.test.ts",
@@ -3558,9 +3565,11 @@
       "kind": "unit",
       "lineCount": 94,
       "declaredTestCount": 9,
-      "status": "unported",
-      "rustTests": [],
-      "notes": ""
+      "status": "partial",
+      "rustTests": [
+        "crates/workflow-world/tests/slot_identity_typescript_port.rs"
+      ],
+      "notes": "All nine fixed-width ordering, round-trip, safe-integer, legacy-prefix, ULID separation, and timestamp-validation declarations are translated. Pending CI confirmation."
     },
     {
       "typescript": "packages/world/src/spec-version.test.ts",
@@ -3582,9 +3591,12 @@
       "kind": "unit",
       "lineCount": 107,
       "declaredTestCount": 3,
-      "status": "unported",
-      "rustTests": [],
-      "notes": ""
+      "status": "partial",
+      "rustTests": [
+        "crates/workflow-world/tests/step_state_security.rs",
+        "rust/conformance/step-state-security.test.ts"
+      ],
+      "notes": "All contradictory-state, null-smuggling, unsafe-attempt, checked-next-attempt, and legacy compatibility fixtures are covered by direct and differential Rust tests. Pending consolidated branch confirmation."
     },
     {
       "typescript": "rust/conformance/errors-parity.test.ts",
