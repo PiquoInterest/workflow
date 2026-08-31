@@ -57,9 +57,7 @@ fn capabilities_match_typescript_unknown_field_stripping() {
 #[test]
 fn capabilities_require_a_numeric_version() {
     assert!(parse_hook_resume_capabilities(json!({})).is_err());
-    assert!(
-        parse_hook_resume_capabilities(json!({ "hookResumeDedupVersion": "1" })).is_err()
-    );
+    assert!(parse_hook_resume_capabilities(json!({ "hookResumeDedupVersion": "1" })).is_err());
 }
 
 #[test]
