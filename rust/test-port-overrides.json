@@ -72,6 +72,36 @@
       "status": "partial",
       "rustTests": ["crates/workflow-world/tests/time_typescript_port.rs"],
       "notes": "All nine TypeScript assertions are mirrored against the existing Rust time implementation. Status remains partial until the new direct mirror test passes the branch workflow; differential coverage already exists separately."
+    },
+    {
+      "typescript": "packages/world/src/attributes.test.ts",
+      "status": "partial",
+      "rustTests": ["crates/workflow-world/tests/attributes_typescript_port.rs"],
+      "notes": "All 24 key, value, batch, contextual-reserved-key, post-merge, and immutable-materialization declarations are mirrored. Pending Rustfmt, test, and Clippy confirmation."
+    },
+    {
+      "typescript": "packages/world/src/attributes-security.test.ts",
+      "status": "partial",
+      "rustTests": ["crates/workflow-world/tests/attributes_security_typescript_port.rs"],
+      "notes": "Both prototype-key security declarations are mirrored. Rust maps treat __proto__ as data and typed deserialization rejects object-shaped values before materialization. Pending CI confirmation."
+    },
+    {
+      "typescript": "packages/world/src/env-config.test.ts",
+      "status": "partial",
+      "rustTests": ["crates/workflow-world/tests/env_config_typescript_port.rs"],
+      "notes": "All numeric, flag, fallback, clamping, radix, warning-dedup behavior, event-limit, and process-environment declarations are mirrored. Process-global behavior is isolated in a child test process. Pending CI confirmation."
+    },
+    {
+      "typescript": "packages/world/src/event-metadata.test.ts",
+      "status": "partial",
+      "rustTests": ["crates/workflow-world/tests/event_metadata_typescript_port.rs"],
+      "notes": "All four entity class, payload field, inherited-property, and sealed-noop declarations are mirrored. Pending CI confirmation."
+    },
+    {
+      "typescript": "packages/world/src/spec-version.test.ts",
+      "status": "partial",
+      "rustTests": ["crates/workflow-world/tests/spec_version_typescript_port.rs"],
+      "notes": "All 11 version constants, minting, kill-switch, readable-ceiling, newer-world, and legacy declarations are mirrored. Pending CI confirmation."
     }
   ]
 }
