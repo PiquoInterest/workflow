@@ -11,7 +11,10 @@ fn prototype_named_attributes_are_ordinary_map_data() {
         }],
     );
 
-    assert_eq!(result.get("__proto__").map(String::as_str), Some("ordinary-data"));
+    assert_eq!(
+        result.get("__proto__").map(String::as_str),
+        Some("ordinary-data")
+    );
     assert_eq!(result.len(), 1);
 }
 

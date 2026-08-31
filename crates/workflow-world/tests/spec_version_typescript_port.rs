@@ -3,8 +3,8 @@ use std::collections::BTreeMap;
 use workflow_world::spec_version::{
     SEALED_LOG_ENV_VAR, SPEC_VERSION_CURRENT, SPEC_VERSION_LEGACY, SPEC_VERSION_MAX_SUPPORTED,
     SPEC_VERSION_SUPPORTS_ATTRIBUTES, SPEC_VERSION_SUPPORTS_COMPRESSION,
-    SPEC_VERSION_SUPPORTS_SEALED_LOG, SPEC_VERSION_SUPPORTS_SLOT_IDENTITY,
-    is_legacy_spec_version, minted_spec_version, requires_newer_world,
+    SPEC_VERSION_SUPPORTS_SEALED_LOG, SPEC_VERSION_SUPPORTS_SLOT_IDENTITY, is_legacy_spec_version,
+    minted_spec_version, requires_newer_world,
 };
 
 fn environment(raw: &str) -> BTreeMap<String, String> {
@@ -51,17 +51,16 @@ fn minted_spec_version_never_exceeds_the_readable_ceiling() {
 
 #[test]
 fn the_readable_ceiling_moves_with_the_default_version() {
-    assert_eq!(
-        SPEC_VERSION_MAX_SUPPORTED,
-        SPEC_VERSION_SUPPORTS_SEALED_LOG
-    );
+    assert_eq!(SPEC_VERSION_MAX_SUPPORTED, SPEC_VERSION_SUPPORTS_SEALED_LOG);
     assert!(SPEC_VERSION_MAX_SUPPORTED >= SPEC_VERSION_CURRENT);
 }
 
 #[test]
 fn requires_newer_world_accepts_runs_at_or_below_the_supported_version() {
     assert!(!requires_newer_world(Some(SPEC_VERSION_CURRENT)));
-    assert!(!requires_newer_world(Some(SPEC_VERSION_SUPPORTS_ATTRIBUTES)));
+    assert!(!requires_newer_world(Some(
+        SPEC_VERSION_SUPPORTS_ATTRIBUTES
+    )));
     assert!(!requires_newer_world(Some(SPEC_VERSION_LEGACY)));
     assert!(!requires_newer_world(None));
 }
@@ -75,17 +74,13 @@ fn requires_newer_world_accepts_slot_identity_runs() {
 
 #[test]
 fn requires_newer_world_rejects_runs_above_the_readable_ceiling() {
-    assert!(requires_newer_world(Some(
-        SPEC_VERSION_MAX_SUPPORTED + 1
-    )));
+    assert!(requires_newer_world(Some(SPEC_VERSION_MAX_SUPPORTED + 1)));
 }
 
 #[test]
 fn a_version_four_reader_would_reject_a_compression_era_run() {
     let v4_requires_newer_world = |version: u32| version > 4;
-    assert!(v4_requires_newer_world(
-        SPEC_VERSION_SUPPORTS_COMPRESSION
-    ));
+    assert!(v4_requires_newer_world(SPEC_VERSION_SUPPORTS_COMPRESSION));
 }
 
 #[test]

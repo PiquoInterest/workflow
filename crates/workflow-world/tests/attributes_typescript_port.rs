@@ -214,8 +214,5 @@ fn returns_a_new_map_without_mutating_the_existing_map() {
 #[test]
 fn starts_from_an_empty_map_when_existing_attributes_are_absent() {
     let result = apply_attribute_changes(None, &[change("x", Some("y"))]);
-    assert_eq!(
-        result,
-        BTreeMap::from([("x".to_owned(), "y".to_owned())])
-    );
+    assert_eq!(result, BTreeMap::from([("x".to_owned(), "y".to_owned())]));
 }

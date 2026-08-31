@@ -104,15 +104,30 @@ fn env_number_clamps_to_the_maximum() {
 #[test]
 fn repeated_invalid_env_numbers_return_the_same_fallback() {
     reset_env_warning_cache_for_tests();
-    assert_eq!(number(Some("nope"), 100.0, EnvNumberOptions::default()), 100.0);
-    assert_eq!(number(Some("nope"), 100.0, EnvNumberOptions::default()), 100.0);
+    assert_eq!(
+        number(Some("nope"), 100.0, EnvNumberOptions::default()),
+        100.0
+    );
+    assert_eq!(
+        number(Some("nope"), 100.0, EnvNumberOptions::default()),
+        100.0
+    );
 }
 
 #[test]
 fn env_number_matches_javascript_number_radix_and_whitespace_forms() {
-    assert_eq!(number(Some("0x10"), 100.0, EnvNumberOptions::default()), 16.0);
-    assert_eq!(number(Some("0b10"), 100.0, EnvNumberOptions::default()), 2.0);
-    assert_eq!(number(Some("0o10"), 100.0, EnvNumberOptions::default()), 8.0);
+    assert_eq!(
+        number(Some("0x10"), 100.0, EnvNumberOptions::default()),
+        16.0
+    );
+    assert_eq!(
+        number(Some("0b10"), 100.0, EnvNumberOptions::default()),
+        2.0
+    );
+    assert_eq!(
+        number(Some("0o10"), 100.0, EnvNumberOptions::default()),
+        8.0
+    );
     assert_eq!(number(Some("   "), 100.0, EnvNumberOptions::default()), 0.0);
 }
 
@@ -120,7 +135,10 @@ fn env_number_matches_javascript_number_radix_and_whitespace_forms() {
 fn max_events_uses_the_default_for_zero_and_negative_values() {
     for raw in ["0", "-1"] {
         let environment = BTreeMap::from([("WORKFLOW_MAX_EVENTS".to_owned(), raw.to_owned())]);
-        assert_eq!(max_events_per_run_from(&environment), DEFAULT_MAX_EVENTS_PER_RUN);
+        assert_eq!(
+            max_events_per_run_from(&environment),
+            DEFAULT_MAX_EVENTS_PER_RUN
+        );
     }
 }
 
