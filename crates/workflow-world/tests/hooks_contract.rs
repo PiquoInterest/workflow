@@ -55,9 +55,39 @@ fn capabilities_match_typescript_unknown_field_stripping() {
 }
 
 #[test]
-fn capabilities_require_a_numeric_version() {
+fn capabilities_require_a_bounded_integer_version() {
     assert!(parse_hook_resume_capabilities(json!({})).is_err());
-    assert!(parse_hook_resume_capabilities(json!({ "hookResumeDedupVersion": "1" })).is_err());
+    for invalid in [
+        json!({ "hookResumeDedupVersion": "1" }),
+        json!({ "hookResumeDedupVersion": 0 }),
+        json!({ "hookResumeDedupVersion": -1 }),
+        json!({ "hookResumeDedupVersion": 1.5 }),
+        json!({ "hookResumeDedupVersion": u64::from(u32::MAX) + 1 }),
+    ] {
+        assert!(parse_hook_resume_capabilities(invalid).is_err());
+    }
+
+    let parsed = parse_hook_resume_capabilities(json!({
+        "hookResumeDedupVersion": u32::MAX,
+    }))
+    .unwrap();
+    assert_eq!(parsed.hook_resume_dedup_version, u32::MAX);
+}
+
+#[test]
+fn context_versions_require_bounded_integers() {
+    for key in ["runSpecVersion", "hookResumeInputVersion"] {
+        for invalid in [
+            json!(0),
+            json!(-1),
+            json!(1.5),
+            json!(u64::from(u32::MAX) + 1),
+        ] {
+            let mut input = full_context();
+            input[key] = invalid;
+            assert!(parse_hook_resume_context(input).is_err());
+        }
+    }
 }
 
 #[test]
