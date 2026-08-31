@@ -132,7 +132,17 @@ export function applyAttributeChanges(
     if (value === null) {
       delete next[key];
     } else {
-      next[key] = value;
+      // Assignment to the magic legacy key `__proto__` does not create an own
+      // data property on a normal object. It instead invokes Object.prototype's
+      // setter, silently dropping primitive values and mutating the output's
+      // prototype for object values. Define an ordinary own property so every
+      // validated attribute key has identical materialization semantics.
+      Object.defineProperty(next, key, {
+        value,
+        enumerable: true,
+        configurable: true,
+        writable: true,
+      });
     }
   }
   return next;
