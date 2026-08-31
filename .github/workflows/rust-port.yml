@@ -51,6 +51,17 @@ jobs:
           if-no-files-found: error
           retention-days: 1
 
+      - name: Upload exact TypeScript oracle sources
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: rust-port-typescript-oracles-${{ github.sha }}
+          path: |
+            packages/errors/src/index.ts
+            packages/serde/src/index.ts
+            packages/utils/src/time.ts
+          if-no-files-found: error
+          retention-days: 1
+
   world-contract:
     name: World, errors, serde, and time parity
     runs-on: ubuntu-24.04
