@@ -171,11 +171,8 @@ fn treats_present_null_as_present_and_forbidden_null_as_forbidden() {
 
 #[test]
 fn validation_errors_never_reflect_serialized_payloads() {
-    let error = parse_step_state(&step(
-        "pending",
-        json!({ "output": "TOP-SECRET-PAYLOAD" }),
-    ))
-    .expect_err("pending output must be rejected");
+    let error = parse_step_state(&step("pending", json!({ "output": "TOP-SECRET-PAYLOAD" })))
+        .expect_err("pending output must be rejected");
 
     assert_eq!(error.code(), "invalid_step_state");
     assert!(!error.message().contains("TOP-SECRET-PAYLOAD"));
