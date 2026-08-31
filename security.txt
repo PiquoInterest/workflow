@@ -12,6 +12,14 @@ Acknowledgments: https://github.com/PiquoInterest/workflow/blob/main/docs/rust-p
 # must identify the original behavior, impact, replacement behavior, regression
 # tests, and repository-wide retirement condition.
 #
+# WF-RUST-005: TypeScript StepSchema models lifecycle-dependent fields as
+# independently optional. It therefore accepts contradictory records such as a
+# pending step with terminal output, a running step with completedAt, or a
+# failed step with output and no error. The TypeScript characterization test
+# keeps those unsafe acceptances reproducible. Rust uses a status-discriminated
+# StepState enum and rejects forbidden, missing, and null-smuggled fields before
+# a record reaches a Rust World. Validation errors never reflect payload data.
+#
 # WF-RUST-011: Hook resume protocol revisions previously accepted zero,
 # negative, fractional, and out-of-range JavaScript numbers. A value such as
 # 1.5 could satisfy a >= 1 capability gate despite having no defined protocol
