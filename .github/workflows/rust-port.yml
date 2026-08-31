@@ -1,0 +1,70 @@
+name: Rust port
+
+on:
+  push:
+    branches:
+      - pro/rust-repository-port
+  pull_request:
+    paths:
+      - 'Cargo.toml'
+      - 'Cargo.lock'
+      - 'crates/workflow-world/**'
+      - 'rust/conformance/**'
+      - 'packages/world/src/**'
+      - 'docs/rust-port/**'
+      - '.github/workflows/rust-port.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  world-contract:
+    name: World contract parity
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Rust 1.87
+        uses: actions-rust-lang/setup-rust-toolchain@46268bd060767258de96ed93c1251119784f2ab6 # v1.16.1
+        with:
+          toolchain: 1.87.0
+          components: clippy,rustfmt
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v5.0.0
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: pnpm
+
+      - name: Install JavaScript dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Check Rust formatting
+        run: cargo fmt --all -- --check
+
+      - name: Compile and test Rust World contract
+        run: cargo test -p workflow-world --all-targets
+
+      - name: Lint Rust World contract
+        run: cargo clippy -p workflow-world --all-targets -- -D warnings
+
+      - name: Run TypeScript World oracle tests
+        run: pnpm --filter @workflow/world test
+
+      - name: Build differential conformance runner
+        run: cargo build -p workflow-world --example conformance
+
+      - name: Compare TypeScript and Rust behavior
+        env:
+          WORKFLOW_RUST_CONFORMANCE_BIN: target/debug/examples/conformance
+        run: pnpm exec vitest run rust/conformance/world-parity.test.ts
