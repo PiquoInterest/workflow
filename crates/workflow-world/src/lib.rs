@@ -13,6 +13,7 @@ pub mod error;
 pub mod errors;
 pub mod event_metadata;
 pub mod events;
+pub mod hooks;
 pub mod queue;
 pub mod runs;
 pub mod serde_symbols;

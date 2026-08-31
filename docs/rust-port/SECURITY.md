@@ -29,6 +29,10 @@ These rules apply to every new Rust crate in the migration.
 10. TypeScript is removed only after Rust-only E2E and upgrade/rollback tests
     pass. A fallback that silently re-enters TypeScript does not count as Rust
     parity.
+11. Live capability attestations are response-only values. They use types and
+    schemas distinct from persistent entities, and every response-to-storage
+    conversion must discard them. A cached capability must never survive a
+    backend rollback, downgrade, or kill switch.
 
 ## CI integrity
 

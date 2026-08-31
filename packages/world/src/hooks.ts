@@ -123,6 +123,21 @@ export const HookSchema = z.object({
 });
 
 /**
+ * Persistence boundary for hook records.
+ *
+ * `resumeCapabilities` is deliberately omitted. It is a fresh live-backend
+ * attestation, so persisting it would let a stale capability survive a server
+ * rollback or kill switch. World adapters should parse every create/update
+ * payload through this schema before writing a hook record.
+ */
+export const PersistedHookSchema = HookSchema.omit({
+  resumeCapabilities: true,
+});
+
+/** A hook record safe to write to persistent storage. */
+export type PersistedHook = z.infer<typeof PersistedHookSchema>;
+
+/**
  * Represents a Hook. Hooks kept by minimum retention remain readable after
  * their workflow runs end, but cannot be resumed.
  *

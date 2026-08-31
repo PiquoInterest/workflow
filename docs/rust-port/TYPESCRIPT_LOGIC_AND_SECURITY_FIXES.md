@@ -158,6 +158,42 @@ ECMAScript TimeClip range before returning an integer millisecond timestamp.
 - `crates/workflow-world/tests/errors_and_time.rs`
 - `rust/conformance/errors-parity.test.ts`
 
+## WF-RUST-010: A response-only hook capability shared the entity schema
+
+**Status:** Persistence-safe boundaries implemented; TypeScript adapter adoption
+remains part of the world-backend migration.
+
+**Affected code:** `packages/world/src/hooks.ts`, `HookSchema`.
+
+**Old behavior:** `HookSchema` contains both persistent hook state and
+`resumeCapabilities`, even though the latter is explicitly response-only and
+must be recomputed by the live backend. The invariant existed only in comments;
+the exported schema and inferred type still made a capability-bearing lookup
+response valid input to generic hook-record processing.
+
+**Impact:** This does not prove that a current adapter persists the field, but it
+made that security-sensitive mistake representable. If a stale dedup capability
+were written to storage and later returned by a rolled-back or kill-switched
+server, the client could keep selecting lazy hook resume without a live backend
+attestation. That would weaken the exactly-once convergence guarantee the field
+is meant to advertise.
+
+**Fix:** TypeScript now exports `PersistedHookSchema`, which omits and strips
+`resumeCapabilities`. Rust uses distinct `PersistedHookProtocolFields` and
+`HookLookupProtocolFields` types; the only conversion to persistence discards
+the transient capability by construction.
+
+**Regression evidence:**
+
+- `packages/world/src/hooks.test.ts`
+- `crates/workflow-world/tests/hooks_contract.rs`
+- `rust/conformance/hooks-parity.test.ts`
+
+**Remaining TypeScript retirement condition:** Existing TypeScript storage
+adapters must use the persistence-safe schema or be replaced by Rust adapters.
+The finding is not considered closed repository-wide until no write path accepts
+the response-only field.
+
 ## Open findings tracked for later port stages
 
 | ID | TypeScript condition | Required Rust closure |

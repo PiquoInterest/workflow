@@ -21,10 +21,11 @@ Status meanings:
 | Error names, messages, fields, and retry classification | PROVEN | All exported `@workflow/errors` constructors, stable names, framed hints/docs, fatal classification, deployment mismatch diagnostics, structured fields, and TypeScript/Rust differential fixtures passed at `6d07fa883aa6d21d83d91e086b28eb8ed489a475`. Native stack/cause identity and ANSI rendering remain JavaScript-host concerns. |
 | Serde custom-class registry symbols | PROVEN | Exact `Symbol.for()` registry keys and Rust protocol constants passed direct and differential tests at `6d07fa883aa6d21d83d91e086b28eb8ed489a475`. Full class hydration belongs to the serialized-data/runtime rows. |
 | Retry duration parsing | PROVEN | Strings, relative milliseconds, absolute dates, default retry delay, JavaScript TimeClip truncation, invalid-date rejection, overflow rejection, and TypeScript/Rust differential fixtures passed at `6d07fa883aa6d21d83d91e086b28eb8ed489a475`. |
+| Hook resume context and backend capability contracts | IMPLEMENTED, CI PENDING | Protocol constants, context/capability parsing, unknown-field stripping, negative fixtures, and a persistence-safe type conversion are implemented. Full hook entities, token retention, storage methods, and resume execution remain. |
 | Queue naming and payload envelope | PARTIAL | Prefix/name contracts and core invoke/probe envelopes are implemented. Remaining queue timing, all transport representations, handler interfaces, and backend delivery behavior are not yet ported. |
 | Run contracts | PARTIAL | Status predicates and bulk-cancel requests/results are implemented. Full run entity schemas, queries, cancellation APIs, and wait-for-terminal behavior remain. |
 | Serialized data contract | PARTIAL | Legacy-versus-modern representation and strict modern binary validation are implemented. Devalue hydration, compression, encryption envelopes, and CBOR transport remain. |
-| Steps, hooks, waits, analytics | NOT STARTED | Port entity schemas, state invariants, request/response contracts, and tests. |
+| Steps, waits, analytics | NOT STARTED | Port entity schemas, state invariants, request/response contracts, and tests. |
 | World interfaces | NOT STARTED | Port storage, queue, streamer, encryption, environment, and lifecycle traits. |
 | world-local | NOT STARTED | Port filesystem persistence, queue, locking, event slots, recovery, and all local-world tests. |
 | world-postgres | NOT STARTED | Port SQL state transitions, migrations/client boundary, workers, slot arbitration, and concurrency tests. |
