@@ -35,6 +35,26 @@
       "typescript": "packages/utils/src/re-exports.test.ts",
       "command": ["cargo", "test", "--locked", "--manifest-path", "rust/tdd/workflow-utils/Cargo.toml", "--test", "re_exports"],
       "failureMarker": "TDD RED: packages/utils/src/parse-name.test.ts implementation pending"
+    },
+    {
+      "typescript": "packages/utils/src/debug-log.test.ts",
+      "command": ["cargo", "test", "--locked", "--manifest-path", "rust/tdd/workflow-utils/Cargo.toml", "--test", "debug_log"],
+      "failureMarker": "TDD RED: packages/utils/src/debug-log.test.ts implementation pending"
+    },
+    {
+      "typescript": "packages/utils/src/check-data-dir.test.ts",
+      "command": ["cargo", "test", "--locked", "--manifest-path", "rust/tdd/workflow-utils/Cargo.toml", "--test", "check_data_dir"],
+      "failureMarker": "TDD RED: packages/utils/src/check-data-dir.test.ts implementation pending"
+    },
+    {
+      "typescript": "packages/utils/src/get-port.test.ts",
+      "command": ["cargo", "test", "--locked", "--manifest-path", "rust/tdd/workflow-utils/Cargo.toml", "--test", "get_port"],
+      "failureMarker": "TDD RED: packages/utils/src/get-port.test.ts implementation pending"
+    },
+    {
+      "typescript": "packages/utils/src/module-scope-state.test.ts",
+      "command": ["cargo", "test", "--locked", "--manifest-path", "rust/tdd/workflow-utils/Cargo.toml", "--test", "module_scope_state"],
+      "failureMarker": "TDD RED: packages/utils/src/module-scope-state.test.ts implementation pending"
     }
   ]
 }

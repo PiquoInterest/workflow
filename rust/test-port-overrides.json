@@ -42,6 +42,36 @@
       "status": "red",
       "rustTests": ["rust/tdd/workflow-utils/tests/re_exports.rs"],
       "notes": "All three crate-root export assertions are translated and intentionally depend on the still-RED parse-name contract."
+    },
+    {
+      "typescript": "packages/utils/src/debug-log.test.ts",
+      "status": "red",
+      "rustTests": ["rust/tdd/workflow-utils/tests/debug_log.rs"],
+      "notes": "All six selector and sink assertions are translated with an injected five-level log sink so disabled logging can be proven silent."
+    },
+    {
+      "typescript": "packages/utils/src/check-data-dir.test.ts",
+      "status": "red",
+      "rustTests": ["rust/tdd/workflow-utils/tests/check_data_dir.rs"],
+      "notes": "All 23 search-order, parent-walk, path-normalization, tilde, short-name, and missing-directory assertions are translated with isolated temporary directories and injected cwd/home paths."
+    },
+    {
+      "typescript": "packages/utils/src/get-port.test.ts",
+      "status": "red",
+      "rustTests": ["rust/tdd/workflow-utils/tests/get_port.rs"],
+      "notes": "All 20 listener enumeration, deterministic ordering, restart, concurrency, workflow-health probing, timeout, IPv6, and Windows netstat assertions are translated."
+    },
+    {
+      "typescript": "packages/utils/src/module-scope-state.test.ts",
+      "status": "red",
+      "rustTests": ["rust/tdd/workflow-utils/tests/module_scope_state.rs"],
+      "notes": "All 19 package-discovery and static-analysis assertions are translated, including cross-file empty collections, static fields, this resolution, .mts sources, and per-copy annotations."
+    },
+    {
+      "typescript": "packages/utils/src/time.test.ts",
+      "status": "partial",
+      "rustTests": ["crates/workflow-world/tests/time_typescript_port.rs"],
+      "notes": "All nine TypeScript assertions are mirrored against the existing Rust time implementation. Status remains partial until the new direct mirror test passes the branch workflow; differential coverage already exists separately."
     }
   ]
 }

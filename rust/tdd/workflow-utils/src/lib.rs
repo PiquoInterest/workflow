@@ -220,3 +220,22 @@ where
         panic!("TDD RED: packages/utils/src/promise.test.ts implementation pending")
     }
 }
+
+mod check_data_dir;
+mod debug_log;
+mod get_port;
+mod module_scope_state;
+
+pub use check_data_dir::{
+    DataDirContext, POSSIBLE_WORKFLOW_DATA_PATHS, WorkflowDataDirResult,
+    find_workflow_data_dir,
+};
+pub use debug_log::{DebugArgument, DebugSink, debug_log, is_workflow_debug_enabled};
+pub use get_port::{
+    WorkflowPortOptions, get_all_ports, get_port, get_workflow_port,
+    parse_windows_netstat_ports_for_pid,
+};
+pub use module_scope_state::{
+    ModuleScopeFinding, discover_bundled_runtime_packages, format_module_scope_findings,
+    scan_module_scope_sources, scan_package,
+};
