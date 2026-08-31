@@ -116,10 +116,7 @@ fn optional_string(object: &Map<String, Value>, key: &str) -> ValidationResult<O
     }
 }
 
-fn required_protocol_version(
-    object: &Map<String, Value>,
-    key: &str,
-) -> ValidationResult<u32> {
+fn required_protocol_version(object: &Map<String, Value>, key: &str) -> ValidationResult<u32> {
     object
         .get(key)
         .and_then(parse_protocol_version)
@@ -147,10 +144,7 @@ fn parse_protocol_version(value: &Value) -> Option<u32> {
     }
 
     let value = value.as_f64()?;
-    if !value.is_finite()
-        || value.fract() != 0.0
-        || !(1.0..=u32::MAX as f64).contains(&value)
-    {
+    if !value.is_finite() || value.fract() != 0.0 || !(1.0..=u32::MAX as f64).contains(&value) {
         return None;
     }
     Some(value as u32)
