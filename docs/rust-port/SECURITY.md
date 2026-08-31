@@ -29,3 +29,18 @@ These rules apply to every new Rust crate in the migration.
 10. TypeScript is removed only after Rust-only E2E and upgrade/rollback tests
     pass. A fallback that silently re-enters TypeScript does not count as Rust
     parity.
+
+## CI integrity
+
+Migration validation is read-only. CI may generate and upload canonical
+formatting or oracle snapshots for diagnosis, but it must not commit, push, or
+rewrite source code. Formatting is enforced with `cargo fmt -- --check`, so the
+checked commit, rather than an uncommitted runner mutation, is what compilation,
+Clippy, and differential tests validate.
+
+Every third-party action is pinned to a full commit SHA. Workflow-level token
+permissions stay at `contents: read`; a future write permission requires a
+separate, narrowly scoped workflow and threat review. TypeScript workspace
+packages used as compatibility oracles are built explicitly when their package
+exports point at generated `dist` files, rather than bypassing the published
+package boundary with source-only aliases.
