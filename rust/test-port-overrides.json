@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "entries": [
+    {
+      "typescript": "packages/utils/src/pluralize.test.ts",
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-utils/tests/pluralize.rs"
+      ],
+      "notes": "All four TypeScript assertions are translated. The Rust API skeleton intentionally panics until the implementation phase begins."
+    }
+  ]
+}

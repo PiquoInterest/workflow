@@ -8,7 +8,10 @@ on:
       - '.github/workflows/rust-test-manifest.yml'
       - 'scripts/rust-port-test-inventory.mjs'
       - 'scripts/bootstrap-rust-test-port-manifest.mjs'
+      - 'scripts/apply-rust-test-port-overrides.mjs'
       - 'rust/test-port-manifest.json'
+      - 'rust/test-port-overrides.json'
+      - 'rust/tdd/**'
       - '**/*.test.ts'
       - '**/*.test.tsx'
       - '**/*.test.mts'
@@ -44,13 +47,16 @@ jobs:
         with:
           node-version: 22.x
 
-      - name: Generate and validate manifest
+      - name: Generate, apply reviewed statuses, and validate manifest
         run: |
           node scripts/rust-port-test-inventory.mjs \
             --write-json /tmp/rust-port-test-inventory.json
           node scripts/bootstrap-rust-test-port-manifest.mjs \
             /tmp/rust-port-test-inventory.json \
             rust/test-port-manifest.json
+          node scripts/apply-rust-test-port-overrides.mjs \
+            rust/test-port-manifest.json \
+            rust/test-port-overrides.json
           node scripts/rust-port-test-inventory.mjs \
             --check rust/test-port-manifest.json
 

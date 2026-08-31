@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "cases": [
+    {
+      "typescript": "packages/utils/src/pluralize.test.ts",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--manifest-path",
+        "rust/tdd/workflow-utils/Cargo.toml",
+        "--test",
+        "pluralize"
+      ],
+      "failureMarker": "TDD RED: packages/utils/src/pluralize.test.ts implementation pending"
+    }
+  ]
+}
