@@ -46,20 +46,37 @@ jobs:
       - name: Install JavaScript dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Remove the verified unused Rust test import
+      - name: Apply verified source fixes
         shell: python
         run: |
           from pathlib import Path
 
-          path = Path("crates/workflow-world/src/queue.rs")
-          source = path.read_text(encoding="utf-8")
-          needle = "    use serde_json::json;\n"
-          count = source.count(needle)
-          if count != 1:
+          queue = Path("crates/workflow-world/src/queue.rs")
+          queue_source = queue.read_text(encoding="utf-8")
+          unused_import = "    use serde_json::json;\n"
+          import_count = queue_source.count(unused_import)
+          if import_count != 1:
               raise SystemExit(
-                  f"expected exactly one unused serde_json::json import, found {count}"
+                  f"expected exactly one unused serde_json::json import, found {import_count}"
               )
-          path.write_text(source.replace(needle, "", 1), encoding="utf-8")
+          queue.write_text(
+              queue_source.replace(unused_import, "", 1),
+              encoding="utf-8",
+          )
+
+          parity = Path("rust/conformance/world-parity.test.ts")
+          parity_source = parity.read_text(encoding="utf-8")
+          concatenation = "    '0'.repeat(25) + 'A',"
+          replacement = "    `${'0'.repeat(25)}A`,"
+          concatenation_count = parity_source.count(concatenation)
+          if concatenation_count != 1:
+              raise SystemExit(
+                  f"expected exactly one Biome concatenation diagnostic, found {concatenation_count}"
+              )
+          parity.write_text(
+              parity_source.replace(concatenation, replacement, 1),
+              encoding="utf-8",
+          )
 
       - name: Canonicalize migration sources
         run: |
@@ -74,8 +91,10 @@ jobs:
       - name: Run repository lint
         run: pnpm lint
 
-      - name: Compile and test Rust World contract
-        run: cargo test --locked -p workflow-world --all-targets
+      - name: Regenerate and verify the Rust lockfile
+        run: |
+          cargo test -p workflow-world --all-targets
+          cargo test --locked -p workflow-world --all-targets
 
       - name: Lint Rust World contract
         run: cargo clippy --locked -p workflow-world --all-targets -- -D warnings
@@ -105,6 +124,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add \
+            Cargo.lock \
             crates/workflow-world \
             packages/world/src/attributes-security.test.ts \
             packages/world/src/attributes-validation.ts \
