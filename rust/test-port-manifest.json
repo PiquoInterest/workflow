@@ -3,9 +3,9 @@
   "sourceCount": 334,
   "declaredTestCount": 5100,
   "statusCounts": {
-    "unported": 330,
+    "unported": 327,
     "partial": 0,
-    "red": 4,
+    "red": 7,
     "green": 0,
     "blocked": 0
   },
@@ -2085,9 +2085,11 @@
       "kind": "unit",
       "lineCount": 110,
       "declaredTestCount": 9,
-      "status": "unported",
-      "rustTests": [],
-      "notes": ""
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-utils/tests/global_singleton.rs"
+      ],
+      "notes": "All nine sharing, versioning, mutation, lookup, and reset assertions are represented against the planned process registry. Final GREEN additionally requires a JavaScript binding test proving globalThis and duplicated-module behavior."
     },
     {
       "typescript": "packages/utils/src/module-scope-state.test.ts",
@@ -2133,9 +2135,11 @@
       "kind": "unit",
       "lineCount": 48,
       "declaredTestCount": 5,
-      "status": "unported",
-      "rustTests": [],
-      "notes": ""
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-utils/tests/promise.rs"
+      ],
+      "notes": "All five one-shot resolver and lazy memoization assertions are represented. Final GREEN additionally requires the JavaScript binding to expose native Promise behavior."
     },
     {
       "typescript": "packages/utils/src/re-exports.test.ts",
@@ -2144,9 +2148,11 @@
       "kind": "unit",
       "lineCount": 25,
       "declaredTestCount": 3,
-      "status": "unported",
-      "rustTests": [],
-      "notes": ""
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-utils/tests/re_exports.rs"
+      ],
+      "notes": "All three crate-root export assertions are translated and intentionally depend on the still-RED parse-name contract."
     },
     {
       "typescript": "packages/utils/src/time.test.ts",
