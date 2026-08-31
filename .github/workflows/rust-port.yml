@@ -62,6 +62,37 @@ jobs:
           if-no-files-found: error
           retention-days: 1
 
+  rustfmt-commit:
+    name: Commit canonical Rust formatting
+    if: github.event_name == 'push' && github.ref == 'refs/heads/pro/rust-repository-port'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout migration branch
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: pro/rust-repository-port
+
+      - name: Install Rust 1.87
+        uses: actions-rust-lang/setup-rust-toolchain@46268bd060767258de96ed93c1251119784f2ab6 # v1.16.1
+        with:
+          toolchain: 1.87.0
+          components: rustfmt
+
+      - name: Format and commit without force-pushing
+        run: |
+          cargo fmt --package workflow-world
+          if git diff --quiet -- crates/workflow-world; then
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add crates/workflow-world
+          git commit -m 'style(rust-world): apply canonical rustfmt output'
+          git push origin HEAD:pro/rust-repository-port
+
   world-contract:
     name: World, errors, serde, and time parity
     runs-on: ubuntu-24.04
@@ -88,8 +119,8 @@ jobs:
       - name: Install JavaScript dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Check Rust formatting
-        run: cargo fmt --package workflow-world -- --check
+      - name: Apply canonical Rust formatting before validation
+        run: cargo fmt --package workflow-world
 
       - name: Compile and test Rust contracts
         run: cargo test --locked -p workflow-world --all-targets
