@@ -102,6 +102,42 @@
       "status": "partial",
       "rustTests": ["crates/workflow-world/tests/spec_version_typescript_port.rs"],
       "notes": "All 11 version constants, minting, kill-switch, readable-ceiling, newer-world, and legacy declarations are mirrored. Pending CI confirmation."
+    },
+    {
+      "typescript": "packages/world/src/hooks.test.ts",
+      "status": "partial",
+      "rustTests": [
+        "crates/workflow-world/tests/hooks_contract.rs",
+        "rust/conformance/hooks-parity.test.ts"
+      ],
+      "notes": "All 12 protocol-constant, context, capability, unknown-field, persistence-stripping, and bounded-version declarations are covered by direct and differential Rust tests. Pending consolidated branch confirmation."
+    },
+    {
+      "typescript": "packages/world/src/runs.test.ts",
+      "status": "partial",
+      "rustTests": ["crates/workflow-world/tests/runs_typescript_port.rs"],
+      "notes": "All 11 request-boundary, outcome-variant, required-field, unknown-outcome, and aggregate declarations are translated. Pending Rustfmt, test, and Clippy confirmation."
+    },
+    {
+      "typescript": "packages/world/src/runs-security.test.ts",
+      "status": "partial",
+      "rustTests": ["crates/workflow-world/tests/runs_security_typescript_port.rs"],
+      "notes": "All strict counter, exact summary, duplicate-ID, empty-result, and maximum-cardinality security cases are translated. The Rust test additionally proves diagnostics do not reflect a sensitive run ID. Pending CI confirmation."
+    },
+    {
+      "typescript": "packages/world/src/slot-identity.test.ts",
+      "status": "partial",
+      "rustTests": ["crates/workflow-world/tests/slot_identity_typescript_port.rs"],
+      "notes": "All nine fixed-width ordering, round-trip, safe-integer, legacy-prefix, ULID separation, and timestamp-validation declarations are translated. Pending CI confirmation."
+    },
+    {
+      "typescript": "packages/world/src/steps-security.test.ts",
+      "status": "partial",
+      "rustTests": [
+        "crates/workflow-world/tests/step_state_security.rs",
+        "rust/conformance/step-state-security.test.ts"
+      ],
+      "notes": "All contradictory-state, null-smuggling, unsafe-attempt, checked-next-attempt, and legacy compatibility fixtures are covered by direct and differential Rust tests. Pending consolidated branch confirmation."
     }
   ]
 }
