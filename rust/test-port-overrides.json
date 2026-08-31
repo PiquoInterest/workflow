@@ -8,6 +8,30 @@
         "rust/tdd/workflow-utils/tests/pluralize.rs"
       ],
       "notes": "All four TypeScript assertions are translated. The Rust API skeleton intentionally panics until the implementation phase begins."
+    },
+    {
+      "typescript": "packages/utils/src/workflow-routes.test.ts",
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-utils/tests/workflow_routes.rs"
+      ],
+      "notes": "All three route assertions are translated, including configured base paths and rejection of the retired standalone step route."
+    },
+    {
+      "typescript": "packages/utils/src/world-target.test.ts",
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-utils/tests/world_target.rs"
+      ],
+      "notes": "All ten environment-resolution assertions are translated with explicit maps rather than process-global mutation."
+    },
+    {
+      "typescript": "packages/utils/src/parse-name.test.ts",
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-utils/tests/parse_name.rs"
+      ],
+      "notes": "All 35 parsing, formatting, default-export, nested-function, sanitized-name, and fallback assertions are translated."
     }
   ]
 }
