@@ -32,6 +32,8 @@ const resumeCapabilities = {
   hookResumeDedupVersion: HOOK_RESUME_DEDUP_VERSION,
 };
 
+const invalidProtocolVersions = [0, -1, 1.5, 0x1_0000_0000];
+
 describe('hook resume protocol versions', () => {
   it('keeps the producer and backend capability versions stable', () => {
     expect(HOOK_RESUME_INPUT_VERSION).toBe(1);
@@ -62,6 +64,30 @@ describe('HookResumeContextSchema', () => {
       })
     ).toThrow();
   });
+
+  it('requires bounded integer protocol versions', () => {
+    for (const version of invalidProtocolVersions) {
+      expect(() =>
+        HookResumeContextSchema.parse({
+          ...resumeContext,
+          runSpecVersion: version,
+        })
+      ).toThrow();
+      expect(() =>
+        HookResumeContextSchema.parse({
+          ...resumeContext,
+          hookResumeInputVersion: version,
+        })
+      ).toThrow();
+    }
+
+    expect(
+      HookResumeContextSchema.parse({
+        ...resumeContext,
+        runSpecVersion: 0xffff_ffff,
+      }).runSpecVersion
+    ).toBe(0xffff_ffff);
+  });
 });
 
 describe('HookResumeCapabilitiesSchema', () => {
@@ -74,11 +100,24 @@ describe('HookResumeCapabilitiesSchema', () => {
     ).toEqual(resumeCapabilities);
   });
 
-  it('requires a numeric dedup protocol version', () => {
+  it('requires a bounded integer dedup protocol version', () => {
     expect(() => HookResumeCapabilitiesSchema.parse({})).toThrow();
     expect(() =>
       HookResumeCapabilitiesSchema.parse({ hookResumeDedupVersion: '1' })
     ).toThrow();
+    for (const version of invalidProtocolVersions) {
+      expect(() =>
+        HookResumeCapabilitiesSchema.parse({
+          hookResumeDedupVersion: version,
+        })
+      ).toThrow();
+    }
+
+    expect(
+      HookResumeCapabilitiesSchema.parse({
+        hookResumeDedupVersion: 0xffff_ffff,
+      }).hookResumeDedupVersion
+    ).toBe(0xffff_ffff);
   });
 });
 
