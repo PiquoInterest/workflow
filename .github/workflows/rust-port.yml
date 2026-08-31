@@ -128,11 +128,14 @@ jobs:
       - name: Lint Rust contracts
         run: cargo clippy --locked -p workflow-world --all-targets -- -D warnings
 
+      - name: Build TypeScript oracle dependencies
+        run: pnpm --filter @workflow/utils build
+
       - name: Run TypeScript oracle tests
         run: |
           pnpm --filter @workflow/world test
-          pnpm --filter @workflow/errors test
           pnpm --filter @workflow/utils test
+          pnpm --filter @workflow/errors test
 
       - name: Build differential conformance runners
         run: cargo build --locked -p workflow-world --examples
