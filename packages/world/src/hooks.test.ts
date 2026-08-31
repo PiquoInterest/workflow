@@ -1,5 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { HookSchema } from './hooks.js';
+import {
+  HOOK_RESUME_DEDUP_VERSION,
+  HOOK_RESUME_INPUT_VERSION,
+  HookResumeCapabilitiesSchema,
+  HookResumeContextSchema,
+  HookSchema,
+  PersistedHookSchema,
+} from './hooks.js';
 
 const baseHook = {
   runId: 'wrun_1',
@@ -8,7 +15,7 @@ const baseHook = {
   ownerId: 'owner_1',
   projectId: 'project_1',
   environment: 'production',
-  createdAt: new Date(),
+  createdAt: new Date('2026-01-02T03:04:05.000Z'),
 };
 
 const resumeContext = {
@@ -18,7 +25,62 @@ const resumeContext = {
   workflowCoreVersion: '5.0.0',
   traceCarrier: { traceparent: '00-abc-def-01' },
   encryptionPublicKey: 'ZmFrZS1wdWJsaWMta2V5',
+  hookResumeInputVersion: HOOK_RESUME_INPUT_VERSION,
 };
+
+const resumeCapabilities = {
+  hookResumeDedupVersion: HOOK_RESUME_DEDUP_VERSION,
+};
+
+describe('hook resume protocol versions', () => {
+  it('keeps the producer and backend capability versions stable', () => {
+    expect(HOOK_RESUME_INPUT_VERSION).toBe(1);
+    expect(HOOK_RESUME_DEDUP_VERSION).toBe(1);
+  });
+});
+
+describe('HookResumeContextSchema', () => {
+  it('parses and preserves a resumeContext', () => {
+    expect(HookResumeContextSchema.parse(resumeContext)).toEqual(resumeContext);
+  });
+
+  it('strips response-only capability fields and unrelated unknown fields', () => {
+    expect(
+      HookResumeContextSchema.parse({
+        ...resumeContext,
+        resumeCapabilities,
+        unexpected: 'not persisted',
+      })
+    ).toEqual(resumeContext);
+  });
+
+  it('rejects a non-string trace carrier value', () => {
+    expect(() =>
+      HookResumeContextSchema.parse({
+        ...resumeContext,
+        traceCarrier: { traceparent: 42 },
+      })
+    ).toThrow();
+  });
+});
+
+describe('HookResumeCapabilitiesSchema', () => {
+  it('parses the live backend attestation and strips unknown fields', () => {
+    expect(
+      HookResumeCapabilitiesSchema.parse({
+        ...resumeCapabilities,
+        staleServerField: true,
+      })
+    ).toEqual(resumeCapabilities);
+  });
+
+  it('requires a numeric dedup protocol version', () => {
+    expect(() => HookResumeCapabilitiesSchema.parse({})).toThrow();
+    expect(() =>
+      HookResumeCapabilitiesSchema.parse({ hookResumeDedupVersion: '1' })
+    ).toThrow();
+  });
+});
 
 describe('HookSchema resumeContext', () => {
   it('parses and preserves a resumeContext', () => {
@@ -31,10 +93,7 @@ describe('HookSchema resumeContext', () => {
     expect(parsed.resumeContext).toBeUndefined();
   });
 
-  it('an old client (schema without resumeContext) strips the unknown field, other fields intact', () => {
-    // Model a pre-`resumeContext` client's schema: Zod strips unknown keys by
-    // default, so the enriched response is parsed without failing and the new
-    // field is simply dropped.
+  it('an old client strips the unknown resumeContext field', () => {
     const legacyHookSchema = HookSchema.omit({ resumeContext: true });
     const parsed = legacyHookSchema.parse({ ...baseHook, resumeContext });
     expect('resumeContext' in parsed).toBe(false);
@@ -43,5 +102,27 @@ describe('HookSchema resumeContext', () => {
       hookId: baseHook.hookId,
       token: baseHook.token,
     });
+  });
+});
+
+describe('PersistedHookSchema', () => {
+  it('strips transient backend capabilities before persistence', () => {
+    const parsed = PersistedHookSchema.parse({
+      ...baseHook,
+      resumeContext,
+      resumeCapabilities,
+    });
+
+    expect(parsed.resumeContext).toEqual(resumeContext);
+    expect('resumeCapabilities' in parsed).toBe(false);
+  });
+
+  it('keeps HookSchema capable of parsing the response-only attestation', () => {
+    const parsed = HookSchema.parse({
+      ...baseHook,
+      resumeContext,
+      resumeCapabilities,
+    });
+    expect(parsed.resumeCapabilities).toEqual(resumeCapabilities);
   });
 });

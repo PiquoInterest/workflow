@@ -117,5 +117,7 @@ jobs:
         run: |
           WORKFLOW_RUST_CONFORMANCE_BIN=target/debug/examples/conformance \
             pnpm exec vitest run rust/conformance/world-parity.test.ts
+          WORKFLOW_RUST_CONFORMANCE_BIN=target/debug/examples/conformance \
+            pnpm exec vitest run rust/conformance/hooks-parity.test.ts
           WORKFLOW_RUST_CONFORMANCE_BIN=target/debug/examples/errors_conformance \
             pnpm exec vitest run rust/conformance/errors-parity.test.ts
