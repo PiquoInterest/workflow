@@ -3,9 +3,9 @@
   "sourceCount": 334,
   "declaredTestCount": 5100,
   "statusCounts": {
-    "unported": 327,
-    "partial": 0,
-    "red": 7,
+    "unported": 322,
+    "partial": 1,
+    "red": 11,
     "green": 0,
     "blocked": 0
   },
@@ -2052,9 +2052,11 @@
       "kind": "unit",
       "lineCount": 312,
       "declaredTestCount": 23,
-      "status": "unported",
-      "rustTests": [],
-      "notes": ""
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-utils/tests/check_data_dir.rs"
+      ],
+      "notes": "All 23 search-order, parent-walk, path-normalization, tilde, short-name, and missing-directory assertions are translated with isolated temporary directories and injected cwd/home paths."
     },
     {
       "typescript": "packages/utils/src/debug-log.test.ts",
@@ -2063,9 +2065,11 @@
       "kind": "unit",
       "lineCount": 75,
       "declaredTestCount": 6,
-      "status": "unported",
-      "rustTests": [],
-      "notes": ""
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-utils/tests/debug_log.rs"
+      ],
+      "notes": "All six selector and sink assertions are translated with an injected five-level log sink so disabled logging can be proven silent."
     },
     {
       "typescript": "packages/utils/src/get-port.test.ts",
@@ -2074,9 +2078,11 @@
       "kind": "unit",
       "lineCount": 381,
       "declaredTestCount": 20,
-      "status": "unported",
-      "rustTests": [],
-      "notes": ""
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-utils/tests/get_port.rs"
+      ],
+      "notes": "All 20 listener enumeration, deterministic ordering, restart, concurrency, workflow-health probing, timeout, IPv6, and Windows netstat assertions are translated."
     },
     {
       "typescript": "packages/utils/src/global-singleton.test.ts",
@@ -2098,9 +2104,11 @@
       "kind": "unit",
       "lineCount": 365,
       "declaredTestCount": 19,
-      "status": "unported",
-      "rustTests": [],
-      "notes": ""
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-utils/tests/module_scope_state.rs"
+      ],
+      "notes": "All 19 package-discovery and static-analysis assertions are translated, including cross-file empty collections, static fields, this resolution, .mts sources, and per-copy annotations."
     },
     {
       "typescript": "packages/utils/src/parse-name.test.ts",
@@ -2161,9 +2169,11 @@
       "kind": "unit",
       "lineCount": 56,
       "declaredTestCount": 9,
-      "status": "unported",
-      "rustTests": [],
-      "notes": ""
+      "status": "partial",
+      "rustTests": [
+        "crates/workflow-world/tests/time_typescript_port.rs"
+      ],
+      "notes": "All nine TypeScript assertions are mirrored against the existing Rust time implementation. Status remains partial until the new direct mirror test passes the branch workflow; differential coverage already exists separately."
     },
     {
       "typescript": "packages/utils/src/workflow-routes.test.ts",
