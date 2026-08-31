@@ -222,10 +222,7 @@ fn required_string(object: &Map<String, Value>, key: &str) -> ValidationResult<S
         .ok_or_else(|| invalid_step_state(format!("{key} must be a string")))
 }
 
-fn required_step_attempt(
-    object: &Map<String, Value>,
-    key: &str,
-) -> ValidationResult<StepAttempt> {
+fn required_step_attempt(object: &Map<String, Value>, key: &str) -> ValidationResult<StepAttempt> {
     object
         .get(key)
         .ok_or_else(|| invalid_safe_integer(key))

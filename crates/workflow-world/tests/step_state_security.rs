@@ -1,7 +1,5 @@
 use serde_json::{Value, json};
-use workflow_world::steps::{
-    MAX_STEP_ATTEMPT, StepAttempt, StepState, parse_step_state,
-};
+use workflow_world::steps::{MAX_STEP_ATTEMPT, StepAttempt, StepState, parse_step_state};
 
 fn step(status: &str, extra: Value) -> Value {
     let mut value = json!({
@@ -125,11 +123,7 @@ fn accepts_and_normalizes_safe_attempt_counters() {
 
 #[test]
 fn advances_attempts_without_crossing_the_javascript_safe_integer_boundary() {
-    for (prior, expected) in [
-        (0, 1),
-        (1, 2),
-        (MAX_STEP_ATTEMPT - 1, MAX_STEP_ATTEMPT),
-    ] {
+    for (prior, expected) in [(0, 1), (1, 2), (MAX_STEP_ATTEMPT - 1, MAX_STEP_ATTEMPT)] {
         let attempt = StepAttempt::new(prior).expect("prior attempt must be safe");
         assert_eq!(
             attempt
