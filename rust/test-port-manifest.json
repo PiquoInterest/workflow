@@ -3,9 +3,9 @@
   "sourceCount": 334,
   "declaredTestCount": 5100,
   "statusCounts": {
-    "unported": 333,
+    "unported": 330,
     "partial": 0,
-    "red": 1,
+    "red": 4,
     "green": 0,
     "blocked": 0
   },
@@ -2107,9 +2107,11 @@
       "kind": "unit",
       "lineCount": 330,
       "declaredTestCount": 35,
-      "status": "unported",
-      "rustTests": [],
-      "notes": ""
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-utils/tests/parse_name.rs"
+      ],
+      "notes": "All 35 parsing, formatting, default-export, nested-function, sanitized-name, and fallback assertions are translated."
     },
     {
       "typescript": "packages/utils/src/pluralize.test.ts",
@@ -2164,9 +2166,11 @@
       "kind": "unit",
       "lineCount": 36,
       "declaredTestCount": 3,
-      "status": "unported",
-      "rustTests": [],
-      "notes": ""
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-utils/tests/workflow_routes.rs"
+      ],
+      "notes": "All three route assertions are translated, including configured base paths and rejection of the retired standalone step route."
     },
     {
       "typescript": "packages/utils/src/world-target.test.ts",
@@ -2175,9 +2179,11 @@
       "kind": "unit",
       "lineCount": 94,
       "declaredTestCount": 10,
-      "status": "unported",
-      "rustTests": [],
-      "notes": ""
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-utils/tests/world_target.rs"
+      ],
+      "notes": "All ten environment-resolution assertions are translated with explicit maps rather than process-global mutation."
     },
     {
       "typescript": "packages/vitest/src/index.test.ts",
