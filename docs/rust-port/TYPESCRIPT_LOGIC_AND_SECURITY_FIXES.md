@@ -104,6 +104,57 @@ summary from results and rejects any mismatch.
 
 **Regression evidence:** `crates/workflow-world/src/runs.rs`.
 
+## WF-RUST-005: Step lifecycle states were not discriminated
+
+**Status:** Implemented at the Rust boundary; branch CI pending.
+
+**Affected code:** `packages/world/src/steps.ts`, `StepSchema`.
+
+**Old behavior:** `StepSchema` is one object whose lifecycle-dependent fields
+are independently optional. Its own source contains a TODO to replace it with a
+discriminated union. The schema accepts records such as:
+
+- a `pending` step carrying `output` and `completedAt`;
+- a `running` step carrying `retryAfter` and `completedAt`;
+- a modern `completed` step with no `output`;
+- a modern `failed` step with `output` and no `error`;
+- a `cancelled` step carrying `output` but no `completedAt`.
+
+It also cannot distinguish an omitted forbidden field from a deliberately
+present `null` unless every state-specific rule checks property presence.
+
+**Impact:** A corrupted or malicious storage/transport response can pass the
+public TypeScript schema while making status, retry scheduling, terminal time,
+output, and error disagree. Different consumers can then choose different
+sources of truth, causing incorrect retry/terminal decisions, stale result or
+error presentation, and persistence of a state that no event sequence can
+legitimately produce.
+
+**Proof of the TypeScript issue:**
+`packages/world/src/steps-security.test.ts` deliberately asserts that the
+legacy `StepSchema` accepts the five contradictory fixtures. This is a permanent
+characterization test, not an endorsement of the behavior.
+
+**Fix:** Rust parses step records into the status-discriminated `StepState`
+enum. The boundary rejects forbidden field presence even when the value is
+`null`, requires `completedAt` for terminal states, requires `output` for modern
+completed steps, requires `error` for modern failed steps, and preserves legacy
+spec-version 1 records whose terminal payload was absent. Error text names only
+the status and field and never reflects serialized payload values.
+
+**Regression evidence:**
+
+- `packages/world/src/steps-security.test.ts`
+- `crates/workflow-world/src/steps.rs`
+- `crates/workflow-world/tests/step_state_security.rs`
+- `crates/workflow-world/examples/steps_conformance.rs`
+- `rust/conformance/step-state-security.test.ts`
+
+**Remaining TypeScript retirement condition:** Every step entity read/write path
+must cross the Rust state parser, or be replaced by a Rust World adapter, before
+the permissive TypeScript schema can be removed. Full date coercion and payload
+representation validation remain tracked under WF-RUST-006 and WF-RUST-002.
+
 ## WF-RUST-008: `WorkflowError.is()` rejected a real `WorkflowError`
 
 **Status:** Fixed in TypeScript and Rust.
@@ -231,6 +282,5 @@ and overflowing values.
 
 | ID | TypeScript condition | Required Rust closure |
 | --- | --- | --- |
-| WF-RUST-005 | `StepSchema` explicitly has a TODO for a status-discriminated union, so contradictory terminal fields are representable. | Model step states as a Rust enum and add negative fixtures for impossible combinations. |
 | WF-RUST-006 | Several other date and numeric schemas accept broad coercion or unconstrained numbers at wire boundaries; hook protocol versions are closed by WF-RUST-011. | Inventory each remaining producer, preserve required legacy coercions, and use bounded integer/newtype validation for modern writes. |
 | WF-RUST-007 | Queue telemetry uses intentionally forgiving `.catch(undefined)` behavior. | Keep telemetry non-fatal while making execution-authoritative fields strict and independently bounded. |
