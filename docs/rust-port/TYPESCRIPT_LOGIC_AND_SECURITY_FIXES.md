@@ -194,10 +194,43 @@ adapters must use the persistence-safe schema or be replaced by Rust adapters.
 The finding is not considered closed repository-wide until no write path accepts
 the response-only field.
 
+## WF-RUST-011: Hook protocol versions accepted undefined revisions
+
+**Status:** Fixed in TypeScript and Rust; branch CI pending.
+
+**Affected code:** `packages/world/src/hooks.ts`,
+`HookResumeContextSchema`, and `HookResumeCapabilitiesSchema`.
+
+**Old behavior:** Hook resume protocol markers used unconstrained `z.number()`
+fields in TypeScript and `f64` fields in Rust. Zero, negative, fractional, and
+out-of-range values were therefore representable. A fractional attestation such
+as `1.5` could satisfy a `>= 1` feature gate even though no revision 1.5 exists.
+Rust also serialized integral inputs as JSON floats (`1.0`), which did not match
+the TypeScript wire representation (`1`).
+
+**Impact:** A malformed or compromised backend could advertise an undefined
+lazy-resume consumer or deduplication revision and make a caller select a path
+whose protocol contract was never implemented. For deduplication capabilities,
+that can weaken the exactly-once convergence assumption used for repeated hook
+resume delivery. The float serialization drift also broke exact cross-language
+wire parity.
+
+**Fix:** TypeScript and Rust now require positive unsigned 32-bit protocol
+versions. Rust normalizes integral JSON float forms such as `1.0` to the same
+integer representation while rejecting zero, negative, fractional, non-finite,
+and overflowing values.
+
+**Regression evidence:**
+
+- `packages/world/src/hooks.test.ts`
+- `crates/workflow-world/src/hooks.rs`
+- `crates/workflow-world/tests/hooks_contract.rs`
+- `rust/conformance/hooks-parity.test.ts`
+
 ## Open findings tracked for later port stages
 
 | ID | TypeScript condition | Required Rust closure |
 | --- | --- | --- |
 | WF-RUST-005 | `StepSchema` explicitly has a TODO for a status-discriminated union, so contradictory terminal fields are representable. | Model step states as a Rust enum and add negative fixtures for impossible combinations. |
-| WF-RUST-006 | Several date and numeric schemas accept broad coercion or unconstrained numbers at wire boundaries. | Inventory each producer, preserve required legacy coercions, and use bounded integer/newtype validation for modern writes. |
+| WF-RUST-006 | Several other date and numeric schemas accept broad coercion or unconstrained numbers at wire boundaries; hook protocol versions are closed by WF-RUST-011. | Inventory each remaining producer, preserve required legacy coercions, and use bounded integer/newtype validation for modern writes. |
 | WF-RUST-007 | Queue telemetry uses intentionally forgiving `.catch(undefined)` behavior. | Keep telemetry non-fatal while making execution-authoritative fields strict and independently bounded. |
