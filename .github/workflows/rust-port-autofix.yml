@@ -51,31 +51,64 @@ jobs:
         run: |
           from pathlib import Path
 
+          def replace_exactly(path: Path, old: str, new: str, expected: int, label: str) -> None:
+              source = path.read_text(encoding="utf-8")
+              count = source.count(old)
+              if count != expected:
+                  raise SystemExit(f"expected {expected} {label} occurrence(s), found {count}")
+              path.write_text(source.replace(old, new), encoding="utf-8")
+
           queue = Path("crates/workflow-world/src/queue.rs")
-          queue_source = queue.read_text(encoding="utf-8")
-          unused_import = "    use serde_json::json;\n"
-          import_count = queue_source.count(unused_import)
-          if import_count != 1:
-              raise SystemExit(
-                  f"expected exactly one unused serde_json::json import, found {import_count}"
-              )
-          queue.write_text(
-              queue_source.replace(unused_import, "", 1),
-              encoding="utf-8",
+          replace_exactly(
+              queue,
+              "    use serde_json::json;\n",
+              "",
+              1,
+              "unused serde_json::json import",
+          )
+          replace_exactly(
+              queue,
+              "    WorkflowInvoke(WorkflowInvokePayload),\n",
+              "    WorkflowInvoke(Box<WorkflowInvokePayload>),\n",
+              1,
+              "large WorkflowInvoke enum variant",
+          )
+          replace_exactly(
+              queue,
+              "    Ok(QueuePayload::WorkflowInvoke(payload))\n",
+              "    Ok(QueuePayload::WorkflowInvoke(Box::new(payload)))\n",
+              1,
+              "WorkflowInvoke constructor",
+          )
+          invoke_match = (
+              "        let QueuePayload::WorkflowInvoke(payload) = parsed else {\n"
+              "            panic!(\"expected invocation payload\");\n"
+              "        };\n"
+          )
+          replace_exactly(
+              queue,
+              invoke_match,
+              invoke_match + "        let payload = *payload;\n",
+              2,
+              "WorkflowInvoke test pattern",
+          )
+
+          spec = Path("crates/workflow-world/src/spec_version.rs")
+          replace_exactly(
+              spec,
+              "        assert!(SPEC_VERSION_MAX_SUPPORTED >= SPEC_VERSION_CURRENT);\n",
+              "        assert_eq!(SPEC_VERSION_MAX_SUPPORTED, SPEC_VERSION_CURRENT);\n",
+              1,
+              "constant-only spec assertion",
           )
 
           parity = Path("rust/conformance/world-parity.test.ts")
-          parity_source = parity.read_text(encoding="utf-8")
-          concatenation = "    '0'.repeat(25) + 'A',"
-          replacement = "    `${'0'.repeat(25)}A`,"
-          concatenation_count = parity_source.count(concatenation)
-          if concatenation_count != 1:
-              raise SystemExit(
-                  f"expected exactly one Biome concatenation diagnostic, found {concatenation_count}"
-              )
-          parity.write_text(
-              parity_source.replace(concatenation, replacement, 1),
-              encoding="utf-8",
+          replace_exactly(
+              parity,
+              "    '0'.repeat(25) + 'A',",
+              "    `${'0'.repeat(25)}A`,",
+              1,
+              "Biome concatenation diagnostic",
           )
 
       - name: Canonicalize migration sources
@@ -117,6 +150,8 @@ jobs:
         run: cargo build --locked -p workflow-world --example conformance
 
       - name: Compare TypeScript and Rust behavior
+        env:
+          WORKFLOW_RUST_CONFORMANCE_BIN: target/debug/examples/conformance
         run: pnpm vitest run rust/conformance/world-parity.test.ts
 
       - name: Commit verified fixes
