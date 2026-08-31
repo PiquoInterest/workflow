@@ -3,6 +3,9 @@ use serde_json::{Map, Value};
 
 use crate::{ValidationError, ValidationResult};
 
+/// Largest exact JavaScript integer accepted for a persisted step attempt.
+const MAX_STEP_ATTEMPT: u64 = 9_007_199_254_740_991;
+
 /// State-independent fields shared by every materialized step.
 ///
 /// Payloads and timestamps remain JSON values in this bounded port stage. The
@@ -16,7 +19,7 @@ pub struct StepCommon {
     pub step_name: String,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub input: Option<Value>,
-    pub attempt: Value,
+    pub attempt: u64,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub started_at: Option<Value>,
     pub created_at: Value,
@@ -147,7 +150,7 @@ fn parse_common(object: &Map<String, Value>) -> ValidationResult<StepCommon> {
         step_id: required_string(object, "stepId")?,
         step_name: required_string(object, "stepName")?,
         input: optional_value(object, "input"),
-        attempt: required_number(object, "attempt")?,
+        attempt: required_step_attempt(object, "attempt")?,
         started_at: optional_value(object, "startedAt"),
         created_at: required_value(object, "createdAt")?,
         updated_at: required_value(object, "updatedAt")?,
@@ -163,13 +166,36 @@ fn required_string(object: &Map<String, Value>, key: &str) -> ValidationResult<S
         .ok_or_else(|| invalid_step_state(format!("{key} must be a string")))
 }
 
-fn required_number(object: &Map<String, Value>, key: &str) -> ValidationResult<Value> {
+fn required_step_attempt(object: &Map<String, Value>, key: &str) -> ValidationResult<u64> {
     let value = object
         .get(key)
-        .filter(|value| value.as_f64().is_some_and(|number| number.is_finite()))
-        .cloned()
-        .ok_or_else(|| invalid_step_state(format!("{key} must be a finite number")))?;
-    Ok(value)
+        .ok_or_else(|| invalid_safe_integer(key))?;
+
+    if let Some(value) = value.as_u64() {
+        return (value <= MAX_STEP_ATTEMPT)
+            .then_some(value)
+            .ok_or_else(|| invalid_safe_integer(key));
+    }
+    if let Some(value) = value.as_i64() {
+        return u64::try_from(value)
+            .ok()
+            .filter(|value| *value <= MAX_STEP_ATTEMPT)
+            .ok_or_else(|| invalid_safe_integer(key));
+    }
+
+    value
+        .as_f64()
+        .filter(|value| {
+            value.is_finite()
+                && value.fract() == 0.0
+                && (0.0..=MAX_STEP_ATTEMPT as f64).contains(value)
+        })
+        .map(|value| value as u64)
+        .ok_or_else(|| invalid_safe_integer(key))
+}
+
+fn invalid_safe_integer(key: &str) -> ValidationError {
+    invalid_step_state(format!("{key} must be a non-negative safe integer"))
 }
 
 fn required_value(object: &Map<String, Value>, key: &str) -> ValidationResult<Value> {

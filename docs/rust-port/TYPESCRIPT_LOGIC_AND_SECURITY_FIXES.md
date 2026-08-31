@@ -278,9 +278,54 @@ and overflowing values.
 - `crates/workflow-world/tests/hooks_contract.rs`
 - `rust/conformance/hooks-parity.test.ts`
 
+## WF-RUST-012: Step attempt counters accepted unsafe numbers
+
+**Status:** Implemented at the Rust boundary; branch CI pending.
+
+**Affected code:** `packages/world/src/steps.ts`, `StepSchema` and
+`UpdateStepRequest.attempt`.
+
+**Old behavior:** The persisted step schema models `attempt` as unconstrained
+`z.number()`. Zod 4.3.6 rejects `NaN` and infinities, but accepts finite negative,
+fractional, and above-safe-integer values. The local World creates every step at
+attempt zero and increments the counter on each `step_started`, so those other
+values do not describe a legitimate event history.
+
+**Impact:** Retry ceilings, telemetry, and redelivery ownership use the attempt
+as an execution-authoritative counter. A negative value can move retry accounting
+backwards, a fraction can represent a start that never happened, and a value
+above `Number.MAX_SAFE_INTEGER` can lose identity when incremented or compared.
+A malformed persisted step could therefore bypass a retry ceiling, produce an
+ambiguous next attempt, or make different implementations disagree about which
+execution is authoritative.
+
+**Proof of the TypeScript issue:**
+`packages/world/src/steps-security.test.ts` deliberately asserts that the legacy
+schema accepts `-1`, `1.5`, and `Number.MAX_SAFE_INTEGER + 1`, while documenting
+that the exact Zod version already rejects non-finite numbers.
+
+**Fix:** Rust stores the counter as `u64` and accepts only exact integers in
+`0..=9_007_199_254_740_991`. Zero remains valid because it is the canonical
+created-but-not-started state. Integral JSON float forms are normalized to an
+integer on output. Rejections use a constant diagnostic and never reflect the
+untrusted value.
+
+**Regression evidence:**
+
+- `packages/world/src/steps-security.test.ts`
+- `crates/workflow-world/src/steps.rs`
+- `crates/workflow-world/tests/step_state_security.rs`
+- `crates/workflow-world/examples/steps_conformance.rs`
+- `rust/conformance/step-state-security.test.ts`
+
+**Remaining TypeScript retirement condition:** Every step read and attempt update
+must cross the Rust safe-integer boundary. The Rust World update path must use a
+checked increment before the TypeScript producer and its unconstrained request
+type can be removed.
+
 ## Open findings tracked for later port stages
 
 | ID | TypeScript condition | Required Rust closure |
 | --- | --- | --- |
-| WF-RUST-006 | Several other date and numeric schemas accept broad coercion or unconstrained numbers at wire boundaries; hook protocol versions are closed by WF-RUST-011. | Inventory each remaining producer, preserve required legacy coercions, and use bounded integer/newtype validation for modern writes. |
+| WF-RUST-006 | Several other date and numeric schemas accept broad coercion or unconstrained numbers at wire boundaries; hook protocol versions are closed by WF-RUST-011 and step attempts by WF-RUST-012. | Inventory each remaining producer, preserve required legacy coercions, and use bounded integer/newtype validation for modern writes. |
 | WF-RUST-007 | Queue telemetry uses intentionally forgiving `.catch(undefined)` behavior. | Keep telemetry non-fatal while making execution-authoritative fields strict and independently bounded. |

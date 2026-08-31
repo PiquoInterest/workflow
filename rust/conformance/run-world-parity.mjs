@@ -34,6 +34,22 @@ function run(command, args, options = {}) {
   }
 }
 
+function runPnpm(args, options = {}) {
+  if (process.platform === 'win32') {
+    // Windows cannot execute a .cmd shim through spawnSync with shell disabled.
+    // Route the static pnpm command through cmd.exe while keeping every other
+    // migration command on the direct, shell-free path.
+    run(
+      process.env.ComSpec ?? 'cmd.exe',
+      ['/d', '/c', ['pnpm', ...args].join(' ')],
+      options
+    );
+    return;
+  }
+
+  run('pnpm', args, options);
+}
+
 // Limit rustfmt to the migration crate. Formatting the whole workspace would
 // also rewrite the pre-existing SWC crates according to the runner's newer
 // rustfmt release, making this gate depend on unrelated source formatting.
@@ -72,15 +88,13 @@ const stepsExecutable = path.join(
   'examples',
   `steps_conformance${executableSuffix}`
 );
-const pnpm = process.platform === 'win32' ? 'pnpm.cmd' : 'pnpm';
 
-run(pnpm, ['exec', 'vitest', 'run', 'rust/conformance/world-parity.test.ts'], {
+runPnpm(['exec', 'vitest', 'run', 'rust/conformance/world-parity.test.ts'], {
   env: {
     WORKFLOW_RUST_CONFORMANCE_BIN: executable,
   },
 });
-run(
-  pnpm,
+runPnpm(
   ['exec', 'vitest', 'run', 'rust/conformance/step-state-security.test.ts'],
   {
     env: {

@@ -27,3 +27,12 @@ Acknowledgments: https://github.com/PiquoInterest/workflow/blob/main/docs/rust-p
 # and the Rust boundary normalizes integral JSON forms to exact integer output.
 # Direct Rust, TypeScript-oracle, and differential tests cover the accepted and
 # rejected boundaries.
+#
+# WF-RUST-012: TypeScript StepSchema accepts negative, fractional, and
+# above-safe-integer attempt counters because the field uses unconstrained
+# z.number(). Steps are created at attempt zero and incremented on each start,
+# so Rust preserves zero while requiring every persisted attempt to be an exact
+# unsigned JavaScript-safe integer. This prevents retry accounting from moving
+# backwards, representing partial attempts, or losing identity above 2^53 - 1.
+# Direct Rust, TypeScript characterization, and differential tests cover the
+# accepted and rejected boundaries without reflecting rejected values.
