@@ -34,7 +34,16 @@ function run(command, args, options = {}) {
   }
 }
 
-run('cargo', ['fmt', '--all', '--', '--check']);
+// Limit rustfmt to the migration crate. Formatting the whole workspace would
+// also rewrite the pre-existing SWC crates according to the runner's newer
+// rustfmt release, making this gate depend on unrelated source formatting.
+run('cargo', [
+  'fmt',
+  '--package',
+  'workflow-world',
+  '--',
+  '--check',
+]);
 run('cargo', ['test', '-p', 'workflow-world', '--all-targets']);
 run('cargo', [
   'clippy',
