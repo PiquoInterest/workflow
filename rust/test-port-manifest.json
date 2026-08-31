@@ -3,8 +3,8 @@
   "sourceCount": 334,
   "declaredTestCount": 5100,
   "statusCounts": {
-    "unported": 322,
-    "partial": 1,
+    "unported": 317,
+    "partial": 6,
     "red": 11,
     "green": 0,
     "blocked": 0
@@ -3407,9 +3407,11 @@
       "kind": "unit",
       "lineCount": 31,
       "declaredTestCount": 2,
-      "status": "unported",
-      "rustTests": [],
-      "notes": ""
+      "status": "partial",
+      "rustTests": [
+        "crates/workflow-world/tests/attributes_security_typescript_port.rs"
+      ],
+      "notes": "Both prototype-key security declarations are mirrored. Rust maps treat __proto__ as data and typed deserialization rejects object-shaped values before materialization. Pending CI confirmation."
     },
     {
       "typescript": "packages/world/src/attributes.test.ts",
@@ -3418,9 +3420,11 @@
       "kind": "unit",
       "lineCount": 207,
       "declaredTestCount": 24,
-      "status": "unported",
-      "rustTests": [],
-      "notes": ""
+      "status": "partial",
+      "rustTests": [
+        "crates/workflow-world/tests/attributes_typescript_port.rs"
+      ],
+      "notes": "All 24 key, value, batch, contextual-reserved-key, post-merge, and immutable-materialization declarations are mirrored. Pending Rustfmt, test, and Clippy confirmation."
     },
     {
       "typescript": "packages/world/src/env-config.test.ts",
@@ -3429,9 +3433,11 @@
       "kind": "unit",
       "lineCount": 110,
       "declaredTestCount": 14,
-      "status": "unported",
-      "rustTests": [],
-      "notes": ""
+      "status": "partial",
+      "rustTests": [
+        "crates/workflow-world/tests/env_config_typescript_port.rs"
+      ],
+      "notes": "All numeric, flag, fallback, clamping, radix, warning-dedup behavior, event-limit, and process-environment declarations are mirrored. Process-global behavior is isolated in a child test process. Pending CI confirmation."
     },
     {
       "typescript": "packages/world/src/event-metadata.test.ts",
@@ -3440,9 +3446,11 @@
       "kind": "unit",
       "lineCount": 35,
       "declaredTestCount": 4,
-      "status": "unported",
-      "rustTests": [],
-      "notes": ""
+      "status": "partial",
+      "rustTests": [
+        "crates/workflow-world/tests/event_metadata_typescript_port.rs"
+      ],
+      "notes": "All four entity class, payload field, inherited-property, and sealed-noop declarations are mirrored. Pending CI confirmation."
     },
     {
       "typescript": "packages/world/src/events.test.ts",
@@ -3561,9 +3569,11 @@
       "kind": "unit",
       "lineCount": 108,
       "declaredTestCount": 11,
-      "status": "unported",
-      "rustTests": [],
-      "notes": ""
+      "status": "partial",
+      "rustTests": [
+        "crates/workflow-world/tests/spec_version_typescript_port.rs"
+      ],
+      "notes": "All 11 version constants, minting, kill-switch, readable-ceiling, newer-world, and legacy declarations are mirrored. Pending CI confirmation."
     },
     {
       "typescript": "packages/world/src/steps-security.test.ts",
