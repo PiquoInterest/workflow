@@ -4,6 +4,8 @@ import type { SerializedData } from './serialization.js';
 import { SerializedDataSchema } from './serialization.js';
 import type { PaginationOptions, ResolveData } from './shared.js';
 
+const ProtocolVersionSchema = z.number().int().positive().max(0xffff_ffff);
+
 /**
  * Minimal, immutable slice of a hook's owning run needed to resume it:
  * enough for encryption-key resolution, serialization/compression capability
@@ -18,7 +20,7 @@ export const HookResumeContextSchema = z.object({
   deploymentId: z.string(),
   workflowName: z.string(),
   // Named `runSpecVersion` to distinguish it from the hook's own `specVersion`.
-  runSpecVersion: z.number().optional(),
+  runSpecVersion: ProtocolVersionSchema.optional(),
   workflowCoreVersion: z.string().optional(),
   traceCarrier: TraceCarrierSchema.optional(),
   // The run's published X25519 public key (base64), mirrored from the run
@@ -35,7 +37,7 @@ export const HookResumeContextSchema = z.object({
   // marker is a reliable per-run attestation, unlike inferring support from a
   // version compare against a predicted release cutoff. Absent on runs created
   // before the marker existed (fall back to the sequential path).
-  hookResumeInputVersion: z.number().optional(),
+  hookResumeInputVersion: ProtocolVersionSchema.optional(),
 });
 
 export type HookResumeContext = z.infer<typeof HookResumeContextSchema>;
@@ -77,7 +79,7 @@ export const HookResumeCapabilitiesSchema = z.object({
   // `(runId, resumeId)` dedup constraint AND no server-side kill switch is
   // active. Absent against an older/rolled-back server or when the kill switch
   // is engaged.
-  hookResumeDedupVersion: z.number(),
+  hookResumeDedupVersion: ProtocolVersionSchema,
 });
 
 export type HookResumeCapabilities = z.infer<
