@@ -15,6 +15,7 @@ on:
       - 'packages/utils/src/time*'
       - 'packages/world/src/**'
       - 'docs/rust-port/**'
+      - 'security.txt'
       - '.github/workflows/rust-port.yml'
   workflow_dispatch:
 
@@ -62,11 +63,13 @@ jobs:
             packages/utils/src/time.ts
             packages/utils/src/time-implementation.ts
             packages/world/src/hooks.ts
+            packages/world/src/steps.ts
+            packages/world/src/steps-security.test.ts
           if-no-files-found: error
           retention-days: 1
 
   world-contract:
-    name: World, hooks, errors, serde, and time parity
+    name: World, steps, hooks, errors, serde, and time parity
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     steps:
@@ -118,6 +121,8 @@ jobs:
         run: |
           WORKFLOW_RUST_CONFORMANCE_BIN=target/debug/examples/conformance \
             pnpm exec vitest run rust/conformance/world-parity.test.ts
+          WORKFLOW_RUST_STEP_CONFORMANCE_BIN=target/debug/examples/steps_conformance \
+            pnpm exec vitest run rust/conformance/step-state-security.test.ts
           WORKFLOW_RUST_CONFORMANCE_BIN=target/debug/examples/hooks_conformance \
             pnpm exec vitest run rust/conformance/hooks-parity.test.ts
           WORKFLOW_RUST_CONFORMANCE_BIN=target/debug/examples/errors_conformance \
