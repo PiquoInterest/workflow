@@ -91,6 +91,21 @@ const contradictoryStates = [
   },
 ] as const;
 
+const unsafeAttempts = [
+  { name: 'negative', attempt: -1 },
+  { name: 'fractional', attempt: 1.5 },
+  {
+    name: 'above Number.MAX_SAFE_INTEGER',
+    attempt: Number.MAX_SAFE_INTEGER + 1,
+  },
+] as const;
+
+const safeAttempts = [
+  { name: 'zero', attempt: 0 },
+  { name: 'one', attempt: 1 },
+  { name: 'Number.MAX_SAFE_INTEGER', attempt: Number.MAX_SAFE_INTEGER },
+] as const;
+
 const validStates = [
   {
     ...baseStep,
@@ -161,6 +176,37 @@ describe('WF-RUST-005 TypeScript step-state security proof', () => {
   it.each(validStates)(
     'preserves the valid TypeScript projection for $status at spec $specVersion',
     (value) => {
+      expect(rust(value)).toEqual({
+        ok: true,
+        value: normalized(StepSchema.parse(value)),
+      });
+    }
+  );
+});
+
+describe('WF-RUST-012 step-attempt security proof', () => {
+  it.each(unsafeAttempts)(
+    'proves TypeScript accepts while Rust rejects a $name attempt',
+    ({ attempt }) => {
+      const value = { ...baseStep, status: 'running', attempt };
+      expect(StepSchema.safeParse(value).success).toBe(true);
+
+      const outcome = rust(value);
+      expect(outcome.ok).toBe(false);
+      if (outcome.ok) {
+        throw new Error('Rust unexpectedly accepted an unsafe attempt');
+      }
+      expect(outcome.error).toEqual({
+        code: 'invalid_step_state',
+        message: 'attempt must be a non-negative safe integer',
+      });
+    }
+  );
+
+  it.each(safeAttempts)(
+    'preserves and normalizes the $name attempt',
+    ({ attempt }) => {
+      const value = { ...baseStep, status: 'running', attempt };
       expect(rust(value)).toEqual({
         ok: true,
         value: normalized(StepSchema.parse(value)),

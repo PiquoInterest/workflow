@@ -62,6 +62,26 @@ export const contradictoryStepStates = [
   },
 ] as const;
 
+/**
+ * `z.number()` rejects non-finite values but accepts these finite values even
+ * though a durable retry counter cannot safely use them. Rust intentionally
+ * narrows this boundary under WF-RUST-012.
+ */
+export const unsafeStepAttempts = [
+  { name: 'a negative attempt', attempt: -1 },
+  { name: 'a fractional attempt', attempt: 1.5 },
+  {
+    name: 'an attempt above Number.MAX_SAFE_INTEGER',
+    attempt: Number.MAX_SAFE_INTEGER + 1,
+  },
+] as const;
+
+const nonFiniteStepAttempts = [
+  { name: 'NaN', attempt: Number.NaN },
+  { name: 'positive infinity', attempt: Number.POSITIVE_INFINITY },
+  { name: 'negative infinity', attempt: Number.NEGATIVE_INFINITY },
+] as const;
+
 describe('StepSchema security characterization', () => {
   it.each(contradictoryStepStates)(
     'currently accepts $name',
@@ -69,4 +89,18 @@ describe('StepSchema security characterization', () => {
       expect(StepSchema.safeParse(value).success).toBe(true);
     }
   );
+});
+
+describe('StepSchema attempt-counter characterization', () => {
+  it.each(unsafeStepAttempts)('currently accepts $name', ({ attempt }) => {
+    expect(
+      StepSchema.safeParse({ ...baseStep, status: 'running', attempt }).success
+    ).toBe(true);
+  });
+
+  it.each(nonFiniteStepAttempts)('already rejects $name', ({ attempt }) => {
+    expect(
+      StepSchema.safeParse({ ...baseStep, status: 'running', attempt }).success
+    ).toBe(false);
+  });
 });
