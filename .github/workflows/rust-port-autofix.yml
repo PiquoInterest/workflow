@@ -1,0 +1,117 @@
+name: Rust port autofix
+
+on:
+  push:
+    branches:
+      - pro/rust-repository-port
+    paths:
+      - .github/workflows/rust-port-autofix.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: rust-port-autofix
+  cancel-in-progress: false
+
+jobs:
+  autofix:
+    name: Apply and verify initial Rust parity fixes
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout migration branch
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: pro/rust-repository-port
+          fetch-depth: 0
+
+      - name: Install Rust 1.87
+        uses: actions-rust-lang/setup-rust-toolchain@46268bd060767258de96ed93c1251119784f2ab6
+        with:
+          toolchain: 1.87.0
+          components: clippy,rustfmt
+          rustflags: -D warnings
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 22.x
+          cache: pnpm
+
+      - name: Install JavaScript dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Remove the verified unused Rust test import
+        shell: python
+        run: |
+          from pathlib import Path
+
+          path = Path("crates/workflow-world/src/queue.rs")
+          source = path.read_text(encoding="utf-8")
+          needle = "    use serde_json::json;\n"
+          count = source.count(needle)
+          if count != 1:
+              raise SystemExit(
+                  f"expected exactly one unused serde_json::json import, found {count}"
+              )
+          path.write_text(source.replace(needle, "", 1), encoding="utf-8")
+
+      - name: Canonicalize migration sources
+        run: |
+          cargo fmt --package workflow-world
+          pnpm exec biome check --write \
+            packages/world/src/attributes-security.test.ts \
+            packages/world/src/attributes-validation.ts \
+            rust/conformance/run-world-parity.mjs \
+            rust/conformance/world-parity.test.ts
+          git diff --check
+
+      - name: Run repository lint
+        run: pnpm lint
+
+      - name: Compile and test Rust World contract
+        run: cargo test --locked -p workflow-world --all-targets
+
+      - name: Lint Rust World contract
+        run: cargo clippy --locked -p workflow-world --all-targets -- -D warnings
+
+      - name: Run TypeScript World oracle tests
+        run: >-
+          pnpm vitest run
+          packages/world/src/attributes-security.test.ts
+          packages/world/src/env.test.ts
+          packages/world/src/event-metadata.test.ts
+          packages/world/src/event.test.ts
+          packages/world/src/queue.test.ts
+          packages/world/src/runs.test.ts
+          packages/world/src/shared.test.ts
+          packages/world/src/slot-idempotency.test.ts
+          packages/world/src/spec-version.test.ts
+          packages/world/src/ulid.test.ts
+
+      - name: Build differential conformance runner
+        run: cargo build --locked -p workflow-world --example conformance
+
+      - name: Compare TypeScript and Rust behavior
+        run: pnpm vitest run rust/conformance/world-parity.test.ts
+
+      - name: Commit verified fixes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            crates/workflow-world \
+            packages/world/src/attributes-security.test.ts \
+            packages/world/src/attributes-validation.ts \
+            rust/conformance
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+          git commit -m "fix(rust-world): clear initial parity CI blockers"
+          git push origin HEAD:pro/rust-repository-port
