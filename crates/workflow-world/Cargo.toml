@@ -1,0 +1,16 @@
+[package]
+name              = "workflow-world"
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+authors.workspace = true
+license.workspace = true
+rust-version.workspace = true
+description       = "Rust implementation of the Workflow World protocol contracts"
+
+[dependencies]
+serde = { workspace = true, features = ["derive"] }
+serde_json.workspace = true
+
+[lints.rust]
+unsafe_code = "forbid"

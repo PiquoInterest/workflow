@@ -1,5 +1,9 @@
 [workspace]
-members = ["packages/swc-plugin-workflow", "workbench/swc-playground/wasm"]
+members = [
+  "packages/swc-plugin-workflow",
+  "workbench/swc-playground/wasm",
+  "crates/workflow-world",
+]
 
 resolver = "2"
 
