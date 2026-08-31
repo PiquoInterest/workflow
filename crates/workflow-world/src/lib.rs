@@ -21,6 +21,7 @@ pub mod serialization;
 pub mod shared;
 pub mod slot_identity;
 pub mod spec_version;
+pub mod steps;
 pub mod time;
 pub mod ulid;
 
