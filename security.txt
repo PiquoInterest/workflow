@@ -1,0 +1,21 @@
+Contact: https://github.com/PiquoInterest/workflow/security/advisories/new
+Expires: 2027-08-31T00:00:00Z
+Preferred-Languages: en
+Canonical: https://github.com/PiquoInterest/workflow/blob/main/security.txt
+Policy: https://github.com/PiquoInterest/workflow/blob/main/docs/rust-port/SECURITY.md
+Acknowledgments: https://github.com/PiquoInterest/workflow/blob/main/docs/rust-port/TYPESCRIPT_LOGIC_AND_SECURITY_FIXES.md
+
+# Rust migration security record
+#
+# Security-relevant TypeScript behavior discovered during the Rust migration is
+# recorded in docs/rust-port/TYPESCRIPT_LOGIC_AND_SECURITY_FIXES.md. Every item
+# must identify the original behavior, impact, replacement behavior, regression
+# tests, and repository-wide retirement condition.
+#
+# WF-RUST-011: Hook resume protocol revisions previously accepted zero,
+# negative, fractional, and out-of-range JavaScript numbers. A value such as
+# 1.5 could satisfy a >= 1 capability gate despite having no defined protocol
+# contract. TypeScript and Rust now require positive unsigned 32-bit integers,
+# and the Rust boundary normalizes integral JSON forms to exact integer output.
+# Direct Rust, TypeScript-oracle, and differential tests cover the accepted and
+# rejected boundaries.
