@@ -157,10 +157,7 @@ fn optional_string_map(
 }
 
 fn invalid_field(key: &str, expected: &str) -> ValidationError {
-    ValidationError::new(
-        "invalid_hook_contract",
-        format!("{key} must be {expected}"),
-    )
+    ValidationError::new("invalid_hook_contract", format!("{key} must be {expected}"))
 }
 
 #[cfg(test)]
