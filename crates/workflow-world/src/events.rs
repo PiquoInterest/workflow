@@ -95,7 +95,10 @@ impl EventType {
     }
 
     pub const fn is_terminal_run_event(self) -> bool {
-        matches!(self, Self::RunCompleted | Self::RunFailed | Self::RunCancelled)
+        matches!(
+            self,
+            Self::RunCompleted | Self::RunFailed | Self::RunCancelled
+        )
     }
 
     pub const fn is_step_event(self) -> bool {
@@ -114,7 +117,10 @@ impl EventType {
     }
 
     pub const fn is_hook_lifecycle_event(self) -> bool {
-        matches!(self, Self::HookCreated | Self::HookReceived | Self::HookDisposed)
+        matches!(
+            self,
+            Self::HookCreated | Self::HookReceived | Self::HookDisposed
+        )
     }
 
     pub const fn requires_existing_hook(self) -> bool {
@@ -126,7 +132,10 @@ impl EventType {
     }
 
     pub const fn is_child_entity_creation_event(self) -> bool {
-        matches!(self, Self::StepCreated | Self::HookCreated | Self::WaitCreated)
+        matches!(
+            self,
+            Self::StepCreated | Self::HookCreated | Self::WaitCreated
+        )
     }
 }
 
@@ -185,8 +194,7 @@ pub fn is_child_entity_creation_event(event: &Value) -> bool {
     let Some(event_data) = event.get("eventData").and_then(Value::as_object) else {
         return false;
     };
-    event_data.get("stepName").is_some_and(Value::is_string)
-        && event_data.contains_key("input")
+    event_data.get("stepName").is_some_and(Value::is_string) && event_data.contains_key("input")
 }
 
 /// Strips opaque payload fields when data resolution is disabled.

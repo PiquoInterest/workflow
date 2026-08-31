@@ -72,10 +72,7 @@ pub fn javascript_string_length(value: &str) -> usize {
 }
 
 /// Validates an attribute key.
-pub fn validate_attribute_key(
-    key: &str,
-    allow_reserved_attributes: bool,
-) -> ValidationResult<()> {
+pub fn validate_attribute_key(key: &str, allow_reserved_attributes: bool) -> ValidationResult<()> {
     let key_length = javascript_string_length(key);
     if key_length == 0 {
         return Err(ValidationError::new(
@@ -86,9 +83,7 @@ pub fn validate_attribute_key(
     if key_length > ATTRIBUTE_KEY_MAX_LENGTH {
         return Err(ValidationError::new(
             "attribute_key_too_long",
-            format!(
-                "Attribute key length {key_length} exceeds limit {ATTRIBUTE_KEY_MAX_LENGTH}"
-            ),
+            format!("Attribute key length {key_length} exceeds limit {ATTRIBUTE_KEY_MAX_LENGTH}"),
         ));
     }
     if !allow_reserved_attributes && key.starts_with(RESERVED_ATTRIBUTE_KEY_PREFIX) {
@@ -259,8 +254,7 @@ mod tests {
     fn deserialization_requires_the_nullable_value_field() {
         assert!(serde_json::from_str::<AttributeChange>(r#"{"key":"phase"}"#).is_err());
         assert_eq!(
-            serde_json::from_str::<AttributeChange>(r#"{"key":"phase","value":null}"#)
-                .unwrap(),
+            serde_json::from_str::<AttributeChange>(r#"{"key":"phase","value":null}"#).unwrap(),
             change("phase", None)
         );
     }

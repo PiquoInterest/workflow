@@ -3,12 +3,12 @@ use std::io::{self, Read};
 
 use serde::de::DeserializeOwned;
 use serde::{Deserialize, Serialize};
-use serde_json::{json, Value};
+use serde_json::{Value, json};
 use workflow_world::attributes::{
-    apply_attribute_changes, validate_attribute_changes, AttributeChange,
-    AttributeValidationOptions,
+    AttributeChange, AttributeValidationOptions, apply_attribute_changes,
+    validate_attribute_changes,
 };
-use workflow_world::env::{env_flag_from, env_number_from, EnvNumberOptions};
+use workflow_world::env::{EnvNumberOptions, env_flag_from, env_number_from};
 use workflow_world::event_metadata::{
     classify_entity_event, entity_event_class, event_data_ref_fields, is_sealed_noop_event,
 };
@@ -23,7 +23,7 @@ use workflow_world::queue::{
     parse_queue_payload,
 };
 use workflow_world::runs::BulkCancelWorkflowRunsRequest;
-use workflow_world::serialization::{validate_serialized_data_for_spec, SerializedData};
+use workflow_world::serialization::{SerializedData, validate_serialized_data_for_spec};
 use workflow_world::shared::ResolveData;
 use workflow_world::slot_identity::{
     event_id_to_slot, is_slot_body, is_slot_event_id, number_to_event_id,
@@ -182,16 +182,10 @@ fn execute(request: ConformanceRequest) -> ValidationResult<Value> {
             to_value(parse_queue_payload(payload)?)
         }
         "isRunEventType" => event_predicate(request.input, is_run_event_type),
-        "isTerminalRunEventType" => {
-            event_predicate(request.input, is_terminal_run_event_type)
-        }
+        "isTerminalRunEventType" => event_predicate(request.input, is_terminal_run_event_type),
         "isStepEventType" => event_predicate(request.input, is_step_event_type),
-        "isTerminalStepEventType" => {
-            event_predicate(request.input, is_terminal_step_event_type)
-        }
-        "isHookLifecycleEventType" => {
-            event_predicate(request.input, is_hook_lifecycle_event_type)
-        }
+        "isTerminalStepEventType" => event_predicate(request.input, is_terminal_step_event_type),
+        "isHookLifecycleEventType" => event_predicate(request.input, is_hook_lifecycle_event_type),
         "isHookEventRequiringExistence" => {
             event_predicate(request.input, is_hook_event_requiring_existence)
         }
@@ -317,10 +311,7 @@ fn optional_u32(input: &Value, key: &str) -> ValidationResult<Option<u32>> {
 }
 
 fn required<T: DeserializeOwned>(input: &Value, key: &str) -> ValidationResult<T> {
-    let value = input
-        .get(key)
-        .cloned()
-        .ok_or_else(|| missing_field(key))?;
+    let value = input.get(key).cloned().ok_or_else(|| missing_field(key))?;
     from_value(value)
 }
 

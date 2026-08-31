@@ -467,11 +467,13 @@ mod tests {
 
     #[test]
     fn non_binary_step_dispatch_is_rejected() {
-        assert!(parse_queue_payload(serde_json::json!({
-            "runId": "wrun_01ABC",
-            "stepId": "step_1",
-            "stepInput": { "input": "mangled-to-string" }
-        }))
-        .is_err());
+        assert!(
+            parse_queue_payload(serde_json::json!({
+                "runId": "wrun_01ABC",
+                "stepId": "step_1",
+                "stepInput": { "input": "mangled-to-string" }
+            }))
+            .is_err()
+        );
     }
 }

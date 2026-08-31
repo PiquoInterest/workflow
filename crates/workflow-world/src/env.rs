@@ -110,11 +110,7 @@ pub fn env_number(name: &str, fallback: f64, options: EnvNumberOptions) -> f64 {
 }
 
 /// Resolves a boolean flag from a supplied environment map.
-pub fn env_flag_from(
-    name: &str,
-    fallback: bool,
-    environment: &BTreeMap<String, String>,
-) -> bool {
+pub fn env_flag_from(name: &str, fallback: bool, environment: &BTreeMap<String, String>) -> bool {
     let Some(raw) = environment.get(name) else {
         return fallback;
     };
@@ -128,9 +124,7 @@ pub fn env_flag_from(
         _ => {
             warn_once(
                 format!("{name}={raw}"),
-                format!(
-                    "Ignoring {name}: expected 0/1/true/false; using default {fallback}"
-                ),
+                format!("Ignoring {name}: expected 0/1/true/false; using default {fallback}"),
             );
             fallback
         }
@@ -293,10 +287,7 @@ mod tests {
     #[test]
     fn non_positive_event_limits_return_the_compiled_default() {
         for raw in ["0", "-1"] {
-            let environment = BTreeMap::from([(
-                "WORKFLOW_MAX_EVENTS".to_owned(),
-                raw.to_owned(),
-            )]);
+            let environment = BTreeMap::from([("WORKFLOW_MAX_EVENTS".to_owned(), raw.to_owned())]);
             assert_eq!(
                 max_events_per_run_from(&environment),
                 DEFAULT_MAX_EVENTS_PER_RUN

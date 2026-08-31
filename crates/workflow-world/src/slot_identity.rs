@@ -15,15 +15,11 @@ pub fn is_slot_body(body: &str) -> bool {
     let bytes = body.as_bytes();
     bytes.len() == EVENT_ID_BODY_LENGTH
         && bytes[..SLOT_LEADING_ZEROS].iter().all(|byte| *byte == b'0')
-        && bytes[SLOT_LEADING_ZEROS..]
-            .iter()
-            .all(u8::is_ascii_digit)
+        && bytes[SLOT_LEADING_ZEROS..].iter().all(u8::is_ascii_digit)
 }
 
 fn strip_event_id_prefix(event_id: &str) -> &str {
-    event_id
-        .split_once('_')
-        .map_or(event_id, |(_, body)| body)
+    event_id.split_once('_').map_or(event_id, |(_, body)| body)
 }
 
 /// Whether a possibly prefixed event id is slot-numbered.
@@ -94,9 +90,10 @@ mod tests {
             .into_iter()
             .map(|slot| slot_to_event_id(slot).unwrap())
             .collect();
-        assert!(ids
-            .iter()
-            .all(|id| id.len() == EVENT_ID_PREFIX.len() + EVENT_ID_BODY_LENGTH));
+        assert!(
+            ids.iter()
+                .all(|id| id.len() == EVENT_ID_PREFIX.len() + EVENT_ID_BODY_LENGTH)
+        );
         let mut sorted = ids.clone();
         sorted.sort();
         assert_eq!(sorted, ids);
@@ -105,7 +102,10 @@ mod tests {
     #[test]
     fn round_trips_every_boundary() {
         for slot in [FIRST_EVENT_SLOT, 7, 12_345, MAX_EVENT_SLOT] {
-            assert_eq!(event_id_to_slot(&slot_to_event_id(slot).unwrap()), Some(slot));
+            assert_eq!(
+                event_id_to_slot(&slot_to_event_id(slot).unwrap()),
+                Some(slot)
+            );
         }
     }
 

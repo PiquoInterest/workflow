@@ -139,12 +139,8 @@ mod tests {
 
     #[test]
     fn validates_exact_run_id_shape() {
-        assert!(is_valid_workflow_run_id(
-            "wrun_01ARZ3NDEKTSV4RRFFQ69G5FAV"
-        ));
-        assert!(!is_valid_workflow_run_id(
-            "step_01ARZ3NDEKTSV4RRFFQ69G5FAV"
-        ));
+        assert!(is_valid_workflow_run_id("wrun_01ARZ3NDEKTSV4RRFFQ69G5FAV"));
+        assert!(!is_valid_workflow_run_id("step_01ARZ3NDEKTSV4RRFFQ69G5FAV"));
         assert!(!is_valid_workflow_run_id("wrun_not-a-ulid"));
     }
 
@@ -172,21 +168,25 @@ mod tests {
             ),
             None
         );
-        assert!(validate_ulid_timestamp_at(
-            &format!("wrun_{body}"),
-            "wrun_",
-            timestamp + DEFAULT_TIMESTAMP_THRESHOLD_PAST_MS + 1,
-            DEFAULT_TIMESTAMP_THRESHOLD_PAST_MS,
-            DEFAULT_TIMESTAMP_THRESHOLD_FUTURE_MS,
-        )
-        .is_some());
-        assert!(validate_ulid_timestamp_at(
-            &format!("wrun_{body}"),
-            "wrun_",
-            timestamp - DEFAULT_TIMESTAMP_THRESHOLD_FUTURE_MS - 1,
-            DEFAULT_TIMESTAMP_THRESHOLD_PAST_MS,
-            DEFAULT_TIMESTAMP_THRESHOLD_FUTURE_MS,
-        )
-        .is_some());
+        assert!(
+            validate_ulid_timestamp_at(
+                &format!("wrun_{body}"),
+                "wrun_",
+                timestamp + DEFAULT_TIMESTAMP_THRESHOLD_PAST_MS + 1,
+                DEFAULT_TIMESTAMP_THRESHOLD_PAST_MS,
+                DEFAULT_TIMESTAMP_THRESHOLD_FUTURE_MS,
+            )
+            .is_some()
+        );
+        assert!(
+            validate_ulid_timestamp_at(
+                &format!("wrun_{body}"),
+                "wrun_",
+                timestamp - DEFAULT_TIMESTAMP_THRESHOLD_FUTURE_MS - 1,
+                DEFAULT_TIMESTAMP_THRESHOLD_PAST_MS,
+                DEFAULT_TIMESTAMP_THRESHOLD_FUTURE_MS,
+            )
+            .is_some()
+        );
     }
 }
