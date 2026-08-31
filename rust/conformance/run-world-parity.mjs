@@ -49,21 +49,42 @@ run('cargo', [
   'warnings',
 ]);
 run('cargo', ['build', '-p', 'workflow-world', '--example', 'conformance']);
+run('cargo', [
+  'build',
+  '-p',
+  'workflow-world',
+  '--example',
+  'steps_conformance',
+]);
 
+const executableSuffix = process.platform === 'win32' ? '.exe' : '';
 const executable = path.join(
   repoRoot,
   'target',
   'debug',
   'examples',
-  process.platform === 'win32' ? 'conformance.exe' : 'conformance'
+  `conformance${executableSuffix}`
 );
+const stepsExecutable = path.join(
+  repoRoot,
+  'target',
+  'debug',
+  'examples',
+  `steps_conformance${executableSuffix}`
+);
+const pnpm = process.platform === 'win32' ? 'pnpm.cmd' : 'pnpm';
 
+run(pnpm, ['exec', 'vitest', 'run', 'rust/conformance/world-parity.test.ts'], {
+  env: {
+    WORKFLOW_RUST_CONFORMANCE_BIN: executable,
+  },
+});
 run(
-  process.platform === 'win32' ? 'pnpm.cmd' : 'pnpm',
-  ['exec', 'vitest', 'run', 'rust/conformance/world-parity.test.ts'],
+  pnpm,
+  ['exec', 'vitest', 'run', 'rust/conformance/step-state-security.test.ts'],
   {
     env: {
-      WORKFLOW_RUST_CONFORMANCE_BIN: executable,
+      WORKFLOW_RUST_STEP_CONFORMANCE_BIN: stepsExecutable,
     },
   }
 );
