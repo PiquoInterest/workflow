@@ -104,6 +104,60 @@ summary from results and rejects any mismatch.
 
 **Regression evidence:** `crates/workflow-world/src/runs.rs`.
 
+## WF-RUST-008: `WorkflowError.is()` rejected a real `WorkflowError`
+
+**Status:** Fixed in TypeScript and Rust.
+
+**Affected code:** `packages/errors/src/index.ts`, `WorkflowError`.
+
+**Old behavior:** The base constructor did not set its public error name, so a
+direct `new WorkflowError()` inherited `Error.prototype.name === "Error"`.
+The class's own static guard requires the name `"WorkflowError"`, which made
+`WorkflowError.is(new WorkflowError())` return `false`.
+
+**Impact:** Catch blocks using the documented type guard could miss the base SDK
+error and route it through generic or user-error handling. That weakens
+classification and can make retry and telemetry decisions inconsistent.
+
+**Fix:** The TypeScript entry point now assigns the stable name on the
+`WorkflowError` prototype before exporting the class. Rust constructors emit the
+same public name directly.
+
+**Regression evidence:**
+
+- `packages/errors/src/workflow-error.test.ts`
+- `crates/workflow-world/tests/errors_and_time.rs`
+- `rust/conformance/errors-parity.test.ts`
+
+## WF-RUST-009: Invalid retry dates could enter scheduling state
+
+**Status:** Fixed in TypeScript and Rust.
+
+**Affected code:** `packages/utils/src/time.ts`, `parseDurationToDate()` and
+`RetryableError`.
+
+**Old behavior:** Numeric inputs were checked for finiteness before addition,
+but the resulting JavaScript `Date` was never checked after TimeClip. A finite
+but enormous duration therefore produced an invalid date. Existing `Date`
+objects and date-like deserialized objects were also accepted when `getTime()`
+returned `NaN` or infinity.
+
+**Impact:** An invalid retry timestamp could be serialized, persisted, or
+compared by queue scheduling code. Depending on the backend this can create an
+immediately repeated delivery, a permanently stuck step, or an opaque
+serialization failure far from the original input.
+
+**Fix:** TypeScript validates the final `Date.getTime()` for every input form.
+Rust validates both the relative calculation and absolute timestamp against the
+ECMAScript TimeClip range before returning an integer millisecond timestamp.
+
+**Regression evidence:**
+
+- `packages/utils/src/time.test.ts`
+- `crates/workflow-world/src/time.rs`
+- `crates/workflow-world/tests/errors_and_time.rs`
+- `rust/conformance/errors-parity.test.ts`
+
 ## Open findings tracked for later port stages
 
 | ID | TypeScript condition | Required Rust closure |

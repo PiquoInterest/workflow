@@ -2,23 +2,28 @@
 
 Status meanings:
 
-- **PROVEN**: direct tests and TypeScript/Rust differential fixtures pass.
+- **PROVEN**: direct tests and TypeScript/Rust differential fixtures pass in
+  the dedicated branch workflow.
 - **IMPLEMENTED, CI PENDING**: code and tests are committed but have not yet
   passed the branch workflow.
 - **PARTIAL**: only a bounded subset is implemented.
 - **NOT STARTED**: TypeScript remains the only implementation.
+- **BLOCKED**: a prerequisite has not reached proven parity.
 
 | Surface | Rust status | Evidence / remaining work |
 | --- | --- | --- |
-| World attribute validation and materialization | IMPLEMENTED, CI PENDING | Key/value limits, UTF-16/UTF-8 length semantics, reserved keys, duplicate batches, exact post-merge count, immutable application, and prototype-key regression tests. |
-| World environment tuning | IMPLEMENTED, CI PENDING | Number/flag parsing, fallback, clamping, integer mode, warning deduplication, and max-event fallback. |
-| Event type categories and metadata | IMPLEMENTED, CI PENDING | All current event names, World-only event restriction, replay classes, terminal classes, data-ref fields, lazy child creation, and resolve-data stripping. |
-| Slot event identity | IMPLEMENTED, CI PENDING | Fixed-width ids, safe-integer bound, legacy prefixes, parsing, required-slot failure, and ULID separation. |
-| Spec-version negotiation | IMPLEMENTED, CI PENDING | Versions 1 through 7, sealed-log kill switch, legacy and newer-reader predicates. |
+| World attribute validation and materialization | PROVEN | Key/value limits, UTF-16/UTF-8 length semantics, reserved keys, duplicate batches, exact post-merge count, immutable application, and prototype-key regression tests passed at `db090ee41b0785afac9bfe771d2df869c8012b73`. |
+| World environment tuning | PROVEN | Number/flag parsing, fallback, clamping, integer mode, warning deduplication, and max-event fallback passed at `db090ee41b0785afac9bfe771d2df869c8012b73`. |
+| Event type categories and metadata | PROVEN | All current event names, World-only event restriction, replay classes, terminal classes, data-ref fields, lazy child creation, and resolve-data stripping passed at `db090ee41b0785afac9bfe771d2df869c8012b73`. |
+| Slot event identity | PROVEN | Fixed-width ids, safe-integer bound, legacy prefixes, parsing, required-slot failure, and ULID separation passed at `db090ee41b0785afac9bfe771d2df869c8012b73`. |
+| Spec-version negotiation | PROVEN | Versions 1 through 7, sealed-log kill switch, legacy and newer-reader predicates passed at `db090ee41b0785afac9bfe771d2df869c8012b73`. |
+| ULID utilities | PROVEN | Exact run-id shape, Crockford parsing, slot rejection, timestamp decoding, and asymmetric skew validation passed at `db090ee41b0785afac9bfe771d2df869c8012b73`. |
+| Error names, messages, fields, and retry classification | IMPLEMENTED, CI PENDING | Every exported error constructor in `@workflow/errors` has a Rust descriptor fixture. Stable names, framed hints/docs, fatal classification, deployment mismatch diagnostics, and structured fields are compared. Native stack/cause object identity and ANSI rendering remain JavaScript-host concerns. |
+| Serde custom-class registry symbols | IMPLEMENTED, CI PENDING | The Rust contract pins the exact `Symbol.for()` registry keys used by `@workflow/serde`. Full class hydration belongs to the serialized-data/runtime rows. |
+| Retry duration parsing | IMPLEMENTED, CI PENDING | Strings, relative milliseconds, absolute dates, default retry delay, JavaScript TimeClip truncation, invalid-date rejection, and overflow rejection have Rust and TypeScript tests. |
 | Queue naming and payload envelope | PARTIAL | Prefix/name contracts and core invoke/probe envelopes are implemented. Remaining queue timing, all transport representations, handler interfaces, and backend delivery behavior are not yet ported. |
 | Run contracts | PARTIAL | Status predicates and bulk-cancel requests/results are implemented. Full run entity schemas, queries, cancellation APIs, and wait-for-terminal behavior remain. |
 | Serialized data contract | PARTIAL | Legacy-versus-modern representation and strict modern binary validation are implemented. Devalue hydration, compression, encryption envelopes, and CBOR transport remain. |
-| ULID utilities | IMPLEMENTED, CI PENDING | Exact run-id shape, Crockford parsing, slot rejection, timestamp decoding, and asymmetric skew validation. |
 | Steps, hooks, waits, analytics | NOT STARTED | Port entity schemas, state invariants, request/response contracts, and tests. |
 | World interfaces | NOT STARTED | Port storage, queue, streamer, encryption, environment, and lifecycle traits. |
 | world-local | NOT STARTED | Port filesystem persistence, queue, locking, event slots, recovery, and all local-world tests. |

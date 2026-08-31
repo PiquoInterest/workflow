@@ -10,6 +10,9 @@ on:
       - 'Cargo.lock'
       - 'crates/workflow-world/**'
       - 'rust/conformance/**'
+      - 'packages/errors/src/**'
+      - 'packages/serde/src/**'
+      - 'packages/utils/src/time*'
       - 'packages/world/src/**'
       - 'docs/rust-port/**'
       - '.github/workflows/rust-port.yml'
@@ -49,7 +52,7 @@ jobs:
           retention-days: 1
 
   world-contract:
-    name: World contract parity
+    name: World, errors, serde, and time parity
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     steps:
@@ -77,19 +80,24 @@ jobs:
       - name: Check Rust formatting
         run: cargo fmt --package workflow-world -- --check
 
-      - name: Compile and test Rust World contract
+      - name: Compile and test Rust contracts
         run: cargo test --locked -p workflow-world --all-targets
 
-      - name: Lint Rust World contract
+      - name: Lint Rust contracts
         run: cargo clippy --locked -p workflow-world --all-targets -- -D warnings
 
-      - name: Run TypeScript World oracle tests
-        run: pnpm --filter @workflow/world test
+      - name: Run TypeScript oracle tests
+        run: |
+          pnpm --filter @workflow/world test
+          pnpm --filter @workflow/errors test
+          pnpm --filter @workflow/utils test
 
-      - name: Build differential conformance runner
-        run: cargo build --locked -p workflow-world --example conformance
+      - name: Build differential conformance runners
+        run: cargo build --locked -p workflow-world --examples
 
       - name: Compare TypeScript and Rust behavior
-        env:
-          WORKFLOW_RUST_CONFORMANCE_BIN: target/debug/examples/conformance
-        run: pnpm exec vitest run rust/conformance/world-parity.test.ts
+        run: |
+          WORKFLOW_RUST_CONFORMANCE_BIN=target/debug/examples/conformance \
+            pnpm exec vitest run rust/conformance/world-parity.test.ts
+          WORKFLOW_RUST_CONFORMANCE_BIN=target/debug/examples/errors_conformance \
+            pnpm exec vitest run rust/conformance/errors-parity.test.ts
