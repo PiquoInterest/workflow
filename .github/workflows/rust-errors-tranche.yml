@@ -1,0 +1,149 @@
+name: Rust errors tranche verification
+
+on:
+  push:
+    branches:
+      - pro/rust-errors-tranche
+    paths:
+      - '.github/workflows/rust-errors-tranche.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: rust-errors-tranche
+  cancel-in-progress: true
+
+jobs:
+  verify-and-commit:
+    name: Verify and commit Rust errors parity
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+
+    steps:
+      - name: Checkout staging branch
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: pro/rust-errors-tranche
+          fetch-depth: 0
+
+      - name: Extract the pinned tranche payload safely
+        shell: python
+        run: |
+          import base64
+          import hashlib
+          import io
+          import tarfile
+          from pathlib import Path, PurePosixPath
+
+          expected = '2420797ff1c2d3c50234eded816c437db6b6323978ebc2836224f7cfcb8ee9fc'
+          parts = sorted(Path('.rust-port').glob('errors-tranche.part-*'))
+          if not parts:
+              raise SystemExit('missing tranche payload parts')
+          encoded = ''.join(part.read_text(encoding='ascii') for part in parts)
+          archive = base64.b64decode(encoded, validate=True)
+          actual = hashlib.sha256(archive).hexdigest()
+          if actual != expected:
+              raise SystemExit(f'payload SHA-256 mismatch: {actual}')
+
+          root = Path.cwd().resolve()
+          with tarfile.open(fileobj=io.BytesIO(archive), mode='r:gz') as bundle:
+              for member in bundle.getmembers():
+                  path = PurePosixPath(member.name)
+                  if path.is_absolute() or '..' in path.parts:
+                      raise SystemExit(f'unsafe archive path: {member.name}')
+                  if member.issym() or member.islnk() or member.isdev():
+                      raise SystemExit(f'unsupported archive member: {member.name}')
+                  destination = (root / Path(*path.parts)).resolve()
+                  if root not in destination.parents and destination != root:
+                      raise SystemExit(f'archive path escaped repository: {member.name}')
+              bundle.extractall(root, filter='data')
+
+      - name: Install Rust 1.87
+        uses: actions-rust-lang/setup-rust-toolchain@46268bd060767258de96ed93c1251119784f2ab6
+        with:
+          toolchain: 1.87.0
+          components: clippy,rustfmt
+          rustflags: -D warnings
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 22.x
+          cache: pnpm
+
+      - name: Install JavaScript dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Canonicalize source
+        run: |
+          cargo fmt --package workflow-errors
+          cargo fmt --package workflow-world
+          pnpm exec biome check --write rust/conformance/errors-parity.test.ts
+          git diff --check
+
+      - name: Generate lockfile and run Rust tests
+        run: |
+          cargo test -p workflow-errors --all-targets
+          cargo test --locked -p workflow-errors --all-targets
+          cargo test --locked -p workflow-world --all-targets
+
+      - name: Run Clippy
+        run: |
+          cargo clippy --locked -p workflow-errors --all-targets -- -D warnings
+          cargo clippy --locked -p workflow-world --all-targets -- -D warnings
+
+      - name: Run repository and TypeScript oracle tests
+        run: |
+          pnpm lint
+          pnpm --filter @workflow/errors test
+          pnpm --filter @workflow/world test
+
+      - name: Build and run differential tests
+        run: |
+          cargo build --locked -p workflow-errors --example errors-conformance
+          cargo build --locked -p workflow-world --example conformance
+          WORKFLOW_RUST_ERRORS_CONFORMANCE_BIN=target/debug/examples/errors-conformance \
+            pnpm exec vitest run rust/conformance/errors-parity.test.ts
+          WORKFLOW_RUST_CONFORMANCE_BIN=target/debug/examples/conformance \
+            pnpm exec vitest run rust/conformance/world-parity.test.ts
+
+      - name: Verify the staged file boundary
+        shell: python
+        run: |
+          import subprocess
+
+          allowed_exact = {
+              'Cargo.lock',
+              'Cargo.toml',
+              '.github/workflows/rust-port.yml',
+              '.github/workflows/rust-errors-tranche.yml',
+              'rust/conformance/errors-parity.test.ts',
+              'docs/rust-port/README.md',
+              'docs/rust-port/PARITY_MATRIX.md',
+              'docs/rust-port/SECURITY.md',
+              'docs/rust-port/TYPESCRIPT_LOGIC_AND_SECURITY_FIXES.md',
+          }
+          changed = subprocess.check_output(
+              ['git', 'diff', '--name-only'], text=True
+          ).splitlines()
+          unexpected = [
+              path for path in changed
+              if path not in allowed_exact and not path.startswith('crates/workflow-errors/')
+          ]
+          if unexpected:
+              raise SystemExit(f'unexpected files in errors tranche: {unexpected}')
+
+      - name: Commit verified tranche and remove bootstrap files
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/rust-errors-tranche.yml
+          git rm .rust-port/errors-tranche.part-*
+          git add -A
+          git diff --cached --check
+          git commit -m "feat(rust-errors): port public error contracts with differential parity"
+          git push origin HEAD:pro/rust-errors-tranche
