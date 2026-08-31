@@ -14,7 +14,8 @@ These rules apply to every new Rust crate in the migration.
    combinations, and legacy/modern payload representations cannot be confused.
 5. Length checks preserve the original unit: JavaScript UTF-16 code units where
    public compatibility requires `String.length`, UTF-8 bytes where wire size is
-   the contract, and bounded integers for counters/slots.
+   the contract, and bounded integers for counters, slots, and protocol-version
+   attestations.
 6. No path, URL, command, SQL fragment, header, queue name, or identifier is
    trusted because it originated in another package. Validate at the boundary
    that consumes it.
