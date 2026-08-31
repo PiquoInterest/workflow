@@ -273,7 +273,7 @@ impl WorkflowInvokePayload {
 #[serde(untagged)]
 pub enum QueuePayload {
     HealthCheck(HealthCheckPayload),
-    WorkflowInvoke(WorkflowInvokePayload),
+    WorkflowInvoke(Box<WorkflowInvokePayload>),
 }
 
 /// Parses a queue payload with a hard health-check discriminator.
@@ -328,7 +328,7 @@ pub fn parse_queue_payload(value: Value) -> ValidationResult<QueuePayload> {
         )
     })?;
     payload.validate()?;
-    Ok(QueuePayload::WorkflowInvoke(payload))
+    Ok(QueuePayload::WorkflowInvoke(Box::new(payload)))
 }
 
 fn parse_wait_continuation(value: &Value) -> Option<WaitContinuation> {
@@ -366,7 +366,6 @@ fn json_nonnegative_integer(value: &Value) -> Option<u64> {
 
 #[cfg(test)]
 mod tests {
-    use serde_json::json;
 
     use super::*;
 
@@ -446,6 +445,7 @@ mod tests {
         let QueuePayload::WorkflowInvoke(payload) = parsed else {
             panic!("expected invocation payload");
         };
+        let payload = *payload;
         assert_eq!(
             payload.run_input.and_then(|input| input.environment),
             Some("preview".to_owned())
@@ -462,6 +462,7 @@ mod tests {
         let QueuePayload::WorkflowInvoke(payload) = parsed else {
             panic!("expected invocation payload");
         };
+        let payload = *payload;
         assert_eq!(payload.wait_continuation, None);
     }
 

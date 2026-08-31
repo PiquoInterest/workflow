@@ -55,9 +55,7 @@ type RustFailure = {
 };
 type RustOutcome = RustSuccess | RustFailure;
 
-type Outcome =
-  | { ok: true; value: unknown }
-  | { ok: false; error: unknown };
+type Outcome = { ok: true; value: unknown } | { ok: false; error: unknown };
 
 const binary =
   process.env.WORKFLOW_RUST_CONFORMANCE_BIN ??
@@ -225,7 +223,16 @@ describe('Rust World environment and spec-version parity', () => {
     });
   }
 
-  for (const raw of [undefined, '', '0', 'false', 'FALSE', '1', 'true', 'yes']) {
+  for (const raw of [
+    undefined,
+    '',
+    '0',
+    'false',
+    'FALSE',
+    '1',
+    'true',
+    'yes',
+  ]) {
     it(`matches envFlag for ${String(raw)}`, () => {
       const name = 'WORKFLOW_RUST_PARITY_FLAG';
       const environment = raw === undefined ? {} : { [name]: raw };
@@ -237,8 +244,7 @@ describe('Rust World environment and spec-version parity', () => {
 
   for (const raw of [undefined, '', '0', 'false', '1', 'true', 'yes-please']) {
     it(`matches mintedSpecVersion for ${String(raw)}`, () => {
-      const environment =
-        raw === undefined ? {} : { WORKFLOW_SEALED_LOG: raw };
+      const environment = raw === undefined ? {} : { WORKFLOW_SEALED_LOG: raw };
       expectParity('mintedSpecVersion', { environment }, () =>
         mintedSpecVersion(environment)
       );
@@ -387,9 +393,7 @@ describe('Rust World slot identity parity', () => {
     it(`round-trips slot ${slot}`, () => {
       expectParity('slotToEventId', { slot }, () => slotToEventId(slot));
       const eventId = slotToEventId(slot);
-      expectParity('eventIdToSlot', { eventId }, () =>
-        eventIdToSlot(eventId)
-      );
+      expectParity('eventIdToSlot', { eventId }, () => eventIdToSlot(eventId));
     });
   }
 
@@ -402,19 +406,15 @@ describe('Rust World slot identity parity', () => {
   const body = String(42).padStart(26, '0');
   for (const eventId of [`evnt_${body}`, `wevt_${body}`, body, 'not-an-id']) {
     it(`matches slot detection for ${eventId}`, () => {
-      expectParity('isSlotEventId', { eventId }, () =>
-        isSlotEventId(eventId)
-      );
-      expectParity('eventIdToSlot', { eventId }, () =>
-        eventIdToSlot(eventId)
-      );
+      expectParity('isSlotEventId', { eventId }, () => isSlotEventId(eventId));
+      expectParity('eventIdToSlot', { eventId }, () => eventIdToSlot(eventId));
     });
   }
 
   for (const candidate of [
     body,
     '0000000001'.padEnd(26, '0'),
-    '0'.repeat(25) + 'A',
+    `${'0'.repeat(25)}A`,
     '',
   ]) {
     it(`matches body detection for ${candidate || '<empty>'}`, () => {
@@ -449,8 +449,10 @@ describe('Rust World queue contract parity', () => {
     'bad_prefix',
   ]) {
     it(`matches QueuePrefix parsing for ${value}`, () => {
-      expectParity('isValidQueuePrefix', { value }, () =>
-        QueuePrefix.safeParse(value).success
+      expectParity(
+        'isValidQueuePrefix',
+        { value },
+        () => QueuePrefix.safeParse(value).success
       );
     });
   }

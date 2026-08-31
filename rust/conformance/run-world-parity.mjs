@@ -1,6 +1,6 @@
 import { spawnSync } from 'node:child_process';
-import { fileURLToPath } from 'node:url';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const repoRoot = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
@@ -37,13 +37,7 @@ function run(command, args, options = {}) {
 // Limit rustfmt to the migration crate. Formatting the whole workspace would
 // also rewrite the pre-existing SWC crates according to the runner's newer
 // rustfmt release, making this gate depend on unrelated source formatting.
-run('cargo', [
-  'fmt',
-  '--package',
-  'workflow-world',
-  '--',
-  '--check',
-]);
+run('cargo', ['fmt', '--package', 'workflow-world', '--', '--check']);
 run('cargo', ['test', '-p', 'workflow-world', '--all-targets']);
 run('cargo', [
   'clippy',
@@ -54,13 +48,7 @@ run('cargo', [
   '-D',
   'warnings',
 ]);
-run('cargo', [
-  'build',
-  '-p',
-  'workflow-world',
-  '--example',
-  'conformance',
-]);
+run('cargo', ['build', '-p', 'workflow-world', '--example', 'conformance']);
 
 const executable = path.join(
   repoRoot,
