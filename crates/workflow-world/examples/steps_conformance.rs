@@ -2,13 +2,22 @@ use std::io::{self, Read};
 
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
-use workflow_world::steps::parse_step_state;
+use workflow_world::steps::{parse_step_attempt, parse_step_state};
 use workflow_world::{ValidationError, ValidationResult};
 
 const MAX_INPUT_BYTES: u64 = 1_048_576;
 
 #[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+enum Operation {
+    ParseStepState,
+    NextStepAttempt,
+}
+
+#[derive(Debug, Deserialize)]
 struct Request {
+    #[serde(default)]
+    operation: Option<Operation>,
     value: Value,
 }
 
@@ -64,6 +73,14 @@ fn execute() -> ValidationResult<Value> {
 
     let request: Request = serde_json::from_slice(&bytes)
         .map_err(|error| ValidationError::new("invalid_request", error.to_string()))?;
-    serde_json::to_value(parse_step_state(&request.value)?)
-        .map_err(|error| ValidationError::new("output_serialization_failed", error.to_string()))
+
+    let value = match request.operation {
+        None | Some(Operation::ParseStepState) => {
+            serde_json::to_value(parse_step_state(&request.value)?)
+        }
+        Some(Operation::NextStepAttempt) => {
+            serde_json::to_value(parse_step_attempt(&request.value)?.checked_next()?)
+        }
+    };
+    value.map_err(|error| ValidationError::new("output_serialization_failed", error.to_string()))
 }

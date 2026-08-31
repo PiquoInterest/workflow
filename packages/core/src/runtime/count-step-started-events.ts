@@ -1,5 +1,35 @@
 import type { Event } from '@workflow/world';
 
+export const MAX_STEP_ATTEMPT = Number.MAX_SAFE_INTEGER;
+
+const STEP_ATTEMPT_ADVANCE_ERROR =
+  'prior step attempt count must be a non-negative safe integer below Number.MAX_SAFE_INTEGER';
+
+function assertAdvanceableAttemptCount(priorAttempts: number): number {
+  if (
+    !Number.isSafeInteger(priorAttempts) ||
+    priorAttempts < 0 ||
+    priorAttempts >= MAX_STEP_ATTEMPT
+  ) {
+    throw new RangeError(STEP_ATTEMPT_ADVANCE_ERROR);
+  }
+  return priorAttempts;
+}
+
+/**
+ * Advance a count of already-recorded starts into the 1-based attempt number
+ * used by the executor.
+ *
+ * The check is intentionally independent of the current event-log
+ * implementation. Today every producer counts a materialized JavaScript array,
+ * whose maximum length is far below Number.MAX_SAFE_INTEGER, but keeping the
+ * transition explicit prevents a future storage-backed counter from silently
+ * crossing the exact-integer boundary.
+ */
+export function nextStepAttempt(priorAttempts: number): number {
+  return assertAdvanceableAttemptCount(priorAttempts) + 1;
+}
+
 /**
  * Scope for {@link countStepStartedEvents}:
  * - `{ type: 'ownedBy', messageId }` counts only starts whose
@@ -31,6 +61,11 @@ const ownerOf = (e: Event): string | undefined =>
  * Number of `step_started` events already recorded for a step, used as the
  * authoritative attempt count for the maxRetries ceiling (the only bound for
  * steps that time out without writing a `step_failed`).
+ *
+ * Every returned value is guaranteed to be safe for the executor's immediate
+ * `+ 1` transition. Materialized event arrays are already capped at 2^32 - 1
+ * entries by JavaScript, but the explicit assertion keeps that invariant local
+ * to this producer instead of relying on its current storage representation.
  *
  * IMPORTANT: the raw (unscoped) count is NOT a reliable attempt number.
  * Concurrent invocations racing on the same pending batch (stale replays,
@@ -81,10 +116,10 @@ export function countStepStartedEvents(
     for (const count of byOwner.values()) {
       total += count;
     }
-    return total;
+    return assertAdvanceableAttemptCount(total);
   }
   if (scope.type === 'ownedBy') {
-    return byOwner.get(scope.messageId) ?? 0;
+    return assertAdvanceableAttemptCount(byOwner.get(scope.messageId) ?? 0);
   }
   // totalAttempts
   let maxOwner = 0;
@@ -93,5 +128,5 @@ export function countStepStartedEvents(
       maxOwner = count;
     }
   }
-  return bare + maxOwner;
+  return assertAdvanceableAttemptCount(bare + maxOwner);
 }

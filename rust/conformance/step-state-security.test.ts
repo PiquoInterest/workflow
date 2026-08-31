@@ -1,6 +1,7 @@
 import { execFileSync } from 'node:child_process';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { nextStepAttempt } from '../../packages/core/src/runtime/count-step-started-events.js';
 import { StepSchema } from '../../packages/world/src/steps.js';
 
 type RustSuccess = { ok: true; value: unknown };
@@ -9,6 +10,7 @@ type RustFailure = {
   error: { code: string; message: string };
 };
 type RustOutcome = RustSuccess | RustFailure;
+type RustOperation = 'parseStepState' | 'nextStepAttempt';
 
 const binary =
   process.env.WORKFLOW_RUST_STEP_CONFORMANCE_BIN ??
@@ -24,10 +26,13 @@ const baseStep = {
   updatedAt: '2026-01-01T00:00:01.000Z',
 };
 
-function rust(value: unknown): RustOutcome {
+function rust(value: unknown, operation?: RustOperation): RustOutcome {
   const output = execFileSync(binary, [], {
     encoding: 'utf8',
-    input: JSON.stringify({ value }),
+    input: JSON.stringify({
+      ...(operation === undefined ? {} : { operation }),
+      value,
+    }),
     maxBuffer: 1024 * 1024,
   });
   return JSON.parse(output) as RustOutcome;
@@ -213,4 +218,35 @@ describe('WF-RUST-012 step-attempt security proof', () => {
       });
     }
   );
+
+  it.each([
+    [0, 1],
+    [1, 2],
+    [Number.MAX_SAFE_INTEGER - 1, Number.MAX_SAFE_INTEGER],
+  ])(
+    'matches the checked TypeScript transition from %s to %s',
+    (prior, expected) => {
+      expect(nextStepAttempt(prior)).toBe(expected);
+      expect(rust(prior, 'nextStepAttempt')).toEqual({
+        ok: true,
+        value: expected,
+      });
+    }
+  );
+
+  it('rejects advancement at Number.MAX_SAFE_INTEGER in both implementations', () => {
+    const message =
+      'prior step attempt count must be a non-negative safe integer below Number.MAX_SAFE_INTEGER';
+
+    expect(() => nextStepAttempt(Number.MAX_SAFE_INTEGER)).toThrow(
+      new RangeError(message)
+    );
+    expect(rust(Number.MAX_SAFE_INTEGER, 'nextStepAttempt')).toEqual({
+      ok: false,
+      error: {
+        code: 'invalid_step_state',
+        message,
+      },
+    });
+  });
 });

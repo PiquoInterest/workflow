@@ -4,7 +4,41 @@ use serde_json::{Map, Value};
 use crate::{ValidationError, ValidationResult};
 
 /// Largest exact JavaScript integer accepted for a persisted step attempt.
-const MAX_STEP_ATTEMPT: u64 = 9_007_199_254_740_991;
+pub const MAX_STEP_ATTEMPT: u64 = 9_007_199_254_740_991;
+
+const STEP_ATTEMPT_ADVANCE_ERROR: &str =
+    "prior step attempt count must be a non-negative safe integer below Number.MAX_SAFE_INTEGER";
+
+/// Exact, non-negative step attempt counter shared with JavaScript.
+///
+/// The transparent representation preserves the existing JSON number on the
+/// wire while preventing unchecked construction and advancement inside Rust.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Serialize)]
+#[serde(transparent)]
+pub struct StepAttempt(u64);
+
+impl StepAttempt {
+    pub const ZERO: Self = Self(0);
+
+    pub const fn new(value: u64) -> Option<Self> {
+        if value <= MAX_STEP_ATTEMPT {
+            Some(Self(value))
+        } else {
+            None
+        }
+    }
+
+    pub const fn get(self) -> u64 {
+        self.0
+    }
+
+    pub fn checked_next(self) -> ValidationResult<Self> {
+        self.0
+            .checked_add(1)
+            .and_then(Self::new)
+            .ok_or_else(|| invalid_step_state(STEP_ATTEMPT_ADVANCE_ERROR))
+    }
+}
 
 /// State-independent fields shared by every materialized step.
 ///
@@ -19,7 +53,7 @@ pub struct StepCommon {
     pub step_name: String,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub input: Option<Value>,
-    pub attempt: u64,
+    pub attempt: StepAttempt,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub started_at: Option<Value>,
     pub created_at: Value,
@@ -144,6 +178,28 @@ pub fn parse_step_state(value: &Value) -> ValidationResult<StepState> {
     }
 }
 
+pub fn parse_step_attempt(value: &Value) -> ValidationResult<StepAttempt> {
+    if let Some(value) = value.as_u64() {
+        return StepAttempt::new(value).ok_or_else(|| invalid_safe_integer("attempt"));
+    }
+    if let Some(value) = value.as_i64() {
+        return u64::try_from(value)
+            .ok()
+            .and_then(StepAttempt::new)
+            .ok_or_else(|| invalid_safe_integer("attempt"));
+    }
+
+    value
+        .as_f64()
+        .filter(|value| {
+            value.is_finite()
+                && value.fract() == 0.0
+                && (0.0..=MAX_STEP_ATTEMPT as f64).contains(value)
+        })
+        .map(|value| StepAttempt(value as u64))
+        .ok_or_else(|| invalid_safe_integer("attempt"))
+}
+
 fn parse_common(object: &Map<String, Value>) -> ValidationResult<StepCommon> {
     Ok(StepCommon {
         run_id: required_string(object, "runId")?,
@@ -166,32 +222,14 @@ fn required_string(object: &Map<String, Value>, key: &str) -> ValidationResult<S
         .ok_or_else(|| invalid_step_state(format!("{key} must be a string")))
 }
 
-fn required_step_attempt(object: &Map<String, Value>, key: &str) -> ValidationResult<u64> {
-    let value = object
+fn required_step_attempt(
+    object: &Map<String, Value>,
+    key: &str,
+) -> ValidationResult<StepAttempt> {
+    object
         .get(key)
-        .ok_or_else(|| invalid_safe_integer(key))?;
-
-    if let Some(value) = value.as_u64() {
-        return (value <= MAX_STEP_ATTEMPT)
-            .then_some(value)
-            .ok_or_else(|| invalid_safe_integer(key));
-    }
-    if let Some(value) = value.as_i64() {
-        return u64::try_from(value)
-            .ok()
-            .filter(|value| *value <= MAX_STEP_ATTEMPT)
-            .ok_or_else(|| invalid_safe_integer(key));
-    }
-
-    value
-        .as_f64()
-        .filter(|value| {
-            value.is_finite()
-                && value.fract() == 0.0
-                && (0.0..=MAX_STEP_ATTEMPT as f64).contains(value)
-        })
-        .map(|value| value as u64)
         .ok_or_else(|| invalid_safe_integer(key))
+        .and_then(parse_step_attempt)
 }
 
 fn invalid_safe_integer(key: &str) -> ValidationError {

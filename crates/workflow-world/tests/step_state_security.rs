@@ -1,7 +1,7 @@
 use serde_json::{Value, json};
-use workflow_world::steps::{StepState, parse_step_state};
-
-const MAX_JAVASCRIPT_SAFE_INTEGER: u64 = 9_007_199_254_740_991;
+use workflow_world::steps::{
+    MAX_STEP_ATTEMPT, StepAttempt, StepState, parse_step_state,
+};
 
 fn step(status: &str, extra: Value) -> Value {
     let mut value = json!({
@@ -88,7 +88,7 @@ fn rejects_unsafe_attempt_counters() {
         ("fractional attempt", json!(1.5)),
         (
             "attempt above JavaScript's safe-integer ceiling",
-            json!(MAX_JAVASCRIPT_SAFE_INTEGER + 1),
+            json!(MAX_STEP_ATTEMPT + 1),
         ),
     ];
 
@@ -107,7 +107,7 @@ fn rejects_unsafe_attempt_counters() {
 
 #[test]
 fn accepts_and_normalizes_safe_attempt_counters() {
-    for attempt in [0, 1, MAX_JAVASCRIPT_SAFE_INTEGER] {
+    for attempt in [0, 1, MAX_STEP_ATTEMPT] {
         let mut fixture = step("running", json!({}));
         fixture["attempt"] = json!(attempt);
 
@@ -121,6 +121,35 @@ fn accepts_and_normalizes_safe_attempt_counters() {
     let state = parse_step_state(&integral_float).expect("integral float must parse");
     let serialized = serde_json::to_value(state).expect("step state must serialize");
     assert_eq!(serialized["attempt"], json!(1));
+}
+
+#[test]
+fn advances_attempts_without_crossing_the_javascript_safe_integer_boundary() {
+    for (prior, expected) in [
+        (0, 1),
+        (1, 2),
+        (MAX_STEP_ATTEMPT - 1, MAX_STEP_ATTEMPT),
+    ] {
+        let attempt = StepAttempt::new(prior).expect("prior attempt must be safe");
+        assert_eq!(
+            attempt
+                .checked_next()
+                .expect("safe prior count must advance")
+                .get(),
+            expected
+        );
+    }
+
+    let error = StepAttempt::new(MAX_STEP_ATTEMPT)
+        .expect("maximum attempt itself is representable")
+        .checked_next()
+        .expect_err("maximum attempt must not advance");
+    assert_eq!(error.code(), "invalid_step_state");
+    assert_eq!(
+        error.message(),
+        "prior step attempt count must be a non-negative safe integer below Number.MAX_SAFE_INTEGER"
+    );
+    assert!(StepAttempt::new(MAX_STEP_ATTEMPT + 1).is_none());
 }
 
 #[test]
