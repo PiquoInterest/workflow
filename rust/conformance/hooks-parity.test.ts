@@ -92,6 +92,26 @@ describe('Rust hook resume protocol parity', () => {
       traceCarrier: { traceparent: 42 },
     },
     {
+      ...fullContext,
+      runSpecVersion: 0,
+    },
+    {
+      ...fullContext,
+      runSpecVersion: -1,
+    },
+    {
+      ...fullContext,
+      hookResumeInputVersion: 1.5,
+    },
+    {
+      ...fullContext,
+      runSpecVersion: 0x1_0000_0000,
+    },
+    {
+      ...fullContext,
+      runSpecVersion: 0xffff_ffff,
+    },
+    {
       workflowName: 'missingDeployment',
     },
   ]) {
@@ -107,6 +127,11 @@ describe('Rust hook resume protocol parity', () => {
   for (const input of [
     { hookResumeDedupVersion: 1 },
     { hookResumeDedupVersion: 1, unknown: true },
+    { hookResumeDedupVersion: 0 },
+    { hookResumeDedupVersion: -1 },
+    { hookResumeDedupVersion: 1.5 },
+    { hookResumeDedupVersion: 0x1_0000_0000 },
+    { hookResumeDedupVersion: 0xffff_ffff },
     {},
     { hookResumeDedupVersion: '1' },
   ]) {
