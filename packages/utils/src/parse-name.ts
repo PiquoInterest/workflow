@@ -176,10 +176,7 @@ function escapeSingleLine(value: string): string {
       escaped.push('\\t');
     } else {
       const codePoint = character.codePointAt(0);
-      if (
-        codePoint !== undefined &&
-        isSingleLineControlCodePoint(codePoint)
-      ) {
+      if (codePoint !== undefined && isSingleLineControlCodePoint(codePoint)) {
         escaped.push(`\\u${codePoint.toString(16).padStart(4, '0')}`);
       } else {
         escaped.push(character);
