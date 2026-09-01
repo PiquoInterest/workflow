@@ -45,3 +45,12 @@ Acknowledgments: https://github.com/PiquoInterest/workflow/blob/main/docs/rust-p
 # rust/tdd/workflow-ai/tests/do_stream_step.rs. Rust implementation remains
 # intentionally RED until those tests can pass against the real stream state
 # machine; a panic marker is not treated as a security fix.
+#
+# WF-RUST-014 (TDD RED): AI telemetry can contain prompts, model output,
+# reasoning, tool arguments, and tool results. The Rust port must preserve the
+# TypeScript privacy controls: recordInputs=false omits prompt material and
+# recordOutputs=false omits response text, tool-call arguments, and tool results
+# while retaining non-sensitive usage and finish metadata. All nine current
+# TypeScript telemetry assertions are translated at
+# rust/tdd/workflow-ai/tests/telemetry.rs. This remains an implementation gate,
+# not a closed security finding, until the actual Rust span path passes it.
