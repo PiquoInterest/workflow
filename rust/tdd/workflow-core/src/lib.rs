@@ -1,6 +1,7 @@
 #![forbid(unsafe_code)]
 
 pub mod abort_consistency;
+pub mod abort_controller;
 pub mod abort_controller_step;
 pub mod abort_replay_ordering;
 pub mod agent_e2e;
