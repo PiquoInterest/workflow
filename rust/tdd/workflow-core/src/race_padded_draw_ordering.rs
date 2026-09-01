@@ -57,9 +57,7 @@ pub struct RacePaddedReplayObservation {
 }
 
 /// Replays the Promise.race watchdog fixture under the future Rust event consumer.
-pub fn replay_race_padded_draws(
-    temperature: ReplayTemperature,
-) -> RacePaddedReplayObservation {
+pub fn replay_race_padded_draws(temperature: ReplayTemperature) -> RacePaddedReplayObservation {
     let _ = temperature;
     pending()
 }

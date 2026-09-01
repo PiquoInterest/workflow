@@ -12,11 +12,7 @@ fn frame(payload: &[u8]) -> Vec<u8> {
 
 #[test]
 fn workflow_server_read_emits_client_span_with_ttfc_and_connect_durations() {
-    let fixture = StreamReadFixture::workflow_server(
-        "run-123",
-        "test-stream",
-        vec![vec![1, 2, 3]],
-    );
+    let fixture = StreamReadFixture::workflow_server("run-123", "test-stream", vec![vec![1, 2, 3]]);
     let observation = observe_stream_read(&fixture);
     let span = observation
         .span("workflow.stream.read")
@@ -24,10 +20,7 @@ fn workflow_server_read_emits_client_span_with_ttfc_and_connect_durations() {
 
     assert_eq!(span.kind, SpanKind::Client);
     assert_eq!(span.text("workflow.run.id"), Some("run-123"));
-    assert_eq!(
-        span.text("workflow.stream.name"),
-        Some("test-stream")
-    );
+    assert_eq!(span.text("workflow.stream.name"), Some("test-stream"));
     assert_eq!(span.text("workflow.stream.operation"), Some("read"));
 
     let ttfc = span
@@ -43,11 +36,7 @@ fn workflow_server_read_emits_client_span_with_ttfc_and_connect_durations() {
 
 #[test]
 fn workflow_server_read_complete_span_reports_drained_payload_totals() {
-    let fixture = StreamReadFixture::workflow_server(
-        "run-123",
-        "test-stream",
-        vec![vec![1, 2, 3]],
-    );
+    let fixture = StreamReadFixture::workflow_server("run-123", "test-stream", vec![vec![1, 2, 3]]);
     let observation = observe_stream_read(&fixture);
     let span = observation
         .span("workflow.stream.read.complete")

@@ -11,7 +11,6 @@ pub mod bench_rtt_stats;
 pub mod benchmark;
 pub mod build_errors;
 pub mod byte_stream_framing;
-pub mod capabilities;
 pub mod classify_error;
 pub mod context_errors;
 pub mod define_hook;
