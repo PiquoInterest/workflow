@@ -323,6 +323,54 @@ must cross the Rust safe-integer boundary. The Rust World update path must use a
 checked increment before the TypeScript producer and its unconstrained request
 type can be removed.
 
+## WF-RUST-099: Replay cache keys were not bound to binary payload identity
+
+**Status:** Closed at the production Rust replay boundary. The TypeScript
+characterization remains intentionally permissive until the TypeScript replay
+cache is retired.
+
+**Affected code:** `packages/core/src/replay-payload-cache.ts`,
+`ReplayPayloadCache.prepareWorkflowInput()`, and
+`ReplayPayloadCache.prepareEventPayload()`.
+
+**Old behavior:** TypeScript keyed prepared binary payloads only by workflow run
+ID or by `(eventId, field)`. Reusing either logical key with different bytes
+returned the first cached preparation. The second payload was never
+authenticated, decrypted, decompressed, or deserialized.
+
+**Impact:** A corrupted or cross-wired workflow/event record could cause one
+identity to consume plaintext prepared from another byte sequence. This weakens
+payload integrity, hides storage or transport corruption, and makes the failure
+dependent on cache timing.
+
+**TypeScript GREEN characterization:**
+`packages/core/src/replay-payload-cache-security.test.ts` proves the existing
+workflow-run and event-key behavior remains characterized and green: conflicting
+bytes resolve from the first cached payload, the preparer runs once, and the
+second byte sequence is not prepared.
+
+**Rust fix:** Each production Rust binary cache cell stores the exact original
+bytes. Reusing a logical key with different bytes moves the cell into a terminal
+`PayloadConflict` state, wakes current waiters, returns the constant
+`PAYLOAD_CONFLICT_MESSAGE`, never invokes the preparer for the conflicting
+payload, and does not reflect run IDs, event IDs, or payload bytes. The original
+in-flight preparation rechecks terminal state before publishing, so its later
+completion cannot overwrite the integrity failure.
+
+**Regression evidence:**
+
+- `packages/core/src/replay-payload-cache-security.test.ts`
+- `crates/workflow-core/src/replay_payload_cache.rs`
+- `crates/workflow-core/tests/replay_payload_cache.rs`
+- `crates/workflow-core/tests/replay_payload_cache_security.rs`
+- GitHub Actions run `33516555780`, where the TypeScript characterization,
+  production Rust behavior/security tests, all Rust targets, Rustfmt, Clippy,
+  and differential checks passed.
+
+**Remaining TypeScript retirement condition:** All replay payload preparation
+must cross the Rust cache boundary before the permissive TypeScript cache and
+its characterization test can be removed.
+
 ## Open findings tracked for later port stages
 
 | ID | TypeScript condition | Required Rust closure |
