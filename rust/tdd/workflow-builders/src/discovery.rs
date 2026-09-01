@@ -44,12 +44,7 @@ impl DiscoveryObservation {
         child_to_find: &str,
         excluded_roots: &BTreeSet<String>,
     ) -> bool {
-        parent_has_child(
-            &self.import_parents,
-            parent,
-            child_to_find,
-            excluded_roots,
-        )
+        parent_has_child(&self.import_parents, parent, child_to_find, excluded_roots)
     }
 }
 
@@ -109,7 +104,5 @@ pub fn discover_with_external_package_warnings(
     options: &ExternalPackageWarningOptions,
 ) -> Result<Vec<String>, String> {
     let _ = (session, options);
-    panic!(
-        "TDD RED: packages/builders/src/external-package-warning.test.ts implementation pending"
-    )
+    panic!("TDD RED: packages/builders/src/external-package-warning.test.ts implementation pending")
 }
