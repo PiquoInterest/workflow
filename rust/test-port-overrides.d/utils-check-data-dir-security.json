@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "entries": [
+    {
+      "typescript": "packages/utils/src/check-data-dir-security.test.ts",
+      "status": "green",
+      "rustTests": ["crates/workflow-utils/tests/check_data_dir_security.rs"],
+      "notes": "Four TypeScript regressions prove accessible files and raw suffix lookalikes are rejected. The production Rust suite adds the same object-type and component-boundary checks plus literal user-qualified tilde handling."
+    }
+  ]
+}

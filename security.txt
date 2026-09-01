@@ -261,3 +261,14 @@ Acknowledgments: https://github.com/PiquoInterest/workflow/blob/main/docs/rust-p
 # targets cover caller/preparer mutation, typed-array method override, in-flight
 # conflicts, terminal retention, and synchronous re-entry. Full analysis is in
 # docs/rust-port/findings/WF-RUST-099.md.
+
+#
+# WF-RUST-100: Workflow-data discovery previously treated any accessible
+# filesystem object as a directory and used raw string suffix checks. A regular
+# file at .workflow-data, or a directory such as not.workflow-data, could be
+# selected as a trusted local storage root. TypeScript now requires an actual
+# directory and exact path components. Rust mirrors that contract with
+# metadata().is_dir(), Path::ends_with(), lexical normalization, and injected
+# cwd/home context. Both TypeScript suites, the 23-case translated Rust suite,
+# and five Rust security regressions are required to stay green. Full analysis
+# is in docs/rust-port/findings/WF-RUST-100.md.

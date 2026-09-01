@@ -51,9 +51,12 @@
     },
     {
       "typescript": "packages/utils/src/check-data-dir.test.ts",
-      "status": "red",
-      "rustTests": ["rust/tdd/workflow-utils/tests/check_data_dir.rs"],
-      "notes": "All 23 search-order, parent-walk, path-normalization, tilde, short-name, and missing-directory assertions are translated with isolated temporary directories and injected cwd/home paths."
+      "status": "green",
+      "rustTests": [
+        "rust/tdd/workflow-utils/tests/check_data_dir.rs",
+        "crates/workflow-utils/tests/check_data_dir_security.rs"
+      ],
+      "notes": "All 23 TypeScript compatibility assertions execute against the production workflow-utils crate through the translated Rust suite. Five additional Rust security tests reject regular files, path-component suffix lookalikes, and user-qualified tilde confusion. The focused TypeScript compatibility and security suites must remain green in .github/workflows/rust-utils.yml."
     },
     {
       "typescript": "packages/utils/src/get-port.test.ts",
@@ -94,13 +97,17 @@
     {
       "typescript": "packages/builders/src/step-source-registration.test.ts",
       "status": "red",
-      "rustTests": ["rust/tdd/workflow-builders/tests/step_source_registration.rs"],
+      "rustTests": [
+        "rust/tdd/workflow-builders/tests/step_source_registration.rs"
+      ],
       "notes": "All three serde-only import, identical pnpm peer-copy deduplication, and divergent-copy collision declarations are translated."
     },
     {
       "typescript": "packages/builders/src/vercel-build-output-api.test.ts",
       "status": "red",
-      "rustTests": ["rust/tdd/workflow-builders/tests/vercel_build_output_api.rs"],
+      "rustTests": [
+        "rust/tdd/workflow-builders/tests/vercel_build_output_api.rs"
+      ],
       "notes": "The CJS __dirname/__filename regression is translated with explicit counts for the combined workflow function and separate webhook function. Final GREEN requires building and importing real ESM bundles under Node."
     },
     {
@@ -130,7 +137,9 @@
     {
       "typescript": "packages/ai/src/workflow-chat-transport.stream-repair.test.ts",
       "status": "red",
-      "rustTests": ["rust/tdd/workflow-ai/tests/workflow_chat_transport_stream_repair.rs"],
+      "rustTests": [
+        "rust/tdd/workflow-ai/tests/workflow_chat_transport_stream_repair.rs"
+      ],
       "notes": "All six raw-failure, text repair, duplicate-tail suppression, well-formed pass-through, raw reasoning failure, and reasoning repair declarations are translated. Final GREEN must drive the actual AI SDK consumer or a byte-for-byte compatible Rust state machine."
     },
     {
@@ -148,7 +157,9 @@
     {
       "typescript": "packages/errors/src/corrupted-event-log-error.test.ts",
       "status": "red",
-      "rustTests": ["rust/tdd/workflow-errors/tests/corrupted_event_log_error.rs"],
+      "rustTests": [
+        "rust/tdd/workflow-errors/tests/corrupted_event_log_error.rs"
+      ],
       "notes": "All four hierarchy, documentation, cause identity, and type-guard declarations are translated."
     },
     {
@@ -166,13 +177,17 @@
     {
       "typescript": "packages/errors/src/replay-divergence-error.test.ts",
       "status": "red",
-      "rustTests": ["rust/tdd/workflow-errors/tests/replay_divergence_error.rs"],
+      "rustTests": [
+        "rust/tdd/workflow-errors/tests/replay_divergence_error.rs"
+      ],
       "notes": "Both replay-signal declarations are translated. The planned guard must require both the public name and eventId, preventing an ordinary runtime error from being misclassified as replay divergence."
     },
     {
       "typescript": "packages/errors/src/runtime-decryption-error.test.ts",
       "status": "red",
-      "rustTests": ["rust/tdd/workflow-errors/tests/runtime_decryption_error.rs"],
+      "rustTests": [
+        "rust/tdd/workflow-errors/tests/runtime_decryption_error.rs"
+      ],
       "notes": "All six hierarchy, docs, cause identity, optional diagnostic context, property omission, and name-guard declarations are translated."
     },
     {
@@ -196,25 +211,33 @@
     {
       "typescript": "packages/world/src/attributes.test.ts",
       "status": "green",
-      "rustTests": ["crates/workflow-world/tests/attributes_typescript_port.rs"],
+      "rustTests": [
+        "crates/workflow-world/tests/attributes_typescript_port.rs"
+      ],
       "notes": "All 24 TypeScript declarations pass in the direct Rust mirror, covering key/value limits, UTF-16 and UTF-8 length rules, reserved keys, duplicate batches, exact post-merge counts, and immutable application. Verified by Rust port workflow run 33455424866."
     },
     {
       "typescript": "packages/world/src/attributes-security.test.ts",
       "status": "green",
-      "rustTests": ["crates/workflow-world/tests/attributes_security_typescript_port.rs"],
+      "rustTests": [
+        "crates/workflow-world/tests/attributes_security_typescript_port.rs"
+      ],
       "notes": "Both prototype-key security declarations pass. Rust maps treat __proto__ as data, and typed deserialization rejects object-shaped values before materialization. Verified by Rust port workflow run 33455424866."
     },
     {
       "typescript": "packages/world/src/env-config.test.ts",
       "status": "green",
-      "rustTests": ["crates/workflow-world/tests/env_config_typescript_port.rs"],
+      "rustTests": [
+        "crates/workflow-world/tests/env_config_typescript_port.rs"
+      ],
       "notes": "All numeric, flag, fallback, clamping, radix, warning-deduplication, event-limit, and process-environment declarations pass. Process-global behavior is isolated in a child test process. Verified by Rust port workflow run 33455424866."
     },
     {
       "typescript": "packages/world/src/event-metadata.test.ts",
       "status": "green",
-      "rustTests": ["crates/workflow-world/tests/event_metadata_typescript_port.rs"],
+      "rustTests": [
+        "crates/workflow-world/tests/event_metadata_typescript_port.rs"
+      ],
       "notes": "All four entity class, payload field, inherited-property, and sealed-noop declarations pass in Rust. Verified by Rust port workflow run 33455424866."
     },
     {
@@ -226,7 +249,9 @@
     {
       "typescript": "packages/world/src/spec-version.test.ts",
       "status": "green",
-      "rustTests": ["crates/workflow-world/tests/spec_version_typescript_port.rs"],
+      "rustTests": [
+        "crates/workflow-world/tests/spec_version_typescript_port.rs"
+      ],
       "notes": "All 11 version constants, minting, kill-switch, readable-ceiling, newer-world, and legacy declarations pass. The test-only constant assertion was replaced with an equivalent runtime-minted comparison so Clippy remains strict. Verified by Rust port workflow run 33455424866."
     },
     {
@@ -271,7 +296,9 @@
     {
       "typescript": "packages/world/src/runs-security.test.ts",
       "status": "green",
-      "rustTests": ["crates/workflow-world/tests/runs_security_typescript_port.rs"],
+      "rustTests": [
+        "crates/workflow-world/tests/runs_security_typescript_port.rs"
+      ],
       "notes": "All strict counter, exact summary, duplicate-ID, empty-result, and maximum-cardinality security cases pass. Rust additionally proves diagnostics do not reflect a sensitive run ID. Verified by Rust port workflow run 33455424866."
     },
     {
@@ -283,7 +310,9 @@
     {
       "typescript": "packages/world/src/slot-identity.test.ts",
       "status": "green",
-      "rustTests": ["crates/workflow-world/tests/slot_identity_typescript_port.rs"],
+      "rustTests": [
+        "crates/workflow-world/tests/slot_identity_typescript_port.rs"
+      ],
       "notes": "All nine fixed-width ordering, round-trip, safe-integer, legacy-prefix, ULID separation, and timestamp-validation declarations pass in Rust. Verified by Rust port workflow run 33455424866."
     },
     {

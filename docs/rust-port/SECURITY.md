@@ -54,3 +54,11 @@ separate, narrowly scoped workflow and threat review. TypeScript workspace
 packages used as compatibility oracles are built explicitly when their package
 exports point at generated `dist` files, rather than bypassing the published
 package boundary with source-only aliases.
+
+## Filesystem discovery boundaries
+
+A path is not a trusted directory merely because it is accessible or its text
+ends with a familiar suffix. Discovery code must validate the filesystem object
+type and compare complete path components. Security regressions must cover
+regular files, suffix lookalikes, normalization, and platform-root termination.
+WF-RUST-100 applies this rule to workflow-data discovery in TypeScript and Rust.

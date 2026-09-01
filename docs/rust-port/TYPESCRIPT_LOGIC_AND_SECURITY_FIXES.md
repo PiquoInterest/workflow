@@ -377,3 +377,11 @@ its characterization test can be removed.
 | --- | --- | --- |
 | WF-RUST-006 | Several other date and numeric schemas accept broad coercion or unconstrained numbers at wire boundaries; hook protocol versions are closed by WF-RUST-011 and step attempts by WF-RUST-012. | Inventory each remaining producer, preserve required legacy coercions, and use bounded integer/newtype validation for modern writes. |
 | WF-RUST-007 | Queue telemetry uses intentionally forgiving `.catch(undefined)` behavior. | Keep telemetry non-fatal while making execution-authoritative fields strict and independently bounded. |
+
+## WF-RUST-100: Workflow data path type and suffix confusion
+
+TypeScript previously used `fs.access()` and raw `endsWith()` checks while
+discovering local workflow data. The security regression was committed first;
+TypeScript and Rust now require a directory at exact path-component boundaries.
+The full evidence, impact, tests, and retirement condition are recorded in
+`docs/rust-port/findings/WF-RUST-100.md`.
