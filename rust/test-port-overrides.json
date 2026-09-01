@@ -131,6 +131,12 @@
       "notes": "All three default, explicit override, and implicit process-environment declarations are translated. Final GREEN additionally requires an isolated JavaScript binding test for live process.env mutation."
     },
     {
+      "typescript": "packages/world/src/node-http.test.ts",
+      "status": "red",
+      "rustTests": ["rust/tdd/workflow-world/tests/node_http.rs"],
+      "notes": "All 23 GET/POST, content-length, compression, streaming, abort, timeout, socket-reset, cancellation, queueing, and keep-alive declarations are translated against the planned Rust client contract. Final GREEN requires the same assertions against real loopback sockets rather than only a scripted contract harness."
+    },
+    {
       "typescript": "packages/world/src/queue.test.ts",
       "status": "partial",
       "rustTests": ["crates/workflow-world/tests/queue_typescript_port.rs"],
