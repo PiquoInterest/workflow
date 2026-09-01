@@ -90,8 +90,8 @@ fn json_stringify_utf16_prefix(value: &str, max_units: Option<usize>) -> String 
 
     while let Some(unit) = units.next() {
         match unit {
-            b'"' as u16 => output.push_str("\\\""),
-            b'\\' as u16 => output.push_str("\\\\"),
+            0x0022 => output.push_str("\\\""),
+            0x005c => output.push_str("\\\\"),
             0x0008 => output.push_str("\\b"),
             0x0009 => output.push_str("\\t"),
             0x000a => output.push_str("\\n"),
