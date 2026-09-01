@@ -1,6 +1,4 @@
-use workflow_core_tdd::duplicate_event_fixtures::{
-    DuplicateEventSpec, ignored_duplicate_indices,
-};
+use workflow_core_tdd::duplicate_event_fixtures::{DuplicateEventSpec, ignored_duplicate_indices};
 
 fn events(values: &[(&str, Option<&str>)]) -> Vec<DuplicateEventSpec> {
     values

@@ -16,7 +16,5 @@ impl DuplicateEventSpec {
 /// Returns the log indices a replay must classify as unclaimed duplicates.
 pub fn ignored_duplicate_indices(events: &[DuplicateEventSpec]) -> Vec<usize> {
     let _ = events;
-    panic!(
-        "TDD RED: packages/core/src/duplicate-event-fixtures.test.ts implementation pending"
-    )
+    panic!("TDD RED: packages/core/src/duplicate-event-fixtures.test.ts implementation pending")
 }

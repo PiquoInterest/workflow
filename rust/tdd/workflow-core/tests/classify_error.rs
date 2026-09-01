@@ -8,12 +8,18 @@ fn assert_code(error: ErrorValue, expected: RunErrorCode) {
 
 #[test]
 fn classifies_corrupted_event_log_errors() {
-    assert_code(ErrorValue::CorruptedEventLog, RunErrorCode::CorruptedEventLog);
+    assert_code(
+        ErrorValue::CorruptedEventLog,
+        RunErrorCode::CorruptedEventLog,
+    );
 }
 
 #[test]
 fn classifies_max_events_exceeded_errors() {
-    assert_code(ErrorValue::MaxEventsExceeded, RunErrorCode::MaxEventsExceeded);
+    assert_code(
+        ErrorValue::MaxEventsExceeded,
+        RunErrorCode::MaxEventsExceeded,
+    );
 }
 
 #[test]
@@ -137,8 +143,14 @@ fn throttling_is_retryable() {
 
 #[test]
 fn world_five_hundred_errors_are_retryable() {
-    assert!(is_retryable_world_error(&ErrorValue::world(Some(502), None)));
-    assert!(is_retryable_world_error(&ErrorValue::world(Some(503), None)));
+    assert!(is_retryable_world_error(&ErrorValue::world(
+        Some(502),
+        None
+    )));
+    assert!(is_retryable_world_error(&ErrorValue::world(
+        Some(503),
+        None
+    )));
 }
 
 #[test]
@@ -160,7 +172,10 @@ fn permanently_missing_event_payloads_are_not_retryable() {
 
 #[test]
 fn ordinary_world_four_hundred_errors_are_not_retryable() {
-    assert!(!is_retryable_world_error(&ErrorValue::world(Some(400), None)));
+    assert!(!is_retryable_world_error(&ErrorValue::world(
+        Some(400),
+        None
+    )));
 }
 
 #[test]

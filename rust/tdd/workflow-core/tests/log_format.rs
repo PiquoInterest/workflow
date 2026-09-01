@@ -101,7 +101,11 @@ fn drops_error_message_when_the_framing_line_already_contains_it() {
         "Workflow simple threw: thing went wrong\nError: thing went wrong",
         Some(&fields),
     );
-    assert!(!output.lines().any(|line| line.trim_start().starts_with("message ")));
+    assert!(
+        !output
+            .lines()
+            .any(|line| line.trim_start().starts_with("message "))
+    );
     assert_eq!(
         output,
         "[workflow-sdk] Workflow simple threw: thing went wrong\n  user error · Error\nError: thing went wrong"

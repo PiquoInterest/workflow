@@ -56,7 +56,10 @@ fn rejects_invalid_payload_before_calling_resume() {
     let outcome = resume_defined_hook(
         HookSchema::Approval,
         "token",
-        input(HookFieldValue::String("yes".to_owned()), HookFieldValue::Number(123)),
+        input(
+            HookFieldValue::String("yes".to_owned()),
+            HookFieldValue::Number(123),
+        ),
     );
     assert_eq!(
         outcome,
