@@ -10,10 +10,9 @@ fn assert_no_zod_inputs(inputs: &[String]) {
 
 #[test]
 fn does_not_bundle_world_schemas_into_a_minimal_workflow() {
-    let observation = workflow_bundle_inputs(
-        r#"export async function minimal() { "use workflow"; return 1; }"#,
-    )
-    .unwrap();
+    let observation =
+        workflow_bundle_inputs(r#"export async function minimal() { "use workflow"; return 1; }"#)
+            .unwrap();
 
     assert_no_zod_inputs(&observation.inputs);
 }

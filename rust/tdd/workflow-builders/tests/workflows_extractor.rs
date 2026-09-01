@@ -2,9 +2,7 @@ use std::fs;
 use std::path::PathBuf;
 use std::time::{SystemTime, UNIX_EPOCH};
 
-use workflow_builders_tdd::workflows_extractor::{
-    WorkflowGraphNode, extract_workflow_graphs,
-};
+use workflow_builders_tdd::workflows_extractor::{WorkflowGraphNode, extract_workflow_graphs};
 
 struct TestRoot(PathBuf);
 
@@ -74,10 +72,7 @@ fn extracts_step_nodes_when_proxies_include_pure_annotations() {
 
     let extraction = extract_workflow_graphs(&bundle_path).unwrap();
     let workflow = &extraction.workflows["./input.ts"]["testWorkflow"];
-    assert_eq!(
-        workflow.workflow_id,
-        "workflow//./input.ts//testWorkflow"
-    );
+    assert_eq!(workflow.workflow_id, "workflow//./input.ts//testWorkflow");
     assert!(workflow.graph.nodes.iter().any(|node| {
         matches!(
             node,

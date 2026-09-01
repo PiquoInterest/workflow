@@ -245,8 +245,5 @@ fn generated_file_writer_rewrites_unchanged_output_when_opted_out() {
         .write_generated_file(&target, "export const a = 1;")
         .unwrap();
     assert_ne!(file_identity(&target), before);
-    assert_eq!(
-        fs::read_to_string(target).unwrap(),
-        "export const a = 1;"
-    );
+    assert_eq!(fs::read_to_string(target).unwrap(), "export const a = 1;");
 }
