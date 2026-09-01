@@ -3,10 +3,10 @@
   "sourceCount": 336,
   "declaredTestCount": 5103,
   "statusCounts": {
-    "unported": 225,
+    "unported": 222,
     "partial": 0,
-    "red": 97,
-    "green": 14,
+    "red": 101,
+    "green": 13,
     "blocked": 0
   },
   "entries": [
@@ -1003,9 +1003,11 @@
       "kind": "unit",
       "lineCount": 378,
       "declaredTestCount": 3,
-      "status": "unported",
-      "rustTests": [],
-      "notes": ""
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-core/tests/race_padded_draw_ordering.rs"
+      ],
+      "notes": "The generated declaration counter reports three tests, while the pinned source contains two executable it(...) cases. Both cold and warm shared-cache cases are translated, plus one Rust-only single-owner binding invariant extending WF-RUST-023. Coverage preserves all seven seeded correlation IDs, the 13-event log, watchdog recovery before settled-branch finalization, cache-priming hydration, complete event consumption, suspension with exactly finalizeS/finalizeW/settleW pending, identical cold/warm bindings, and rejection of correlation-ID or logical-step rebinding. Final GREEN must exercise the real Rust event consumer, Promise.race-equivalent scheduling, delayed hydration, ReplayPayloadCache, log-ordered draw allocator, suspension collector, and corruption path; fixture-precomputed observations are insufficient."
     },
     {
       "typescript": "packages/core/src/readable-stream-telemetry.test.ts",
@@ -1014,9 +1016,11 @@
       "kind": "unit",
       "lineCount": 180,
       "declaredTestCount": 3,
-      "status": "unported",
-      "rustTests": [],
-      "notes": ""
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-core/tests/readable_stream_telemetry.rs"
+      ],
+      "notes": "All three TypeScript declarations are translated. Coverage preserves CLIENT span identity; exact run, stream, and operation attributes; numeric time-to-first-non-empty-chunk and connect durations; connect not exceeding TTFC; drained-only completion totals; raw payload byte counts for WorkflowServerReadableStream; framed wire-byte counts including each four-byte header; and reconnect totals. Final GREEN must instrument the real Rust World read and framed reconnect paths, use monotonic elapsed timing, and keep telemetry fire-and-forget so a missing or failing exporter cannot alter stream delivery."
     },
     {
       "typescript": "packages/core/src/reconnecting-framed-stream.test.ts",
@@ -1036,9 +1040,11 @@
       "kind": "unit",
       "lineCount": 241,
       "declaredTestCount": 9,
-      "status": "unported",
-      "rustTests": [],
-      "notes": ""
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-core/tests/replay_payload_cache.rs"
+      ],
+      "notes": "All nine TypeScript declarations are translated. Coverage preserves exact in-flight preparation sharing; synchronous preparer normalization; speculative rejection retention until the ordered consumer observes it; retry only after observation; concurrent workflow/result/error/hook prewarming; cached decrypt/decompress work with fresh VM object revival; stale-snapshot resetScan behavior for events inserted below the scanned prefix; event-ID keyed reuse across rescans; legacy flattened-value bypass; missing event-data tolerance; memoization of share-safe primitives including undefined; the 4096-character cap; fresh hydration for mutable and oversized values; and retry after failed hydration. Security-relevant cases prevent mutable object graphs from crossing VM boundaries, prevent stale-snapshot insertions from escaping preparation, and prevent speculative prewarming from hiding the original decryption failure. Final GREEN must exercise the production Rust payload preparer, authenticated decryption/decompression, event scanner, VM reviver, and failure-eviction ordering; scenario-specific observations are insufficient."
     },
     {
       "typescript": "packages/core/src/retained-vm-loop.test.ts",
@@ -1117,12 +1123,11 @@
       "kind": "unit",
       "lineCount": 166,
       "declaredTestCount": 9,
-      "status": "green",
+      "status": "red",
       "rustTests": [
-        "crates/workflow-core/tests/count_step_started_events.rs",
-        "rust/conformance/count-step-started-events-parity.test.ts"
+        "rust/tdd/workflow-core/tests/count_step_started_events.rs"
       ],
-      "notes": "All nine TypeScript declarations remain covered, expanded into direct boundary and lifecycle cases plus a differential oracle. Internal Rust retry accounting uses the checked StepAttemptCount integer newtype; floating-point input is confined to the JavaScript compatibility boundary and rejects negative, fractional, maximum, above-maximum, NaN, and infinite values without reflecting them. Counting preserves owner-scoped recovery and totalAttempts as bare starts plus the largest single owner, preventing workflow#3069 racing one-off stamps from falsely exhausting healthy steps while still bounding genuine and mixed retries. Executor and World-event adoption remain tracked under WF-RUST-098."
+      "notes": "All nine TypeScript declarations are expanded into 16 executable Rust cases. Coverage preserves exact 1-based attempt advancement for zero, one, and Number.MAX_SAFE_INTEGER - 1; the shared RangeError contract for negative, fractional, maximum, above-maximum, NaN, and infinite inputs; null/empty logs; step/event filtering; owner-scoped counts; totalAttempts as bare starts plus the largest single owner; the workflow#3069 racer regression; real repeated-owner timeout ceilings; and mixed owned-to-bare retry ceilings. Security and availability behavior requires exact safe-integer accounting and prevents racing one-off owner stamps from falsely exhausting a healthy step's retry budget while still bounding genuine retries. Final GREEN must share the production Rust event model and executor retry counter, preserve owner-message identity, and avoid lossy floating-point or saturating arithmetic."
     },
     {
       "typescript": "packages/core/src/runtime/cross-environment-delivery.test.ts",
