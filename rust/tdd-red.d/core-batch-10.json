@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "cases": [
+    {
+      "typescript": "packages/core/src/abort-controller-step.test.ts",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--manifest-path",
+        "rust/tdd/workflow-core/Cargo.toml",
+        "--test",
+        "abort_controller_step"
+      ],
+      "failureMarker": "TDD RED: packages/core/src/abort-controller-step.test.ts implementation pending"
+    },
+    {
+      "typescript": "packages/core/src/abort-consistency.test.ts",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--manifest-path",
+        "rust/tdd/workflow-core/Cargo.toml",
+        "--test",
+        "abort_consistency"
+      ],
+      "failureMarker": "TDD RED: packages/core/src/abort-consistency.test.ts implementation pending"
+    }
+  ]
+}
