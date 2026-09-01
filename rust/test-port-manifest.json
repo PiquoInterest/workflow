@@ -3,9 +3,9 @@
   "sourceCount": 334,
   "declaredTestCount": 5100,
   "statusCounts": {
-    "unported": 228,
+    "unported": 227,
     "partial": 0,
-    "red": 94,
+    "red": 95,
     "green": 12,
     "blocked": 0
   },
@@ -744,9 +744,11 @@
       "kind": "unit",
       "lineCount": 378,
       "declaredTestCount": 30,
-      "status": "unported",
-      "rustTests": [],
-      "notes": ""
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-core/tests/bench_rtt_stats.rs"
+      ],
+      "notes": "All 30 TypeScript declarations are translated directly. Coverage preserves mechanism-based sequence buckets, chunk-count-independent progress bins, sparse input handling, exact mean-profile and histogram merges, doubling size bins, nearest-rank percentiles, one-decimal rounding, per-run delay maxima, steady-window rate trimming, skew-free CDV with duplicate/reorder/hole accounting, positive-CDV sequence padding, count-weighted averages, and percentile-of-percentiles aggregation. Final GREEN must share one production Rust implementation between the deployment reader and benchmark runner; fixture tables or precomputed summaries are insufficient."
     },
     {
       "typescript": "packages/core/src/byte-stream-framing.test.ts",
