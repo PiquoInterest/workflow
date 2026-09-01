@@ -133,11 +133,7 @@ fn list_events_falls_back_to_storage_when_first_analytics_page_is_empty() {
 #[test]
 fn list_waits_passes_cursor_and_preserves_array_output() {
     let input = wait();
-    let mut analytics_page = Page::new(
-        vec![input.clone()],
-        Some("next-wait-cursor"),
-        true,
-    );
+    let mut analytics_page = Page::new(vec![input.clone()], Some("next-wait-cursor"), true);
     analytics_page.page_info = Some(page_info());
     let observation = list_waits(
         &WaitWorld { analytics_page },

@@ -123,7 +123,11 @@ export async function multipleViolationsWorkflow() {
 
     let observation = analyze_workflow_build(&fixture);
     assert!(!observation.succeeded);
-    assert!(observation.output.contains("\"fs\" which is a Node.js module"));
+    assert!(
+        observation
+            .output
+            .contains("\"fs\" which is a Node.js module")
+    );
     assert!(
         observation
             .output

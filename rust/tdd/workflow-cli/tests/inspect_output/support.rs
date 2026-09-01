@@ -1,8 +1,8 @@
 use std::collections::BTreeMap;
 
 use workflow_cli_tdd::output::{
-    AnalyticsPageInfo, DateValue, EventOutputRecord, EventRecord, Page, RunOutputRecord,
-    RunRecord, StepOutputRecord, StepRecord, WaitOutputRecord, WaitRecord,
+    AnalyticsPageInfo, DateValue, EventOutputRecord, EventRecord, Page, RunOutputRecord, RunRecord,
+    StepOutputRecord, StepRecord, WaitOutputRecord, WaitRecord,
 };
 
 pub fn date(value: &str) -> DateValue {
@@ -100,8 +100,7 @@ pub fn event(analytics: bool) -> EventRecord {
         correlation_id: Some("step-1".to_owned()),
         entity_id: analytics.then(|| "step-1".to_owned()),
         step_name: Some("doWork".to_owned()),
-        workflow_name: analytics
-            .then(|| "workflow//./src/workflows/test//myWorkflow".to_owned()),
+        workflow_name: analytics.then(|| "workflow//./src/workflows/test//myWorkflow".to_owned()),
         deployment_id: analytics.then(|| "dep-1".to_owned()),
         spec_version: analytics.then_some(2),
         run_created_at: analytics.then(|| date("2026-06-30T00:00:00.000Z")),

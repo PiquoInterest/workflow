@@ -1,6 +1,6 @@
 pub const ALL_REGIONS: [&str; 19] = [
-    "iad1", "arn1", "bom1", "cdg1", "cle1", "cpt1", "dub1", "fra1", "gru1", "hkg1",
-    "hnd1", "icn1", "kix1", "lhr1", "pdx1", "sfo1", "sin1", "syd1", "yul1",
+    "iad1", "arn1", "bom1", "cdg1", "cle1", "cpt1", "dub1", "fra1", "gru1", "hkg1", "hnd1", "icn1",
+    "kix1", "lhr1", "pdx1", "sfo1", "sin1", "syd1", "yul1",
 ];
 
 pub const DETAILED_REGIONS: [&str; 3] = ["iad1", "sfo1", "fra1"];
@@ -66,10 +66,7 @@ pub fn start_all_region_probes(regions: &[&str]) -> Vec<RegionProbeObservation> 
     pending()
 }
 
-pub fn start_implicit_region_probe(
-    region: &str,
-    label: &str,
-) -> ImplicitRegionProbeObservation {
+pub fn start_implicit_region_probe(region: &str, label: &str) -> ImplicitRegionProbeObservation {
     let _ = (region, label);
     pending()
 }

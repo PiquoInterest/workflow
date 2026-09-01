@@ -1,7 +1,6 @@
 use workflow_cli_tdd::output::{
-    ApiError, EXPIRED_DATA_MESSAGE, format_table_value,
-    get_observability_upgrade_required_message, has_expired_data,
-    is_observability_upgrade_required_error,
+    ApiError, EXPIRED_DATA_MESSAGE, format_table_value, get_observability_upgrade_required_message,
+    has_expired_data, is_observability_upgrade_required_error,
 };
 
 const DAY_MS: i64 = 24 * 60 * 60 * 1_000;
@@ -72,7 +71,5 @@ fn does_not_treat_404_as_an_upgrade_prompt() {
 
 #[test]
 fn upgrade_message_names_observability_plus() {
-    assert!(
-        get_observability_upgrade_required_message().contains("Upgrade Observability Plus")
-    );
+    assert!(get_observability_upgrade_required_message().contains("Upgrade Observability Plus"));
 }

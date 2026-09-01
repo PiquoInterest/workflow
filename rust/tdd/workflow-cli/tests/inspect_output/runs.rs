@@ -65,10 +65,7 @@ fn preserves_analytics_page_metadata_in_json_output() {
 fn includes_world_specific_fields_when_describe_run_exists() {
     let input = run("wrun_41KX206BTK10M0C31CMN2AS1JS");
     let observation = list(
-        DescribeRunBehavior::Sync(fields(&[
-            ("region", Some("sfo1")),
-            ("shard", Some("a")),
-        ])),
+        DescribeRunBehavior::Sync(fields(&[("region", Some("sfo1")), ("shard", Some("a"))])),
         Page::new(vec![input.clone()], None, false),
     );
 
@@ -87,7 +84,11 @@ fn preserves_null_describe_run_values() {
         Page::new(vec![input], None, false),
     );
 
-    assert!(observation.output.data[0].world_fields.contains_key("region"));
+    assert!(
+        observation.output.data[0]
+            .world_fields
+            .contains_key("region")
+    );
     assert_eq!(observation.output.data[0].world_fields["region"], None);
 }
 
@@ -156,8 +157,5 @@ fn world_without_describe_run_adds_no_world_fields() {
     );
 
     assert_eq!(observation.describe_calls, Vec::<String>::new());
-    assert_eq!(
-        observation.output.data[0].world_fields,
-        BTreeMap::new()
-    );
+    assert_eq!(observation.output.data[0].world_fields, BTreeMap::new());
 }

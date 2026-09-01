@@ -3,9 +3,9 @@
   "sourceCount": 334,
   "declaredTestCount": 5100,
   "statusCounts": {
-    "unported": 257,
+    "unported": 256,
     "partial": 0,
-    "red": 65,
+    "red": 66,
     "green": 12,
     "blocked": 0
   },
@@ -569,9 +569,15 @@
       "kind": "e2e",
       "lineCount": 473,
       "declaredTestCount": 6,
-      "status": "unported",
-      "rustTests": [],
-      "notes": ""
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-core/tests/e2e_region.rs",
+        "rust/tdd/workflow-core/tests/e2e_region/support.rs",
+        "rust/tdd/workflow-core/tests/e2e_region/explicit.rs",
+        "rust/tdd/workflow-core/tests/e2e_region/implicit.rs",
+        "rust/tdd/workflow-core/tests/e2e_region/stream_and_hooks.rs"
+      ],
+      "notes": "All six parameterized TypeScript declarations are translated as 27 executable Rust tests: three explicit starts, nine concurrent probes, one aggregate all-region pass, one in-progress cross-region stream, nineteen implicit starts, and two non-default-region hook round trips. Coverage preserves the complete 19-region set, strict run-ID tag/data-placement ownership, the documented execution-adjacency allowlist, unique concurrent run identity, stream visibility before completion, implicit VERCEL_REGION minting, opaque-token hook lookup, ordered sequential resume payloads, and terminal server state. Security-relevant cases require concurrent starts and opaque hook tokens to never cross-wire tenant run state, require readers to observe backend stream metadata rather than stale region-local state, and allow geographic execution elasticity without weakening exact tag ownership. Final GREEN must exercise real Rust run-ID tagging, queue routing, storage, stream, and hook-resume implementations; fixture-generated observations are insufficient."
     },
     {
       "typescript": "packages/core/e2e/e2e.test.ts",
