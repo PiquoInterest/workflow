@@ -3,9 +3,9 @@
   "sourceCount": 334,
   "declaredTestCount": 5100,
   "statusCounts": {
-    "unported": 283,
+    "unported": 282,
     "partial": 0,
-    "red": 39,
+    "red": 40,
     "green": 12,
     "blocked": 0
   },
@@ -65,9 +65,11 @@
       "kind": "unit",
       "lineCount": 1164,
       "declaredTestCount": 15,
-      "status": "unported",
-      "rustTests": [],
-      "notes": ""
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-ai/tests/stream_text_iterator.rs"
+      ],
+      "notes": "All 15 current declarations are translated: provider metadata to provider-options mapping, parallel and mixed providers, Gemini thought signatures, OpenAI item IDs, reasoning ordering and provider options, prepareStep system-message rules, multi-step system updates, and malformed tool-call input retention. Final GREEN must drive the real Rust iterator and provider prompt builder."
     },
     {
       "typescript": "packages/ai/src/agent/telemetry.test.ts",
