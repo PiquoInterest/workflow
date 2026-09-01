@@ -15,9 +15,12 @@
     },
     {
       "typescript": "packages/utils/src/world-target.test.ts",
-      "status": "red",
-      "rustTests": ["rust/tdd/workflow-utils/tests/world_target.rs"],
-      "notes": "All ten environment-resolution assertions are translated with explicit maps rather than process-global mutation."
+      "status": "green",
+      "rustTests": [
+        "rust/tdd/workflow-utils/tests/world_target.rs",
+        "crates/workflow-utils/tests/world_target.rs"
+      ],
+      "notes": "All ten TypeScript environment-resolution declarations execute against production workflow-utils. Direct production tests additionally pin empty environment values and exact Vercel target matching so prefix lookalikes are not accepted. Verified by read-only utility workflow run 33560481078."
     },
     {
       "typescript": "packages/utils/src/parse-name.test.ts",
@@ -42,9 +45,12 @@
     },
     {
       "typescript": "packages/utils/src/re-exports.test.ts",
-      "status": "red",
-      "rustTests": ["rust/tdd/workflow-utils/tests/re_exports.rs"],
-      "notes": "All three crate-root export assertions are translated and intentionally depend on the still-RED parse-name contract."
+      "status": "green",
+      "rustTests": [
+        "rust/tdd/workflow-utils/tests/re_exports.rs",
+        "crates/workflow-utils/tests/re_exports.rs"
+      ],
+      "notes": "All three TypeScript crate-root re-export declarations execute against the production workflow-utils parse-name exports. Verified by read-only utility workflow run 33560481078."
     },
     {
       "typescript": "packages/utils/src/debug-log.test.ts",

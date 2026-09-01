@@ -46,3 +46,10 @@ Status meanings:
 | Contract | Status | Evidence |
 | --- | --- | --- |
 | Debug selector gating and diagnostic redaction | PROVEN | TypeScript legacy characterization plus production and translated Rust tests; read-only workflow run `33558964834`; WF-RUST-102 |
+
+## Utility target and export promotions
+
+| Contract | Status | Evidence |
+| --- | --- | --- |
+| Workflow world-target resolution | PROVEN | 10 translated TypeScript tests plus direct exact-match regressions; read-only workflow run `33560481078` |
+| Parse-name crate-root re-exports | PROVEN | 3 translated TypeScript tests plus direct production re-export tests; read-only workflow run `33560481078` |
