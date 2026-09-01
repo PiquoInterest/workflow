@@ -36,3 +36,12 @@ Acknowledgments: https://github.com/PiquoInterest/workflow/blob/main/docs/rust-p
 # backwards, representing partial attempts, or losing identity above 2^53 - 1.
 # Direct Rust, TypeScript characterization, and differential tests cover the
 # accepted and rejected boundaries without reflecting rejected values.
+#
+# WF-RUST-013 (TDD RED): AI provider stream chunks are an untrusted protocol
+# boundary. Malformed tool-call JSON must be preserved as raw input instead of
+# crashing the workflow or silently becoming a different argument object, and
+# partial response-metadata chunks must merge without erasing earlier identity
+# fields. The complete 30-declaration TypeScript suite is translated at
+# rust/tdd/workflow-ai/tests/do_stream_step.rs. Rust implementation remains
+# intentionally RED until those tests can pass against the real stream state
+# machine; a panic marker is not treated as a security fix.
