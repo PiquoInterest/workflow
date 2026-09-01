@@ -3,9 +3,9 @@
   "sourceCount": 334,
   "declaredTestCount": 5100,
   "statusCounts": {
-    "unported": 234,
+    "unported": 231,
     "partial": 0,
-    "red": 88,
+    "red": 91,
     "green": 12,
     "blocked": 0
   },
@@ -523,9 +523,11 @@
       "kind": "e2e",
       "lineCount": 1448,
       "declaredTestCount": 10,
-      "status": "unported",
-      "rustTests": [],
-      "notes": ""
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-core/tests/benchmark.rs"
+      ],
+      "notes": "All 10 benchmark scenario declarations are translated. The Rust contract preserves the in-deployment preflight and clientStart clock anchor, exact workflow names and arguments, sequential sampling, bounded retry budgets, three-attempt zero-success abort, exact step/chunk count validation, TTFS targets, CRTT index buckets, size and progress profiles, replay cadence identity, fan-out first/last completion metrics, destination-kind STSO splitting, and whole-run overhead. WF-RUST-090 records that security and measurement-integrity cases require malformed trigger responses and mismatched return counts to fail closed, prevent a remote target from consuming an unbounded retry budget, and retain semantic cadence hashes so a changed workload cannot inherit an unrelated baseline. Final GREEN must drive the real Rust runtime and workbench route; fabricated observations or local-only timestamps are insufficient."
     },
     {
       "typescript": "packages/core/e2e/build-errors.test.ts",
@@ -547,9 +549,11 @@
       "kind": "e2e",
       "lineCount": 1550,
       "declaredTestCount": 2,
-      "status": "unported",
-      "rustTests": [],
-      "notes": ""
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-core/tests/dev_hmr.rs"
+      ],
+      "notes": "The generated declaration counter reports two plain test(...) calls, but the pinned source registers seven additional test.runIf(...) cases. All nine top-level cases are preserved, and the final HMR fuzz case is expanded into its 13 independently diagnosable mutations. The Rust suite also makes 12 load-bearing helper contracts explicit: configuration precedence, platform/canary timeout budgets, portable flow-route detection, UTF-16/UTF-8 log decoding, exact stable versus lower-bound canary log counts, quiescence before cursor windows, missing-output failure, stranded-step restoration, bounded poll diagnostics, and source conditionals. WF-RUST-091 records the shared-dev-server denial-of-service risk when a missed unlink leaves generated step registrations importing a deleted file. Final GREEN must drive the real Rust watcher, builder, generated artifacts, manifest, workflow execution, log stream, and failure-safe cleanup; returning the expected contract is insufficient."
     },
     {
       "typescript": "packages/core/e2e/e2e-agent.test.ts",
@@ -625,9 +629,11 @@
       "kind": "e2e",
       "lineCount": 368,
       "declaredTestCount": 6,
-      "status": "unported",
-      "rustTests": [],
-      "notes": ""
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-core/tests/manifest_e2e.rs"
+      ],
+      "notes": "All six parameterized TypeScript declarations are expanded into their 36 concrete project/scenario cases: structure across eight workbenches, dot-directory step/workflow discovery across two Next builders, and single-statement if/while/for extraction across all eight workbenches. Four additional Rust contract tests cover exact path routing, ID/graph validation, metadata validation, and WF-RUST-092. The TypeScript tryReadManifest helper catches every read and JSON error as null, so a malformed or unreadable manifest silently skips the suite. Rust preserves the intended missing-file skip but fails closed on parse and non-ENOENT I/O failures. Final GREEN must parse real generated JSON and validate the actual Rust builder output; fixture-only manifests are insufficient."
     },
     {
       "typescript": "packages/core/e2e/route-bundle-isolation.test.ts",
