@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "entries": [
+    {
+      "typescript": "packages/core/src/byte-stream-framing.test.ts",
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-core/tests/byte_stream_framing.rs"
+      ],
+      "notes": "All 17 TypeScript declarations are translated. Coverage preserves the four-byte big-endian envelope, empty-chunk suppression, large and empty streams, the 100 MB producer and consumer cap, split and coalesced transport reads, truncated-frame rejection, one-hundred-chunk boundary preservation, legacy raw references, framed-v1 references, and world-stream round trips. WF-RUST-024 records the memory-exhaustion and protocol-desynchronization boundary. Final GREEN must use the production incremental Rust parser and must reject an advertised oversized length before allocating or waiting for its body."
+    },
+    {
+      "typescript": "packages/core/src/flushable-stream.test.ts",
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-core/tests/flushable_stream.rs"
+      ],
+      "notes": "All 16 TypeScript declarations are translated. Coverage includes handled pre-await rejection, writable and readable lock polling, natural close, write and source failures, concurrent and delayed writes, singleton pollers, drain-barrier adoption, early-ack completion ordering, barrier failure, accepted-prefix durability, plain sinks, ordered delivery, sink close, and pending-operation cleanup. WF-RUST-025 records the durability boundary. Final GREEN must exercise the production async Rust pipe and prove that neither success nor failure settles before every accepted byte is durable."
+    },
+    {
+      "typescript": "packages/core/src/delivery-barrier-dispenser.test.ts",
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-core/tests/delivery_barrier_dispenser.rs"
+      ],
+      "notes": "All three TypeScript regression cases are translated. The suite requires suspension to wait for a delivery parked behind an unclaimed payload, several parked segments to wake lowest-log-position first so later correlation draws remain deterministic, and a rejected promise queue not to kill the safety-net dispenser or leave delivery idle permanently false. WF-RUST-026 records the availability and replay-integrity boundary. Final GREEN must run the actual Rust event consumer, barrier registry, scheduler, and correlation allocator."
+    }
+  ]
+}
