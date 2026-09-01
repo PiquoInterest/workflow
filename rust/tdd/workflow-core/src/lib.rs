@@ -5,6 +5,7 @@ pub mod abort_controller_step;
 pub mod abort_replay_ordering;
 pub mod agent_e2e;
 pub mod attribute_changes;
+pub mod bench_rtt_stats;
 pub mod benchmark;
 pub mod build_errors;
 pub mod byte_stream_framing;
