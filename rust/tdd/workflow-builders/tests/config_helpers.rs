@@ -33,5 +33,5 @@ fn prefers_the_workspace_root_over_app_lockfiles() {
     fs::write(root.0.join("pnpm-workspace.yaml"), "packages: []\n").unwrap();
     fs::write(app_root.join("package-lock.json"), "{}\n").unwrap();
 
-    assert_eq!(resolve_project_root(&app_root), root.0);
+    assert_eq!(resolve_project_root(&app_root), root.0.clone());
 }
