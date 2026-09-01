@@ -149,3 +149,31 @@ Acknowledgments: https://github.com/PiquoInterest/workflow/blob/main/docs/rust-p
 # bindings across extension, every dense prefix, and repeated evaluation. Full
 # analysis is in docs/rust-port/findings/WF-RUST-023.md. Closure requires the
 # production scheduler, allocator, and event consumer.
+#
+# WF-RUST-024 (TDD RED): Framed byte-stream length prefixes are untrusted. The
+# Rust decoder must reject producer chunks and advertised frames above
+# 100,000,000 bytes before allocating a payload-sized buffer, reject partial
+# headers and payloads at EOF, and preserve exact boundaries across split and
+# coalesced reads. All 17 TypeScript framing and stream-reference assertions are
+# translated at rust/tdd/workflow-core/tests/byte_stream_framing.rs. Full
+# analysis is in docs/rust-port/findings/WF-RUST-024.md. Closure requires the
+# production incremental parser, serializer, World stream path, and hydration.
+#
+# WF-RUST-025 (TDD RED): A group-commit stream sink can acknowledge buffer entry
+# before accepted bytes are durable. Neither success nor producer/sink failure
+# may settle the invocation before the sink drain barrier has committed the
+# accepted prefix. All 16 TypeScript polling, error, close, ordering, and drain
+# assertions are translated at
+# rust/tdd/workflow-core/tests/flushable_stream.rs. Full analysis is in
+# docs/rust-port/findings/WF-RUST-025.md. Closure requires the production async
+# pipe, World sink abstraction, drain barrier, and invocation completion path.
+#
+# WF-RUST-026 (TDD RED): Delivery barriers parked behind unclaimed payloads must
+# retire lowest-log-position first before end-of-log suspension, and a rejected
+# internal promise queue must not permanently kill the safety-net dispenser.
+# Otherwise runs can wedge or later correlation draws can become timing-based
+# and corrupt deterministic replay. All three production-shape TypeScript cases
+# are translated at
+# rust/tdd/workflow-core/tests/delivery_barrier_dispenser.rs. Full analysis is
+# in docs/rust-port/findings/WF-RUST-026.md. Closure requires the real event
+# consumer, barrier registry, scheduler, and correlation allocator.
