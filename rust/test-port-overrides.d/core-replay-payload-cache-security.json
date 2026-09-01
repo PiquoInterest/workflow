@@ -8,7 +8,7 @@
         "crates/workflow-core/tests/replay_payload_cache.rs",
         "crates/workflow-core/tests/replay_payload_cache_security.rs"
       ],
-      "notes": "WF-RUST-099 is closed at the production Rust replay boundary. The TypeScript characterization remains green and deliberately proves the legacy cache aliases conflicting workflow-run and event payload bytes to the first preparation. Production Rust binds each logical cache key to the exact original binary bytes. Reusing a run or event key with different bytes creates a terminal, redacted PayloadConflict, does not invoke the preparer for the conflicting payload, wakes in-flight waiters, and cannot be overwritten when the original preparation later completes. The permanent Rust core workflow requires the TypeScript characterization and both production Rust replay-cache test targets to pass."
+      "notes": "WF-RUST-099 is fixed in both the active TypeScript cache and production Rust. Both bind workflow/event keys to exact original bytes, share in-flight work for identical bytes, reject mismatches without preparing the conflicting payload, preserve terminal conflicts across in-flight completion and later lookup, reject same-key preparer re-entry, and expose only fixed redacted diagnostics. TypeScript copies identity and preparation buffers separately and publishes the entry before invoking custom preparation code. The permanent Rust-core workflow must keep the TypeScript regression and both production Rust replay-cache targets green."
     }
   ]
 }
