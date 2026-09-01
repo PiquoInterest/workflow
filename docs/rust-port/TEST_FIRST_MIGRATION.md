@@ -25,25 +25,27 @@ silently.
 
 ## Current progress
 
-At branch commit `7e0ea4d360cd0ec8da3a9d187af8c501233fc19b` the checked-in manifest records:
+At branch commit `cfc3e6e79b07c143016e182e066419aa868ec78f` the checked-in manifest records:
 
 - 334 TypeScript test files and 5,100 declared tests in the locked corpus;
-- 39 source files fully translated into expected-RED Rust suites;
+- 40 source files fully translated into expected-RED Rust suites;
 - 12 source files green against production Rust behavior;
-- 283 source files not yet translated;
+- 282 source files not yet translated;
 - no entries marked partial or blocked.
 
-The latest AI tranche translates all 51 declarations from:
+The latest AI tranche translates all 66 declarations from:
 
 - `packages/ai/src/agent/do-stream-step.test.ts`;
 - `packages/ai/src/agent/tools-to-model-tools.test.ts`;
-- `packages/ai/src/agent/telemetry.test.ts`.
+- `packages/ai/src/agent/telemetry.test.ts`;
+- `packages/ai/src/agent/stream-text-iterator.test.ts`.
 
 The translated suites cover provider-stream normalization, malformed tool-call
 input retention, partial metadata merging, model-tool projection, telemetry
-parity, and the `recordInputs` and `recordOutputs` privacy controls. These tests
-remain intentionally RED. They do not count as production implementation or as
-closed security findings.
+parity, telemetry privacy controls, provider metadata retention, reasoning
+ordering, and dynamic system-message replacement. These tests remain
+intentionally RED. They do not count as production implementation or as closed
+security findings.
 
 Large generated registries are split into reviewed fragments:
 
