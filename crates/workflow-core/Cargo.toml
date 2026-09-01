@@ -14,6 +14,7 @@ path = "src/lib.rs"
 
 [dependencies]
 semver = "=1.0.26"
+workflow-world = { path = "../workflow-world" }
 
 [lints.rust]
 unsafe_code = "forbid"

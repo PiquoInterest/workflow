@@ -6,6 +6,10 @@ on:
       - pro/rust-repository-port
     paths:
       - 'crates/workflow-core/**'
+      - 'crates/workflow-world/src/attributes.rs'
+      - 'crates/workflow-world/src/error.rs'
+      - 'packages/core/src/attribute-changes.ts'
+      - 'packages/core/src/attribute-changes.test.ts'
       - 'packages/core/src/capabilities.ts'
       - 'packages/core/src/capabilities.test.ts'
       - 'packages/core/src/serialization/types.ts'
@@ -14,6 +18,8 @@ on:
       - 'packages/core/src/replay-payload-cache-security.test.ts'
       - 'packages/core/src/runtime/count-step-started-events.ts'
       - 'packages/core/src/runtime/count-step-started-events.test.ts'
+      - 'packages/world/src/attributes-validation.ts'
+      - 'rust/conformance/attribute-changes-parity.test.ts'
       - 'rust/conformance/capabilities-parity.test.ts'
       - 'rust/conformance/count-step-started-events-parity.test.ts'
       - 'rust/test-port-manifest.json'
@@ -29,6 +35,10 @@ on:
   pull_request:
     paths:
       - 'crates/workflow-core/**'
+      - 'crates/workflow-world/src/attributes.rs'
+      - 'crates/workflow-world/src/error.rs'
+      - 'packages/core/src/attribute-changes.ts'
+      - 'packages/core/src/attribute-changes.test.ts'
       - 'packages/core/src/capabilities.ts'
       - 'packages/core/src/capabilities.test.ts'
       - 'packages/core/src/serialization/types.ts'
@@ -37,6 +47,8 @@ on:
       - 'packages/core/src/replay-payload-cache-security.test.ts'
       - 'packages/core/src/runtime/count-step-started-events.ts'
       - 'packages/core/src/runtime/count-step-started-events.test.ts'
+      - 'packages/world/src/attributes-validation.ts'
+      - 'rust/conformance/attribute-changes-parity.test.ts'
       - 'rust/conformance/capabilities-parity.test.ts'
       - 'rust/conformance/count-step-started-events-parity.test.ts'
       - 'rust/test-port-manifest.json'
@@ -60,7 +72,7 @@ permissions:
 
 jobs:
   core-contracts:
-    name: Capability, replay-cache, and retry-accounting parity
+    name: Capability, attribute, replay-cache, and retry-accounting parity
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
@@ -91,6 +103,9 @@ jobs:
       - name: Check Rust formatting
         run: cargo fmt --manifest-path crates/workflow-core/Cargo.toml -- --check
 
+      - name: Prove production Rust attribute normalization tests are green
+        run: cargo test --locked --manifest-path crates/workflow-core/Cargo.toml --test attribute_changes
+
       - name: Prove production Rust replay-cache behavior tests are green
         run: cargo test --locked --manifest-path crates/workflow-core/Cargo.toml --test replay_payload_cache
 
@@ -106,6 +121,7 @@ jobs:
       - name: Run TypeScript oracles
         run: |
           pnpm exec vitest run \
+            packages/core/src/attribute-changes.test.ts \
             packages/core/src/capabilities.test.ts \
             packages/core/src/replay-payload-cache.test.ts \
             packages/core/src/replay-payload-cache-security.test.ts \
@@ -116,6 +132,8 @@ jobs:
 
       - name: Compare TypeScript and Rust behavior
         run: |
+          WORKFLOW_RUST_ATTRIBUTE_CHANGES_CONFORMANCE_BIN=crates/workflow-core/target/debug/examples/attribute_changes_conformance \
+            pnpm exec vitest run rust/conformance/attribute-changes-parity.test.ts
           WORKFLOW_RUST_CAPABILITIES_CONFORMANCE_BIN=crates/workflow-core/target/debug/examples/capabilities_conformance \
             pnpm exec vitest run rust/conformance/capabilities-parity.test.ts
           WORKFLOW_RUST_STEP_ATTEMPT_CONFORMANCE_BIN=crates/workflow-core/target/debug/examples/count_step_started_events_conformance \
