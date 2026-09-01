@@ -3,9 +3,9 @@
   "sourceCount": 334,
   "declaredTestCount": 5100,
   "statusCounts": {
-    "unported": 269,
+    "unported": 268,
     "partial": 0,
-    "red": 53,
+    "red": 54,
     "green": 12,
     "blocked": 0
   },
@@ -290,9 +290,11 @@
       "kind": "unit",
       "lineCount": 361,
       "declaredTestCount": 13,
-      "status": "unported",
-      "rustTests": [],
-      "notes": ""
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-builders/tests/module_specifier.rs"
+      ],
+      "notes": "All 13 package and relative-import declarations are translated using real package.json and source files: root/subpath/conditional exports, module/main entrypoints, deep fallback paths, direct versus transitive node_modules dependencies, project-local package files, workspace package IDs, non-exported files, and source-backed dist exports. Final GREEN must resolve declared dependency and export ownership rather than infer package identity from path shape alone."
     },
     {
       "typescript": "packages/builders/src/node-module-esbuild-plugin.test.ts",
