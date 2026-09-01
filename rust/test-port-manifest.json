@@ -3,9 +3,9 @@
   "sourceCount": 334,
   "declaredTestCount": 5100,
   "statusCounts": {
-    "unported": 256,
+    "unported": 255,
     "partial": 0,
-    "red": 66,
+    "red": 67,
     "green": 12,
     "blocked": 0
   },
@@ -558,9 +558,15 @@
       "kind": "e2e",
       "lineCount": 329,
       "declaredTestCount": 20,
-      "status": "unported",
-      "rustTests": [],
-      "notes": ""
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-core/tests/e2e_agent.rs",
+        "rust/tdd/workflow-core/tests/e2e_agent/core.rs",
+        "rust/tdd/workflow-core/tests/e2e_agent/callbacks.rs",
+        "rust/tdd/workflow-core/tests/e2e_agent/tools.rs",
+        "rust/tdd/workflow-core/tests/e2e_agent/gaps.rs"
+      ],
+      "notes": "The pinned source contains 19 executable it(...) cases although the generated declaration counter reports 20. All 19 are translated, plus one Rust-only authorization target for WF-RUST-017. Coverage preserves basic text, function/provider/mixed/sequential/error-recovery/multimodal tools, constructor and method callback ordering, captured finish data, string instructions, timeout, prepareStep precedence and numbering, and every documented experimental gap. The TypeScript tool-approval case is retained explicitly as evidence that needsApproval currently produces both a call and result, while the separate Rust target requires one pending riskyTool call, zero results, and no execution before approval. Final GREEN must route the compatibility characterization through a TypeScript oracle and make the production Rust path satisfy the secure target; implementing the unsafe legacy result in the Rust agent loop is prohibited."
     },
     {
       "typescript": "packages/core/e2e/e2e-region.test.ts",
