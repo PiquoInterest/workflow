@@ -1,7 +1,5 @@
 fn pending<T>() -> T {
-    panic!(
-        "TDD RED: packages/core/src/race-padded-draw-ordering.test.ts implementation pending"
-    )
+    panic!("TDD RED: packages/core/src/race-padded-draw-ordering.test.ts implementation pending")
 }
 
 /// Deterministic correlation IDs drawn by the seeded TypeScript replay fixture.

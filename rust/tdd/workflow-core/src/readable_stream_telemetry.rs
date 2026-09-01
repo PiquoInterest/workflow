@@ -1,9 +1,7 @@
 use std::collections::BTreeMap;
 
 fn pending<T>() -> T {
-    panic!(
-        "TDD RED: packages/core/src/readable-stream-telemetry.test.ts implementation pending"
-    )
+    panic!("TDD RED: packages/core/src/readable-stream-telemetry.test.ts implementation pending")
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
