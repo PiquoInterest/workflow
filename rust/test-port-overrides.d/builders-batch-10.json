@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "entries": [
+    {
+      "typescript": "packages/builders/src/node-module-esbuild-plugin.test.ts",
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-builders/tests/node_module_esbuild_plugin.rs",
+        "rust/tdd/workflow-builders/tests/node_module_esbuild_plugin/plugin.rs",
+        "rust/tdd/workflow-builders/tests/node_module_esbuild_plugin/helpers.rs"
+      ],
+      "notes": "All 37 executable it() cases are translated; the textual inventory reports 38 because it also matches the source file's split(...) helper call. The Rust fixtures preserve direct and node:-prefixed built-ins, multiple violations, top-level package attribution, main/module entry-field parity, namespace/default/aliased imports, tree-shaken unused imports, shared-module safe and unsafe exports, comment/string-aware source locations, Bun and bun: imports, package-name extraction including pnpm and scoped layouts, regular-expression escaping, import-clause identifier extraction, and used-versus-unused location lookup. Security-critical negatives prevent comments or strings from hijacking diagnostics, nested dependency internals from being exposed instead of the caller-controlled package boundary, unused imports from causing false failures, and path parsing from confusing scoped or nested packages. Final GREEN must inspect the real Rust bundle graph and parse bounded canonical source paths rather than raw substring-matching fixtures."
+    }
+  ]
+}

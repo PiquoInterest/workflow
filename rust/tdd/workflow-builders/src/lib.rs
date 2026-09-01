@@ -6,6 +6,7 @@ pub mod fast_discovery;
 pub mod input_files;
 pub mod manifest_ids;
 pub mod module_specifier;
+pub mod node_module_plugin;
 pub mod pseudo_package;
 pub mod sourcemap;
 pub mod transform_utils;
