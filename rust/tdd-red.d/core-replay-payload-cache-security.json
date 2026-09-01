@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "cases": [
+    {
+      "typescript": "packages/core/src/replay-payload-cache-security.test.ts",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--manifest-path",
+        "rust/tdd/workflow-core/Cargo.toml",
+        "--test",
+        "replay_payload_cache_security"
+      ],
+      "failureMarker": "TDD RED: packages/core/src/replay-payload-cache-security.test.ts implementation pending"
+    }
+  ]
+}

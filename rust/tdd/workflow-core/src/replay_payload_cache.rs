@@ -2,6 +2,12 @@ fn pending<T>() -> T {
     panic!("TDD RED: packages/core/src/replay-payload-cache.test.ts implementation pending")
 }
 
+fn security_pending<T>() -> T {
+    panic!(
+        "TDD RED: packages/core/src/replay-payload-cache-security.test.ts implementation pending"
+    )
+}
+
 pub const MAX_MEMOIZED_PRIMITIVE_LENGTH: usize = 4096;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -93,6 +99,15 @@ pub struct FailedHydrationObservation {
     pub hydration_calls: usize,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct PayloadConflictObservation {
+    pub accepted_conflicting_payload: bool,
+    pub preparation_calls: usize,
+    pub returned_payload: Option<Vec<u8>>,
+    pub error: Option<String>,
+    pub reflected_event_id: bool,
+}
+
 /// Observes exact in-flight promise sharing for one binary event payload.
 pub fn observe_synchronous_preparer_deduplication() -> DeduplicationObservation {
     pending()
@@ -136,4 +151,9 @@ pub fn observe_mutable_and_oversized_rehydration() -> MutableOversizedObservatio
 /// Observes that a failed step hydration is never installed in the primitive cache.
 pub fn observe_failed_step_hydration_retry() -> FailedHydrationObservation {
     pending()
+}
+
+/// Proves one cache key cannot be rebound to different authenticated bytes.
+pub fn observe_conflicting_event_payload_alias() -> PayloadConflictObservation {
+    security_pending()
 }
