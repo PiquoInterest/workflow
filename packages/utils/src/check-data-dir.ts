@@ -1,4 +1,4 @@
-import { access } from 'node:fs/promises';
+import { stat } from 'node:fs/promises';
 import { homedir } from 'node:os';
 import { dirname, isAbsolute, join, resolve, sep } from 'node:path';
 
@@ -18,16 +18,20 @@ export interface WorkflowDataDirInfo {
   projectDir: string;
   /** Short name for display: up to last two folder names of projectDir */
   shortName: string;
-  /** Error message if the given path couldn't be accessed (doesn't exist or is not readable) */
+  /** Error message if the given path couldn't be accessed (doesn't exist or is not a directory) */
   error?: string;
 }
 
 /**
- * Expands a path that starts with ~ to use the user's home directory.
+ * Expands a standalone ~ or a ~/... path to use the user's home directory.
+ * User-qualified forms such as ~alice remain ordinary relative paths.
  */
 function expandTilde(path: string): string {
-  if (path.startsWith('~')) {
-    return join(homedir(), path.slice(1));
+  if (path === '~') {
+    return homedir();
+  }
+  if (path.startsWith('~/') || path.startsWith(`~${sep}`)) {
+    return join(homedir(), path.slice(2));
   }
   return path;
 }
@@ -63,36 +67,35 @@ export function getDirShortName(projectDir: string): string {
 }
 
 /**
- * Checks if a directory exists.
+ * Checks that a path resolves to a directory. Merely being accessible is not
+ * enough because regular files and special files are not workflow stores.
  */
 async function directoryExists(path: string): Promise<boolean> {
   try {
-    await access(path);
-    return true;
+    return (await stat(path)).isDirectory();
   } catch {
     return false;
   }
 }
 
 /**
- * Checks if the given path is itself a workflow data directory
- * (ends with one of the possibleWorkflowDataPaths).
+ * Checks if the given path is itself a workflow data directory.
  *
- * Returns the matching suffix and the projectDir if found.
+ * The comparison is made from complete path components. A raw string suffix
+ * check would incorrectly classify names such as `not.workflow-data` and
+ * `not-workflow-data` as trusted workflow stores.
  */
 function checkIfPathIsWorkflowDataDir(
   absolutePath: string
 ): { suffix: string; projectDir: string } | null {
   for (const suffix of possibleWorkflowDataPaths) {
-    // Handle both forward slashes and the platform's separator
-    const normalizedSuffix = suffix.split('/').join(sep);
-    if (absolutePath.endsWith(normalizedSuffix)) {
-      // Calculate how many directories up we need to go
-      const suffixParts = suffix.split('/').length;
-      let projectDir = absolutePath;
-      for (let i = 0; i < suffixParts; i++) {
-        projectDir = dirname(projectDir);
-      }
+    const suffixParts = suffix.split('/');
+    let projectDir = absolutePath;
+    for (let index = 0; index < suffixParts.length; index++) {
+      projectDir = dirname(projectDir);
+    }
+
+    if (resolve(projectDir, ...suffixParts) === absolutePath) {
       return { suffix, projectDir };
     }
   }
@@ -108,14 +111,13 @@ function checkIfPathIsWorkflowDataDir(
  * 3. The path is somewhere inside a project with workflow data
  *
  * @param cwd - The directory to start searching from (can be relative, absolute, or use ~)
- * @returns Information about the found workflow data directory, or null if not found
+ * @returns Information about the found workflow data directory, or an empty result if not found
  */
 export async function findWorkflowDataDir(
   cwd: string
 ): Promise<WorkflowDataDirInfo> {
   const absoluteCwd = toAbsolutePath(cwd);
 
-  // Pre-check if the passed path is valid at all
   if (!(await directoryExists(absoluteCwd))) {
     return {
       projectDir: absoluteCwd,
@@ -125,9 +127,8 @@ export async function findWorkflowDataDir(
     };
   }
 
-  // Case 1: Check if the path itself is already a workflow data directory
   const isDataDir = checkIfPathIsWorkflowDataDir(absoluteCwd);
-  if (isDataDir && (await directoryExists(absoluteCwd))) {
+  if (isDataDir) {
     return {
       projectDir: isDataDir.projectDir,
       dataDir: absoluteCwd,
@@ -135,7 +136,6 @@ export async function findWorkflowDataDir(
     };
   }
 
-  // Case 2: Check if cwd contains one of the workflow data directories
   for (const path of possibleWorkflowDataPaths) {
     const fullPath = join(absoluteCwd, path);
     if (await directoryExists(fullPath)) {
@@ -147,12 +147,8 @@ export async function findWorkflowDataDir(
     }
   }
 
-  // Case 3: Walk up the directory tree to find the project root
   let currentDir = absoluteCwd;
-  const root = resolve('/');
-
-  while (currentDir !== root) {
-    // Check if any workflow data path exists here
+  while (true) {
     for (const path of possibleWorkflowDataPaths) {
       const fullPath = join(currentDir, path);
       if (await directoryExists(fullPath)) {
@@ -166,12 +162,10 @@ export async function findWorkflowDataDir(
 
     const parentDir = dirname(currentDir);
     if (parentDir === currentDir) {
-      break; // Reached the filesystem root
+      break;
     }
     currentDir = parentDir;
   }
-
-  // If we get here, we didn't find a workflow data directory
 
   return {
     projectDir: absoluteCwd,
