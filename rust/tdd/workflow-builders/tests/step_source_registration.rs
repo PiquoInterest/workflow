@@ -28,14 +28,17 @@ fn deduplicates_identical_pnpm_peer_variant_package_copies() {
         create_step_registrations(StepRegistrationFixture::IdenticalPnpmPeerCopies).unwrap();
 
     assert_eq!(output.manifest_step_ids.len(), 2);
-    assert!(output.manifest_step_ids.iter().all(|step_id| {
-        step_id == "step//step-pkg@1.0.0//runPackagedStep"
-    }));
+    assert!(
+        output
+            .manifest_step_ids
+            .iter()
+            .all(|step_id| { step_id == "step//step-pkg@1.0.0//runPackagedStep" })
+    );
 }
 
 #[test]
 fn rejects_pnpm_style_package_copies_whose_implementations_differ() {
-    let error = create_step_registrations(StepRegistrationFixture::DivergentPnpmPeerCopies)
-        .unwrap_err();
+    let error =
+        create_step_registrations(StepRegistrationFixture::DivergentPnpmPeerCopies).unwrap_err();
     assert!(error.contains("Duplicate workflow step ID"));
 }

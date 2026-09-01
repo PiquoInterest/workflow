@@ -26,11 +26,8 @@ fn shows_progress_logs_when_debug_matches_workflow_build() {
 #[test]
 fn shows_progress_logs_for_matching_wildcards() {
     for selector in ["workflow:*", "*"] {
-        let call = build_progress_log(
-            Some(selector),
-            &["Created step registrations", "10ms"],
-        )
-        .unwrap();
+        let call =
+            build_progress_log(Some(selector), &["Created step registrations", "10ms"]).unwrap();
         assert_eq!(
             call.message,
             "[workflow:build] Created step registrations 10ms"

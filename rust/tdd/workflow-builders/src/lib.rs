@@ -45,9 +45,7 @@ pub struct VercelEsmBuildObservation {
 }
 
 pub fn build_vercel_esm_fixture() -> VercelEsmBuildObservation {
-    panic!(
-        "TDD RED: packages/builders/src/vercel-build-output-api.test.ts implementation pending"
-    )
+    panic!("TDD RED: packages/builders/src/vercel-build-output-api.test.ts implementation pending")
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -68,7 +66,5 @@ pub fn create_step_registrations(
     fixture: StepRegistrationFixture,
 ) -> Result<StepRegistrationOutput, String> {
     let _ = fixture;
-    panic!(
-        "TDD RED: packages/builders/src/step-source-registration.test.ts implementation pending"
-    )
+    panic!("TDD RED: packages/builders/src/step-source-registration.test.ts implementation pending")
 }
