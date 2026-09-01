@@ -95,8 +95,9 @@ export function parseClassName(name: string) {
  * name and the source module specifier without the internal `//` syntax.
  *
  * Falls back to the raw name if parsing fails (e.g. older name formats or
- * user-provided strings we don't recognize) so logs never silently drop
- * information.
+ * user-provided strings we don't recognize). Control and line-separator
+ * characters are escaped in both parsed and fallback output so one logical
+ * name cannot forge additional log lines or terminal control sequences.
  */
 export function formatStepName(name: string): string {
   return formatParsedName(parseStepName(name), name);
@@ -155,6 +156,24 @@ function shortNameFromSanitized(tag: string, name: string): string | null {
   return shortName || null;
 }
 
+const SINGLE_LINE_CONTROL_CHARACTERS =
+  /[\u0000-\u001f\u007f-\u009f\u2028\u2029]/g;
+
+function escapeSingleLine(value: string): string {
+  return value.replace(SINGLE_LINE_CONTROL_CHARACTERS, (character) => {
+    switch (character) {
+      case '\n':
+        return '\\n';
+      case '\r':
+        return '\\r';
+      case '\t':
+        return '\\t';
+      default:
+        return `\\u${character.charCodeAt(0).toString(16).padStart(4, '0')}`;
+    }
+  });
+}
+
 function formatParsedName(
   parsed: {
     shortName: string;
@@ -163,6 +182,8 @@ function formatParsedName(
   } | null,
   fallback: string
 ): string {
-  if (!parsed) return fallback;
-  return `${parsed.shortName} (${parsed.moduleSpecifier})`;
+  if (!parsed) return escapeSingleLine(fallback);
+  return `${escapeSingleLine(parsed.shortName)} (${escapeSingleLine(
+    parsed.moduleSpecifier
+  )})`;
 }
