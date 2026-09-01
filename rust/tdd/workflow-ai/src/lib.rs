@@ -1,5 +1,7 @@
 #![forbid(unsafe_code)]
 
+pub mod telemetry;
+
 use std::marker::PhantomData;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
