@@ -1,57 +1,53 @@
-# WF-RUST-097: Replay cache aliases conflicting payload bytes
+# WF-RUST-097: Producer capability negotiation must fail closed
 
-**Status:** TypeScript characterization committed; Rust secure target is TDD RED.
+**Status:** Rust contract implemented; runtime adoption and CI proof pending.
 
-## Original behavior
+## TypeScript reference behavior
 
-`ReplayPayloadCache` indexes prepared event payloads by `eventId` and field. Once
-one binary payload has populated that key, a later call with the same key returns
-the original in-flight or completed promise without comparing the supplied
-bytes. The second payload is never passed to `prepareReplayPayload`.
+`packages/core/src/capabilities.ts` chooses the serialization and stream
+representations that a target workflow run can decode. Missing or invalid
+`workflowCoreVersion` metadata receives only the baseline `devl` format and raw
+byte streams. Optional features become available at explicit semantic-version
+cutoffs.
 
-The characterization test in
-`packages/core/src/replay-payload-cache-security.test.ts` supplies two different
-`Uint8Array` values under the same event ID and `result` field. It proves that
-TypeScript returns the first promise and first prepared bytes for both calls.
+The TypeScript implementation is the correct compatibility oracle. This finding
+records a security-sensitive migration invariant rather than a TypeScript flaw.
 
 ## Security and correctness impact
 
-Event IDs are expected to bind immutable event content. A stale snapshot,
-corrupted backend response, collision, or compromised adapter can violate that
-assumption. Reusing the first preparation hides the conflict and skips the
-second payload's authentication, decryption, decompression, and parse path. The
-runtime can therefore associate bytes from one event version with another log
-version instead of reporting corruption.
+A false-positive capability is more dangerous than a false negative. If a new
+producer treats malformed or legacy metadata as modern, it can send encrypted,
+compressed, sealed, or length-framed bytes to a consumer that cannot decode
+them. The result is durable payload loss, replay failure, or an availability
+incident. A conservative false negative only delays an optimization.
 
-This does not make unauthenticated bytes valid. It bypasses the validation path
-entirely by returning a previously accepted value for a now-conflicting key.
+## Rust implementation
 
-## Required Rust invariant
+`crates/workflow-core/src/capabilities.rs`:
 
-A workflow-input or event cache key is immutable for the invocation lifetime.
-The production Rust cache must retain the original binary bytes in its shared
-preparation cell. Reusing the key with byte-for-byte identical input shares the
-same preparation. Reusing it with different bytes transitions the cell to a
-terminal conflict state and returns a typed integrity error.
-
-The error must be static and must not include the run ID, event ID, payload, or
-cryptographic material. A conflict is not evicted for retry because retrying the
-same contradictory log cannot repair it.
+- uses the `semver` crate for real prerelease ordering;
+- matches npm-semver normalization for surrounding whitespace and one lower-case
+  `v` prefix;
+- rejects raw inputs above npm semver's 256 UTF-16-code-unit limit;
+- rejects major, minor, or patch components above
+  `Number.MAX_SAFE_INTEGER`;
+- always includes `devl`;
+- enables `encr` at `4.2.0-beta.64`;
+- enables framed byte streams at `5.0.0-beta.15`;
+- enables `gzip` and `zstd` together at `5.0.0-beta.18`;
+- enables `encp` at `5.0.0-beta.37`;
+- otherwise fails closed without reflecting untrusted metadata in an error.
 
 ## Regression evidence
 
-- Unsafe TypeScript characterization:
-  `packages/core/src/replay-payload-cache-security.test.ts`
-- Rust secure RED target:
-  `rust/tdd/workflow-core/tests/replay_payload_cache_security.rs`
-- Existing cache behavior suite:
-  `packages/core/src/replay-payload-cache.test.ts`
-  and `rust/tdd/workflow-core/tests/replay_payload_cache.rs`
+- TypeScript oracle: `packages/core/src/capabilities.test.ts`
+- Direct Rust tests: `crates/workflow-core/tests/capabilities.rs`
+- Differential tests: `rust/conformance/capabilities-parity.test.ts`
+- Dedicated CI: `.github/workflows/rust-core.yml`
 
 ## Closure condition
 
-WF-RUST-097 is GREEN only when the production `workflow-core` cache shares
-identical bytes, rejects conflicting bytes before invoking the preparer, keeps
-the conflict terminal across later lookups, emits no attacker-controlled data in
-the error, and the TypeScript characterization remains available as evidence of
-the intentional security divergence.
+The contract becomes fully closed only after the branch workflow passes and
+every Rust producer that selects serialization or byte-stream framing uses this
+single implementation. Until then, runtime adoption remains a separate parity
+gate.
