@@ -5,8 +5,8 @@
   "statusCounts": {
     "unported": 222,
     "partial": 0,
-    "red": 101,
-    "green": 13,
+    "red": 100,
+    "green": 14,
     "blocked": 0
   },
   "entries": [
@@ -1123,11 +1123,12 @@
       "kind": "unit",
       "lineCount": 166,
       "declaredTestCount": 9,
-      "status": "red",
+      "status": "green",
       "rustTests": [
-        "rust/tdd/workflow-core/tests/count_step_started_events.rs"
+        "crates/workflow-core/tests/count_step_started_events.rs",
+        "rust/conformance/count-step-started-events-parity.test.ts"
       ],
-      "notes": "All nine TypeScript declarations are expanded into 16 executable Rust cases. Coverage preserves exact 1-based attempt advancement for zero, one, and Number.MAX_SAFE_INTEGER - 1; the shared RangeError contract for negative, fractional, maximum, above-maximum, NaN, and infinite inputs; null/empty logs; step/event filtering; owner-scoped counts; totalAttempts as bare starts plus the largest single owner; the workflow#3069 racer regression; real repeated-owner timeout ceilings; and mixed owned-to-bare retry ceilings. Security and availability behavior requires exact safe-integer accounting and prevents racing one-off owner stamps from falsely exhausting a healthy step's retry budget while still bounding genuine retries. Final GREEN must share the production Rust event model and executor retry counter, preserve owner-message identity, and avoid lossy floating-point or saturating arithmetic."
+      "notes": "All nine parameterized TypeScript declarations are covered by the production workflow-core Rust implementation and differential oracle. The Rust tests add exact negative-zero and negative-infinity boundaries while preserving safe-integer advancement, null/empty logs, event filtering, owner-scoped counts, totalAttempts as bare starts plus the largest single owner, the workflow#3069 racer regression, genuine retry ceilings, and mixed owned-to-bare ceilings. Internal Rust accounting uses the private StepAttemptCount integer type; f64 exists only at the JavaScript compatibility boundary. The dedicated Rust core workflow runs Rustfmt, compilation, all tests, Clippy with warnings denied, the TypeScript oracle, and cross-language differential fixtures."
     },
     {
       "typescript": "packages/core/src/runtime/cross-environment-delivery.test.ts",
