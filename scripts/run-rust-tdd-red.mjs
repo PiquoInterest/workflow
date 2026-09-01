@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+import { spawnSync } from 'node:child_process';
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -16,7 +17,7 @@ function fragmentDirectoryFor(filePath) {
   return `${filePath.slice(0, -extension.length)}.d`;
 }
 
-function loadDocuments(primaryPath, arrayKey, label) {
+function loadDocuments(primaryPath, arrayKey) {
   const paths = [primaryPath];
   const fragmentDirectory = fragmentDirectoryFor(primaryPath);
 
@@ -41,17 +42,12 @@ function loadDocuments(primaryPath, arrayKey, label) {
     return document[arrayKey].map((entry) => ({
       ...entry,
       __sourceDocument: path.relative(ROOT, documentPath),
-      __sourceLabel: label,
     }));
   });
 }
 
-const cases = loadDocuments(configPath, 'cases', 'expected-RED case');
-const overrideEntries = loadDocuments(
-  overridesPath,
-  'entries',
-  'test-port override'
-);
+const cases = loadDocuments(configPath, 'cases');
+const overrideEntries = loadDocuments(overridesPath, 'entries');
 
 let failures = 0;
 const configuredPaths = new Set();
@@ -115,7 +111,11 @@ for (const testCase of cases) {
   }
 
   const [program, ...args] = command;
-  const result = spawnExpectedRed(program, args);
+  const result = spawnSync(program, args, {
+    cwd: ROOT,
+    encoding: 'utf8',
+    maxBuffer: 16 * 1024 * 1024,
+  });
   const output = `${result.stdout ?? ''}${result.stderr ?? ''}`;
 
   if (result.error) {
@@ -149,18 +149,3 @@ for (const testCase of cases) {
 }
 
 if (failures > 0) process.exit(1);
-
-function spawnExpectedRed(program, args) {
-  const { spawnSync } = awaitImportChildProcess();
-  return spawnSync(program, args, {
-    cwd: ROOT,
-    encoding: 'utf8',
-    maxBuffer: 16 * 1024 * 1024,
-  });
-}
-
-function awaitImportChildProcess() {
-  return childProcessModule;
-}
-
-import * as childProcessModule from 'node:child_process';
