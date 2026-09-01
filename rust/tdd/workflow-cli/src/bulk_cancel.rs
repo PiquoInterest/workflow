@@ -5,8 +5,7 @@ pub const BULK_CANCEL_MAX_LIMIT: f64 = 500.0;
 /// Cancellation reason emitted by the CLI.
 pub const CLI_CANCEL_REASON: &str = "Cancelled via Workflow CLI";
 /// Guidance shown when one bounded batch did not exhaust the matches.
-pub const HAS_MORE_GUIDANCE: &str =
-    "More runs match these filters. Re-run this command to cancel the next batch,\n\
+pub const HAS_MORE_GUIDANCE: &str = "More runs match these filters. Re-run this command to cancel the next batch,\n\
      or use --limit up to 500.";
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]

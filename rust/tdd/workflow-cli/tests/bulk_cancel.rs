@@ -121,8 +121,15 @@ fn restricts_unpinned_queries_to_cancellable_statuses_and_excludes_terminal_runs
 
     let observation = perform(world, None, 50, true, None);
     assert_eq!(observation.exit_code, 0);
-    assert_eq!(observation.requested_statuses, CANCELLABLE_STATUSES.to_vec());
-    assert!(!observation.requested_statuses.contains(&RunStatus::Completed));
+    assert_eq!(
+        observation.requested_statuses,
+        CANCELLABLE_STATUSES.to_vec()
+    );
+    assert!(
+        !observation
+            .requested_statuses
+            .contains(&RunStatus::Completed)
+    );
     assert_eq!(observation.cancel_many_requests.len(), 1);
     let mut run_ids = observation.cancel_many_requests[0].run_ids.clone();
     run_ids.sort();
@@ -200,10 +207,7 @@ fn falls_back_to_per_run_cancellation_when_cancel_many_is_absent() {
             },
         ]
     );
-    assert_eq!(
-        observation.result.as_ref().unwrap().summary.cancelled,
-        2
-    );
+    assert_eq!(observation.result.as_ref().unwrap().summary.cancelled, 2);
     assert!(observation.logs.join("\n").contains("2 cancelled"));
 }
 
