@@ -57,6 +57,31 @@
       "failureMarker": "TDD RED: packages/utils/src/module-scope-state.test.ts implementation pending"
     },
     {
+      "typescript": "packages/builders/src/base-builder-logging.test.ts",
+      "command": ["cargo", "test", "--locked", "--manifest-path", "rust/tdd/workflow-builders/Cargo.toml", "--test", "base_builder_logging"],
+      "failureMarker": "TDD RED: packages/builders/src/base-builder-logging.test.ts implementation pending"
+    },
+    {
+      "typescript": "packages/builders/src/config-helpers.test.ts",
+      "command": ["cargo", "test", "--locked", "--manifest-path", "rust/tdd/workflow-builders/Cargo.toml", "--test", "config_helpers"],
+      "failureMarker": "TDD RED: packages/builders/src/config-helpers.test.ts implementation pending"
+    },
+    {
+      "typescript": "packages/builders/src/esbuild-tsconfig.test.ts",
+      "command": ["cargo", "test", "--locked", "--manifest-path", "rust/tdd/workflow-builders/Cargo.toml", "--test", "esbuild_tsconfig"],
+      "failureMarker": "TDD RED: packages/builders/src/esbuild-tsconfig.test.ts implementation pending"
+    },
+    {
+      "typescript": "packages/builders/src/step-source-registration.test.ts",
+      "command": ["cargo", "test", "--locked", "--manifest-path", "rust/tdd/workflow-builders/Cargo.toml", "--test", "step_source_registration"],
+      "failureMarker": "TDD RED: packages/builders/src/step-source-registration.test.ts implementation pending"
+    },
+    {
+      "typescript": "packages/builders/src/vercel-build-output-api.test.ts",
+      "command": ["cargo", "test", "--locked", "--manifest-path", "rust/tdd/workflow-builders/Cargo.toml", "--test", "vercel_build_output_api"],
+      "failureMarker": "TDD RED: packages/builders/src/vercel-build-output-api.test.ts implementation pending"
+    },
+    {
       "typescript": "packages/errors/src/ansi.test.ts",
       "command": ["cargo", "test", "--locked", "--manifest-path", "rust/tdd/workflow-errors/Cargo.toml", "--test", "ansi"],
       "failureMarker": "TDD RED: packages/errors/src/ansi.test.ts implementation pending"
