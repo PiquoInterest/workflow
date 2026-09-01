@@ -85,9 +85,7 @@ pub struct NodeHttpError {
     pub preserved_abort_reason: bool,
 }
 
-pub fn exercise_node_http_case(
-    case: NodeHttpCase,
-) -> Result<NodeHttpObservation, NodeHttpError> {
+pub fn exercise_node_http_case(case: NodeHttpCase) -> Result<NodeHttpObservation, NodeHttpError> {
     let _ = case;
     panic!("TDD RED: packages/world/src/node-http.test.ts implementation pending")
 }

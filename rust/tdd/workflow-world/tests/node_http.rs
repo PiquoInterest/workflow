@@ -40,7 +40,11 @@ fn sends_method_headers_and_a_buffered_body() {
 
     assert_eq!(observation.request.method, "POST");
     assert_eq!(
-        observation.request.headers.get("x-custom").map(String::as_str),
+        observation
+            .request
+            .headers
+            .get("x-custom")
+            .map(String::as_str),
         Some("value")
     );
     assert_eq!(observation.request.body, b"payload");
@@ -59,11 +63,13 @@ fn advertises_and_decodes_gzip() {
     let observation = observation(NodeHttpCase::Decode(ContentCoding::Gzip));
     let response = response(&observation);
 
-    assert!(observation
-        .request
-        .headers
-        .get("accept-encoding")
-        .is_some_and(|value| value.contains("gzip")));
+    assert!(
+        observation
+            .request
+            .headers
+            .get("accept-encoding")
+            .is_some_and(|value| value.contains("gzip"))
+    );
     assert_eq!(body(response).bytes, b"compressed payload");
     assert!(!response.headers.contains_key("content-encoding"));
     assert!(!response.headers.contains_key("content-length"));
