@@ -209,11 +209,7 @@ fn pseudo_package_set_contains_only_the_four_next_marker_packages() {
 #[test]
 fn inlines_dynamic_imports_when_the_package_is_not_external() {
     let root = TestRoot::new("dynamic-inline");
-    write_package(
-        &root.0,
-        "my-test-package",
-        "export const testValue = 42;",
-    );
+    write_package(&root.0, "my-test-package", "export const testValue = 42;");
     let observation = bundle(
         &root,
         r#"
@@ -234,11 +230,7 @@ fn inlines_dynamic_imports_when_the_package_is_not_external() {
 #[test]
 fn leaves_dynamic_imports_in_place_when_the_package_is_external() {
     let root = TestRoot::new("dynamic-external");
-    write_package(
-        &root.0,
-        "external-package",
-        "export const value = 100;",
-    );
+    write_package(&root.0, "external-package", "export const value = 100;");
     let observation = bundle(
         &root,
         r#"
@@ -255,9 +247,7 @@ fn leaves_dynamic_imports_in_place_when_the_package_is_external() {
     assert!(observation.errors.is_empty());
     assert!(
         observation.output.contains("import('external-package')")
-            || observation
-                .output
-                .contains("import(\"external-package\")")
+            || observation.output.contains("import(\"external-package\")")
     );
     assert!(!observation.output.contains("100"));
 }
@@ -265,11 +255,7 @@ fn leaves_dynamic_imports_in_place_when_the_package_is_external() {
 #[test]
 fn inlines_nested_dynamic_imports_from_dependencies() {
     let root = TestRoot::new("dynamic-nested");
-    write_package(
-        &root.0,
-        "inner-package",
-        "export const innerValue = 999;",
-    );
+    write_package(&root.0, "inner-package", "export const innerValue = 999;");
     write_package(
         &root.0,
         "outer-package",

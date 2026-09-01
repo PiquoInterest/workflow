@@ -7,6 +7,7 @@ pub mod manifest_ids;
 pub mod module_specifier;
 pub mod pseudo_package;
 pub mod sourcemap;
+pub mod transform_utils;
 pub mod workflow_alias;
 pub mod workflow_bundle_boundary;
 pub mod workflows_extractor;
