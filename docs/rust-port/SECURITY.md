@@ -34,6 +34,11 @@ These rules apply to every new Rust crate in the migration.
     schemas distinct from persistent entities, and every response-to-storage
     conversion must discard them. A cached capability must never survive a
     backend rollback, downgrade, or kill switch.
+12. Cache keys for authenticated or execution-authoritative payloads bind to an
+    immutable copy of the exact bytes. Same-key/different-bytes reuse is a
+    terminal integrity conflict, and diagnostics must be constant and redacted.
+    Cache entries are published before extensible preparation code runs, and
+    same-key preparer re-entry must fail without duplicate work or recursion.
 
 ## CI integrity
 
