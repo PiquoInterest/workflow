@@ -3,12 +3,11 @@
   "entries": [
     {
       "typescript": "packages/core/src/runtime/count-step-started-events.test.ts",
-      "status": "green",
+      "status": "red",
       "rustTests": [
-        "crates/workflow-core/tests/count_step_started_events.rs",
-        "rust/conformance/count-step-started-events-parity.test.ts"
+        "rust/tdd/workflow-core/tests/count_step_started_events.rs"
       ],
-      "notes": "All nine TypeScript declarations remain covered, expanded into direct boundary and lifecycle cases plus a differential oracle. Internal Rust retry accounting uses the checked StepAttemptCount integer newtype; floating-point input is confined to the JavaScript compatibility boundary and rejects negative, fractional, maximum, above-maximum, NaN, and infinite values without reflecting them. Counting preserves owner-scoped recovery and totalAttempts as bare starts plus the largest single owner, preventing workflow#3069 racing one-off stamps from falsely exhausting healthy steps while still bounding genuine and mixed retries. Executor and World-event adoption remain tracked under WF-RUST-098."
+      "notes": "All nine TypeScript declarations are expanded into 16 executable Rust cases. Coverage preserves exact 1-based attempt advancement for zero, one, and Number.MAX_SAFE_INTEGER - 1; the shared RangeError contract for negative, fractional, maximum, above-maximum, NaN, and infinite inputs; null/empty logs; step/event filtering; owner-scoped counts; totalAttempts as bare starts plus the largest single owner; the workflow#3069 racer regression; real repeated-owner timeout ceilings; and mixed owned-to-bare retry ceilings. Security and availability behavior requires exact safe-integer accounting and prevents racing one-off owner stamps from falsely exhausting a healthy step's retry budget while still bounding genuine retries. Final GREEN must share the production Rust event model and executor retry counter, preserve owner-message identity, and avoid lossy floating-point or saturating arithmetic."
     }
   ]
 }

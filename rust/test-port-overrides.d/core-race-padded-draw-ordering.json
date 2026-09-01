@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "entries": [
+    {
+      "typescript": "packages/core/src/race-padded-draw-ordering.test.ts",
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-core/tests/race_padded_draw_ordering.rs"
+      ],
+      "notes": "The generated declaration counter reports three tests, while the pinned source contains two executable it(...) cases. Both cold and warm shared-cache cases are translated, plus one Rust-only single-owner binding invariant extending WF-RUST-023. Coverage preserves all seven seeded correlation IDs, the 13-event log, watchdog recovery before settled-branch finalization, cache-priming hydration, complete event consumption, suspension with exactly finalizeS/finalizeW/settleW pending, identical cold/warm bindings, and rejection of correlation-ID or logical-step rebinding. Final GREEN must exercise the real Rust event consumer, Promise.race-equivalent scheduling, delayed hydration, ReplayPayloadCache, log-ordered draw allocator, suspension collector, and corruption path; fixture-precomputed observations are insufficient."
+    }
+  ]
+}

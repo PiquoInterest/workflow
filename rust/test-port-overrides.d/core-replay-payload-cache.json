@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "entries": [
+    {
+      "typescript": "packages/core/src/replay-payload-cache.test.ts",
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-core/tests/replay_payload_cache.rs"
+      ],
+      "notes": "All nine TypeScript declarations are translated. Coverage preserves exact in-flight preparation sharing; synchronous preparer normalization; speculative rejection retention until the ordered consumer observes it; retry only after observation; concurrent workflow/result/error/hook prewarming; cached decrypt/decompress work with fresh VM object revival; stale-snapshot resetScan behavior for events inserted below the scanned prefix; event-ID keyed reuse across rescans; legacy flattened-value bypass; missing event-data tolerance; memoization of share-safe primitives including undefined; the 4096-character cap; fresh hydration for mutable and oversized values; and retry after failed hydration. Security-relevant cases prevent mutable object graphs from crossing VM boundaries, prevent stale-snapshot insertions from escaping preparation, and prevent speculative prewarming from hiding the original decryption failure. Final GREEN must exercise the production Rust payload preparer, authenticated decryption/decompression, event scanner, VM reviver, and failure-eviction ordering; scenario-specific observations are insufficient."
+    }
+  ]
+}
