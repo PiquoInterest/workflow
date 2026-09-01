@@ -1,3 +1,5 @@
+// Port of packages/core/src/runtime/count-step-started-events.test.ts.
+// Keep these assertions unchanged when the implementation moves from RED to production Rust.
 use workflow_core_tdd::runtime::count_step_started_events::{
     MAX_STEP_ATTEMPT, STEP_ATTEMPT_ADVANCE_ERROR, StepEvent, StepStartScope,
     count_step_started_events, next_step_attempt,
