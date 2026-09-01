@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "entries": [
+    {
+      "typescript": "packages/core/e2e/manifest.test.ts",
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-core/tests/manifest_e2e.rs"
+      ],
+      "notes": "All six parameterized TypeScript declarations are expanded into their 36 concrete project/scenario cases: structure across eight workbenches, dot-directory step/workflow discovery across two Next builders, and single-statement if/while/for extraction across all eight workbenches. Four additional Rust contract tests cover exact path routing, ID/graph validation, metadata validation, and WF-RUST-092. The TypeScript tryReadManifest helper catches every read and JSON error as null, so a malformed or unreadable manifest silently skips the suite. Rust preserves the intended missing-file skip but fails closed on parse and non-ENOENT I/O failures. Final GREEN must parse real generated JSON and validate the actual Rust builder output; fixture-only manifests are insufficient."
+    }
+  ]
+}

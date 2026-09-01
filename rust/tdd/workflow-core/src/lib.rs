@@ -22,6 +22,7 @@ pub mod flushable_stream;
 pub mod log_format;
 pub mod log_order_draws;
 pub mod logger;
+pub mod manifest_e2e;
 pub mod module_scope_state;
 pub mod region_routing;
 pub mod runtime_import;
