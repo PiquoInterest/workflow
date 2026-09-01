@@ -79,23 +79,11 @@ fn resolve_sourcemap_prefers_explicit_config_over_environment() {
 #[test]
 fn resolve_sourcemap_uses_environment_when_config_is_absent() {
     for (raw, default_mode, expected) in [
-        (
-            "false",
-            SourcemapMode::Inline,
-            SourcemapMode::Disabled,
-        ),
-        (
-            "true",
-            SourcemapMode::Disabled,
-            SourcemapMode::Enabled,
-        ),
+        ("false", SourcemapMode::Inline, SourcemapMode::Disabled),
+        ("true", SourcemapMode::Disabled, SourcemapMode::Enabled),
         ("inline", SourcemapMode::Inline, SourcemapMode::Inline),
         ("linked", SourcemapMode::Inline, SourcemapMode::Linked),
-        (
-            "external",
-            SourcemapMode::Inline,
-            SourcemapMode::External,
-        ),
+        ("external", SourcemapMode::Inline, SourcemapMode::External),
         ("both", SourcemapMode::Inline, SourcemapMode::Both),
     ] {
         let mut config = config(None, false);
@@ -138,10 +126,7 @@ fn production_defaults_to_disabled_sourcemaps() {
     let mut config = config(None, false);
     config.node_environment = Some("production".to_owned());
     assert!(!is_development_build(&config));
-    assert_eq!(
-        default_sourcemap_mode(&config),
-        SourcemapMode::Disabled
-    );
+    assert_eq!(default_sourcemap_mode(&config), SourcemapMode::Disabled);
 }
 
 #[test]
