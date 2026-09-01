@@ -74,6 +74,60 @@
       "notes": "All nine TypeScript assertions are mirrored against the existing Rust time implementation. Status remains partial until the new direct mirror test passes the branch workflow; differential coverage already exists separately."
     },
     {
+      "typescript": "packages/errors/src/ansi.test.ts",
+      "status": "red",
+      "rustTests": ["rust/tdd/workflow-errors/tests/ansi.rs"],
+      "notes": "All 11 frame, inline annotation, code-token, hint, note, help, and docs snapshot declarations are translated. The test model keeps styled fragments readable as HTML-like tags, matching the TypeScript mock rather than embedding terminal escape bytes."
+    },
+    {
+      "typescript": "packages/errors/src/build-error.test.ts",
+      "status": "red",
+      "rustTests": ["rust/tdd/workflow-errors/tests/build_error.rs"],
+      "notes": "All four public-name, hierarchy, hint framing, native cause identity, and name-guard declarations are translated. Final GREEN requires the JavaScript binding to preserve Error subclass and cause identity."
+    },
+    {
+      "typescript": "packages/errors/src/corrupted-event-log-error.test.ts",
+      "status": "red",
+      "rustTests": ["rust/tdd/workflow-errors/tests/corrupted_event_log_error.rs"],
+      "notes": "All four hierarchy, documentation, cause identity, and type-guard declarations are translated."
+    },
+    {
+      "typescript": "packages/errors/src/fatal-error.test.ts",
+      "status": "red",
+      "rustTests": ["rust/tdd/workflow-errors/tests/fatal_error.rs"],
+      "notes": "All five retry-gate declarations are translated, including the security-sensitive requirement that only an Error with literal boolean fatal=true is treated as terminal."
+    },
+    {
+      "typescript": "packages/errors/src/module-scope-state.test.ts",
+      "status": "red",
+      "rustTests": ["rust/tdd/workflow-errors/tests/module_scope_state.rs"],
+      "notes": "The package-local module-scope-state sweep is translated separately so running only the error test crate retains the original safety signal."
+    },
+    {
+      "typescript": "packages/errors/src/replay-divergence-error.test.ts",
+      "status": "red",
+      "rustTests": ["rust/tdd/workflow-errors/tests/replay_divergence_error.rs"],
+      "notes": "Both replay-signal declarations are translated. The planned guard must require both the public name and eventId, preventing an ordinary runtime error from being misclassified as replay divergence."
+    },
+    {
+      "typescript": "packages/errors/src/runtime-decryption-error.test.ts",
+      "status": "red",
+      "rustTests": ["rust/tdd/workflow-errors/tests/runtime_decryption_error.rs"],
+      "notes": "All six hierarchy, docs, cause identity, optional diagnostic context, property omission, and name-guard declarations are translated."
+    },
+    {
+      "typescript": "packages/errors/src/serialization-error.test.ts",
+      "status": "red",
+      "rustTests": ["rust/tdd/workflow-errors/tests/serialization_error.rs"],
+      "notes": "All six hierarchy, bare-title, hint framing, cause identity, name-guard, and fatal retry-short-circuit declarations are translated."
+    },
+    {
+      "typescript": "packages/errors/src/workflow-error.test.ts",
+      "status": "red",
+      "rustTests": ["rust/tdd/workflow-errors/tests/workflow_error.rs"],
+      "notes": "Both base-error declarations are translated, including the prior WorkflowError.is regression and stable documentation framing. Final GREEN requires the JavaScript binding to expose the correct native Error name and guard behavior."
+    },
+    {
       "typescript": "packages/world/src/analytics.test.ts",
       "status": "red",
       "rustTests": ["rust/tdd/workflow-world/tests/analytics.rs"],
