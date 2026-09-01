@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "entries": [
+    {
+      "typescript": "packages/core/e2e/benchmark.test.ts",
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-core/tests/benchmark.rs"
+      ],
+      "notes": "All 10 benchmark scenario declarations are translated. The Rust contract preserves the in-deployment preflight and clientStart clock anchor, exact workflow names and arguments, sequential sampling, bounded retry budgets, three-attempt zero-success abort, exact step/chunk count validation, TTFS targets, CRTT index buckets, size and progress profiles, replay cadence identity, fan-out first/last completion metrics, destination-kind STSO splitting, and whole-run overhead. WF-RUST-090 records that security and measurement-integrity cases require malformed trigger responses and mismatched return counts to fail closed, prevent a remote target from consuming an unbounded retry budget, and retain semantic cadence hashes so a changed workload cannot inherit an unrelated baseline. Final GREEN must drive the real Rust runtime and workbench route; fabricated observations or local-only timestamps are insufficient."
+    }
+  ]
+}
