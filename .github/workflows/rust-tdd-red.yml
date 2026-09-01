@@ -1,6 +1,9 @@
 name: Rust TDD expected RED
 
 on:
+  push:
+    branches:
+      - pro/rust-repository-port
   pull_request:
     paths:
       - 'rust/tdd/**'
