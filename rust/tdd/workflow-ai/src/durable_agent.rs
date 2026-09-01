@@ -54,13 +54,8 @@ pub enum DurableAgentCase {
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum ContentPart {
-    Text {
-        text: String,
-    },
-    FileData {
-        data: String,
-        media_type: String,
-    },
+    Text { text: String },
+    FileData { data: String, media_type: String },
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
