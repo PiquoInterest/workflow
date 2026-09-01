@@ -8,6 +8,9 @@ on:
       - 'crates/workflow-core/**'
       - 'packages/core/src/capabilities.ts'
       - 'packages/core/src/capabilities.test.ts'
+      - 'packages/core/src/replay-payload-cache.ts'
+      - 'packages/core/src/replay-payload-cache.test.ts'
+      - 'packages/core/src/replay-payload-cache-security.test.ts'
       - 'packages/core/src/runtime/count-step-started-events.ts'
       - 'packages/core/src/runtime/count-step-started-events.test.ts'
       - 'rust/conformance/capabilities-parity.test.ts'
@@ -15,8 +18,12 @@ on:
       - 'rust/test-port-manifest.json'
       - 'rust/test-port-overrides.d/core-batch-04.json'
       - 'rust/test-port-overrides.d/core-count-step-started-events.json'
+      - 'rust/test-port-overrides.d/core-replay-payload-cache.json'
+      - 'rust/test-port-overrides.d/core-replay-payload-cache-security.json'
       - 'rust/tdd-red.d/core-batch-04.json'
       - 'rust/tdd-red.d/core-count-step-started-events.json'
+      - 'rust/tdd-red.d/core-replay-payload-cache.json'
+      - 'rust/tdd-red.d/core-replay-payload-cache-security.json'
       - 'docs/rust-port/**'
       - 'security.txt'
       - '.github/workflows/rust-core.yml'
@@ -25,6 +32,9 @@ on:
       - 'crates/workflow-core/**'
       - 'packages/core/src/capabilities.ts'
       - 'packages/core/src/capabilities.test.ts'
+      - 'packages/core/src/replay-payload-cache.ts'
+      - 'packages/core/src/replay-payload-cache.test.ts'
+      - 'packages/core/src/replay-payload-cache-security.test.ts'
       - 'packages/core/src/runtime/count-step-started-events.ts'
       - 'packages/core/src/runtime/count-step-started-events.test.ts'
       - 'rust/conformance/capabilities-parity.test.ts'
@@ -32,8 +42,12 @@ on:
       - 'rust/test-port-manifest.json'
       - 'rust/test-port-overrides.d/core-batch-04.json'
       - 'rust/test-port-overrides.d/core-count-step-started-events.json'
+      - 'rust/test-port-overrides.d/core-replay-payload-cache.json'
+      - 'rust/test-port-overrides.d/core-replay-payload-cache-security.json'
       - 'rust/tdd-red.d/core-batch-04.json'
       - 'rust/tdd-red.d/core-count-step-started-events.json'
+      - 'rust/tdd-red.d/core-replay-payload-cache.json'
+      - 'rust/tdd-red.d/core-replay-payload-cache-security.json'
       - 'docs/rust-port/**'
       - 'security.txt'
       - '.github/workflows/rust-core.yml'
@@ -48,7 +62,7 @@ permissions:
 
 jobs:
   core-contracts:
-    name: Capability and retry-accounting differential parity
+    name: Capability, replay-cache, and retry-accounting parity
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
@@ -86,6 +100,8 @@ jobs:
         run: |
           pnpm exec vitest run \
             packages/core/src/capabilities.test.ts \
+            packages/core/src/replay-payload-cache.test.ts \
+            packages/core/src/replay-payload-cache-security.test.ts \
             packages/core/src/runtime/count-step-started-events.test.ts
 
       - name: Build Rust differential runners

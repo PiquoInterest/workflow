@@ -7,4 +7,5 @@
 //! been observed failing in the expected-RED lane.
 
 pub mod capabilities;
+pub mod replay_payload_cache;
 pub mod runtime;
