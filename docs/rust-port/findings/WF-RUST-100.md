@@ -1,6 +1,6 @@
 # WF-RUST-100: Workflow data path type and suffix confusion
 
-**Status:** TypeScript and Rust fixes committed; GREEN promotion requires the focused CI lane.
+**Status:** GREEN. TypeScript and production Rust fixes passed the focused parity and security lane.
 
 ## Original behavior
 
@@ -39,7 +39,7 @@ The TypeScript implementation now:
 - stops parent traversal only when `dirname(current) === current`, which is
   correct for POSIX roots and Windows drive roots.
 
-The existing 23-case compatibility suite remains unchanged and must stay green.
+The existing 23-case compatibility suite remains unchanged and stays green.
 
 ## Rust implementation
 
@@ -69,10 +69,22 @@ tilde names.
 - Permanent verification lane:
   `.github/workflows/rust-utils.yml`
 
+## Verification
+
+GitHub Actions run `33547319403`, attempt 2, passed all TypeScript and Rust
+checks and created signed-off GREEN promotion commit
+`18e4a1ed2af88586006f4e8332148c845561ac4c`.
+
+The independent read-only permanent lane, run `33547532819`, also passed:
+Rustfmt, production Rust tests, the complete 23-case translated suite, both
+Clippy checks, and all 27 TypeScript compatibility and security tests.
+
+The generated manifest at the promotion commit reports 339 TypeScript test
+files and 5,114 declared tests. Both check-data-dir suites are GREEN, and the
+legacy check-data-dir expected-RED registration has been removed.
+
 ## Closure condition
 
-WF-RUST-100 is GREEN only when both TypeScript suites pass, the complete
-translated Rust suite passes against the production crate, the Rust security
-tests pass, Rustfmt and Clippy are clean, the RED registry no longer contains
-the source suite, and the checked test-port manifest reports both TypeScript
-files as GREEN.
+Satisfied. Future changes must keep both TypeScript suites, the complete
+translated Rust suite, the production Rust security tests, Rustfmt, Clippy, and
+the checked test-port manifest green.
