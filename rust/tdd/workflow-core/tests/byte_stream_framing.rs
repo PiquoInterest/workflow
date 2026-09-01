@@ -1,6 +1,6 @@
 use workflow_core_tdd::byte_stream_framing::{
-    ByteFramingErrorKind, FRAME_HEADER_SIZE, MAX_FRAME_SIZE, dehydrate_byte_stream,
-    frame_chunks, persist_framed_chunks, unframe_reads, validate_frame_length,
+    ByteFramingErrorKind, FRAME_HEADER_SIZE, MAX_FRAME_SIZE, dehydrate_byte_stream, frame_chunks,
+    persist_framed_chunks, unframe_reads, validate_frame_length,
 };
 
 fn header(length: u32) -> Vec<u8> {
@@ -49,7 +49,11 @@ fn framer_handles_a_large_chunk() {
 
 #[test]
 fn framer_handles_clean_eof() {
-    assert!(frame_chunks(&[]).expect("clean EOF must succeed").is_empty());
+    assert!(
+        frame_chunks(&[])
+            .expect("clean EOF must succeed")
+            .is_empty()
+    );
 }
 
 #[test]
@@ -64,12 +68,18 @@ fn framer_rejects_chunks_larger_than_the_safety_cap() {
 fn unframer_round_trips_framed_chunks() {
     let chunks = vec![b"hello".to_vec(), b", ".to_vec(), b"world".to_vec()];
     let wire = frame_chunks(&chunks).expect("framing must succeed");
-    assert_eq!(unframe_reads(&wire).expect("unframing must succeed"), chunks);
+    assert_eq!(
+        unframe_reads(&wire).expect("unframing must succeed"),
+        chunks
+    );
 }
 
 #[test]
 fn unframer_reassembles_a_frame_split_across_reads() {
-    let reads: Vec<Vec<u8>> = framed(b"hello").into_iter().map(|byte| vec![byte]).collect();
+    let reads: Vec<Vec<u8>> = framed(b"hello")
+        .into_iter()
+        .map(|byte| vec![byte])
+        .collect();
     assert_eq!(
         unframe_reads(&reads).expect("split frame must reassemble"),
         vec![b"hello".to_vec()]
@@ -104,20 +114,27 @@ fn unframer_rejects_an_advertised_oversized_frame_before_allocation() {
 
 #[test]
 fn unframer_accepts_clean_eof_without_buffered_data() {
-    assert!(unframe_reads(&[]).expect("clean EOF must succeed").is_empty());
+    assert!(
+        unframe_reads(&[])
+            .expect("clean EOF must succeed")
+            .is_empty()
+    );
 }
 
 #[test]
 fn unframer_preserves_one_hundred_small_chunk_boundaries() {
     let chunks: Vec<Vec<u8>> = (0..100).map(|value| vec![value]).collect();
     let wire = frame_chunks(&chunks).expect("small chunks must frame");
-    assert_eq!(unframe_reads(&wire).expect("round-trip must succeed"), chunks);
+    assert_eq!(
+        unframe_reads(&wire).expect("round-trip must succeed"),
+        chunks
+    );
 }
 
 #[test]
 fn legacy_dehydration_omits_the_framing_field() {
-    let observation = dehydrate_byte_stream(&[vec![1, 2, 3]], false)
-        .expect("legacy dehydration must succeed");
+    let observation =
+        dehydrate_byte_stream(&[vec![1, 2, 3]], false).expect("legacy dehydration must succeed");
     assert!(observation.serialized_reference.contains("ReadableStream"));
     assert!(!observation.serialized_reference.contains("framing"));
     assert!(!observation.serialized_reference.contains("framed-v1"));
@@ -133,8 +150,7 @@ fn framed_dehydration_emits_framed_v1() {
 #[test]
 fn framed_dehydrate_and_hydrate_round_trip_user_chunks() {
     let chunks = vec![vec![1, 2, 3], vec![4, 5], vec![6, 7, 8, 9]];
-    let observation =
-        dehydrate_byte_stream(&chunks, true).expect("framed round-trip must succeed");
+    let observation = dehydrate_byte_stream(&chunks, true).expect("framed round-trip must succeed");
     assert_eq!(observation.user_chunks, chunks);
     assert!(observation.sink_closed);
     assert!(
@@ -148,8 +164,7 @@ fn framed_dehydrate_and_hydrate_round_trip_user_chunks() {
 #[test]
 fn raw_dehydrate_and_hydrate_round_trip_user_chunks() {
     let chunks = vec![vec![10, 20, 30]];
-    let observation =
-        dehydrate_byte_stream(&chunks, false).expect("raw round-trip must succeed");
+    let observation = dehydrate_byte_stream(&chunks, false).expect("raw round-trip must succeed");
     assert_eq!(observation.stored_chunks, chunks);
     assert_eq!(observation.user_chunks, chunks);
 }

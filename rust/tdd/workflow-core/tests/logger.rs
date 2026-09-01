@@ -85,7 +85,10 @@ fn for_run_accepts_extra_metadata() {
 
 #[test]
 fn no_metadata_emits_only_the_prefix_line() {
-    assert_eq!(first_error(LoggerScenario::NoMetadata), "[workflow-sdk] boom");
+    assert_eq!(
+        first_error(LoggerScenario::NoMetadata),
+        "[workflow-sdk] boom"
+    );
 }
 
 #[test]

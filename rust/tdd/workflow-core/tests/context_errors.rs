@@ -42,9 +42,11 @@ fn step_context_error_uses_step_function_phrasing() {
             .message
             .contains("can only be called inside a step function")
     );
-    assert!(error.message.contains(
-        "docs: https://workflow-sdk.dev/docs/api-reference/workflow/get-step-metadata"
-    ));
+    assert!(
+        error.message.contains(
+            "docs: https://workflow-sdk.dev/docs/api-reference/workflow/get-step-metadata"
+        )
+    );
 }
 
 #[test]
@@ -69,7 +71,11 @@ fn unavailable_error_names_the_active_workflow() {
         "https://workflow-sdk.dev/docs/api-reference/workflow-api/resume-hook",
         Some("workflow//./src/workflows/example.ts//myWorkflow"),
     );
-    assert!(error.message.contains("cannot be called from a workflow context"));
+    assert!(
+        error
+            .message
+            .contains("cannot be called from a workflow context")
+    );
     assert!(
         error
             .message
@@ -157,10 +163,26 @@ macro_rules! fatal_context_case {
     };
 }
 
-fatal_context_case!(workflow_context_errors_are_fatal, ContextErrorKind::NotInWorkflow, "createHook()");
-fatal_context_case!(step_context_errors_are_fatal, ContextErrorKind::NotInStep, "getStepMetadata()");
-fatal_context_case!(combined_context_errors_are_fatal, ContextErrorKind::NotInWorkflowOrStep, "getWorkflowMetadata()");
-fatal_context_case!(unavailable_context_errors_are_fatal, ContextErrorKind::UnavailableInWorkflow, "resumeHook()");
+fatal_context_case!(
+    workflow_context_errors_are_fatal,
+    ContextErrorKind::NotInWorkflow,
+    "createHook()"
+);
+fatal_context_case!(
+    step_context_errors_are_fatal,
+    ContextErrorKind::NotInStep,
+    "getStepMetadata()"
+);
+fatal_context_case!(
+    combined_context_errors_are_fatal,
+    ContextErrorKind::NotInWorkflowOrStep,
+    "getWorkflowMetadata()"
+);
+fatal_context_case!(
+    unavailable_context_errors_are_fatal,
+    ContextErrorKind::UnavailableInWorkflow,
+    "resumeHook()"
+);
 
 #[test]
 fn throw_helper_redirects_the_first_stack_frame_to_the_user_caller() {

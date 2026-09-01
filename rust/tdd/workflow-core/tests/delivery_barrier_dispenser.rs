@@ -40,8 +40,7 @@ fn several_parked_segments_wake_in_log_order() {
 
 #[test]
 fn rejected_promise_queue_does_not_kill_the_dispenser() {
-    let observation =
-        run_delivery_barrier_scenario(DeliveryBarrierScenario::RejectedPromiseQueue);
+    let observation = run_delivery_barrier_scenario(DeliveryBarrierScenario::RejectedPromiseQueue);
     assert_eq!(observation.registry_size_before_release, 1);
     assert!(!observation.delivery_idle_before_release);
     assert_eq!(observation.registry_size_after_release, 0);

@@ -1,8 +1,6 @@
 use std::collections::{BTreeMap, BTreeSet};
 
-use workflow_core_tdd::log_order_draws::{
-    DrawMode, EntityBinding, observe_blocked_branch_draws,
-};
+use workflow_core_tdd::log_order_draws::{DrawMode, EntityBinding, observe_blocked_branch_draws};
 
 fn by_id(bindings: &[EntityBinding]) -> BTreeMap<&str, &str> {
     bindings

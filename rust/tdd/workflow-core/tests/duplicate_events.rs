@@ -4,7 +4,8 @@ use workflow_core_tdd::duplicate_events::{
 
 #[test]
 fn ignores_step_started_after_the_step_completed() {
-    let observation = replay_duplicate_scenario(DuplicateReplayScenario::StepStartedAfterCompletion);
+    let observation =
+        replay_duplicate_scenario(DuplicateReplayScenario::StepStartedAfterCompletion);
     assert!(observation.suspended);
     assert_eq!(observation.observed_values, vec!["a-result"]);
     assert_eq!(observation.pending_step_names, vec!["stepB"]);
@@ -19,7 +20,8 @@ fn ignores_step_started_after_the_step_completed() {
 
 #[test]
 fn ignores_wait_created_after_the_wait_completed() {
-    let observation = replay_duplicate_scenario(DuplicateReplayScenario::WaitCreatedAfterCompletion);
+    let observation =
+        replay_duplicate_scenario(DuplicateReplayScenario::WaitCreatedAfterCompletion);
     assert!(observation.suspended);
     assert_eq!(observation.pending_step_names, vec!["afterSleep"]);
     assert_eq!(

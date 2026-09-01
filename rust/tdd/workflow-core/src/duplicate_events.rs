@@ -30,9 +30,7 @@ pub struct DuplicateReplayObservation {
 }
 
 /// Replays one hand-authored log through the future Rust workflow primitives.
-pub fn replay_duplicate_scenario(
-    scenario: DuplicateReplayScenario,
-) -> DuplicateReplayObservation {
+pub fn replay_duplicate_scenario(scenario: DuplicateReplayScenario) -> DuplicateReplayObservation {
     let _ = scenario;
     pending()
 }

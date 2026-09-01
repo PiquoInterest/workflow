@@ -87,10 +87,7 @@ fn step_not_registered_errors_are_attributed_to_the_sdk() {
 
 #[test]
 fn precomputed_replay_timeout_is_attributed_to_the_sdk() {
-    let result = describe_error(
-        DescribableError::Absent,
-        Some(RunErrorCode::ReplayTimeout),
-    );
+    let result = describe_error(DescribableError::Absent, Some(RunErrorCode::ReplayTimeout));
     assert_eq!(result.attribution, ErrorAttribution::Sdk);
     assert_eq!(result.error_code, RunErrorCode::ReplayTimeout);
     assert!(
@@ -181,10 +178,7 @@ fn persisted_context_error_name_restores_the_hint() {
 
 #[test]
 fn persisted_workflow_runtime_name_is_attributed_to_the_sdk() {
-    let result = describe_run_error(&signal(
-        Some("RUNTIME_ERROR"),
-        Some("WorkflowRuntimeError"),
-    ));
+    let result = describe_run_error(&signal(Some("RUNTIME_ERROR"), Some("WorkflowRuntimeError")));
     assert_eq!(result.attribution, ErrorAttribution::Sdk);
     assert!(result.hint.unwrap().contains("internal workflow SDK error"));
 }
@@ -319,10 +313,7 @@ fn corrupted_event_log_payload_shape_is_exact() {
 #[test]
 fn replay_timeout_payload_shape_is_exact() {
     assert_description(
-        describe_error(
-            DescribableError::Absent,
-            Some(RunErrorCode::ReplayTimeout),
-        ),
+        describe_error(DescribableError::Absent, Some(RunErrorCode::ReplayTimeout)),
         ErrorAttribution::Sdk,
         RunErrorCode::ReplayTimeout,
         Some(REPLAY_TIMEOUT_HINT),

@@ -55,9 +55,7 @@ pub fn dehydrate_byte_stream(
 }
 
 /// Persists one frame per stored chunk and decodes the resulting wire stream.
-pub fn persist_framed_chunks(
-    chunks: &[Vec<u8>],
-) -> Result<ByteStreamRoundTrip, ByteFramingError> {
+pub fn persist_framed_chunks(chunks: &[Vec<u8>]) -> Result<ByteStreamRoundTrip, ByteFramingError> {
     let _ = chunks;
     pending()
 }
