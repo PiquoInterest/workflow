@@ -3,9 +3,9 @@
   "sourceCount": 334,
   "declaredTestCount": 5100,
   "statusCounts": {
-    "unported": 281,
+    "unported": 280,
     "partial": 0,
-    "red": 41,
+    "red": 42,
     "green": 12,
     "blocked": 0
   },
@@ -30,9 +30,11 @@
       "kind": "unit",
       "lineCount": 1783,
       "declaredTestCount": 42,
-      "status": "unported",
-      "rustTests": [],
-      "notes": ""
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-ai/tests/durable_agent_compat.rs"
+      ],
+      "notes": "Every executable TypeScript assertion is translated into 42 Rust tests. Coverage includes prepareCall/prepareStep precedence, abort and timeout propagation, string and structured instructions, constructor/method callback ordering, lifecycle event payloads, tool-call start/finish data, final and detailed v6 usage aggregation, local/global telemetry integrations, listener-failure isolation, and static/dynamic tool approval. The dynamic approval test is split so validated input and no-execution pause behavior fail independently."
     },
     {
       "typescript": "packages/ai/src/agent/durable-agent-types.test.ts",
