@@ -1,6 +1,7 @@
 #![forbid(unsafe_code)]
 
 pub mod constants;
+pub mod discovery;
 
 use std::path::{Path, PathBuf};
 
