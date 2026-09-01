@@ -107,9 +107,7 @@ fn records_response_time_attributes_on_the_do_stream_span() {
         Some(TelemetryValue::Number(_))
     ));
     assert!(matches!(
-        observation
-            .emitted_attributes
-            .get("ai.response.msToFinish"),
+        observation.emitted_attributes.get("ai.response.msToFinish"),
         Some(TelemetryValue::Number(_))
     ));
 }
@@ -159,7 +157,11 @@ fn record_outputs_false_omits_response_payloads_but_keeps_usage() {
             .get("ai.response.finishReason"),
         Some(&string("stop"))
     );
-    assert!(!observation.emitted_attributes.contains_key("ai.response.text"));
+    assert!(
+        !observation
+            .emitted_attributes
+            .contains_key("ai.response.text")
+    );
     assert!(
         !observation
             .emitted_attributes
