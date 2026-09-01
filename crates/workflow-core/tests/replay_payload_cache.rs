@@ -129,16 +129,8 @@ fn prewarm_starts_workflow_result_error_and_hook_payloads_concurrently() {
             ReplayEventType::StepCompleted,
             Some(binary(1)),
         ),
-        ReplayEvent::new(
-            "evnt_error",
-            ReplayEventType::StepFailed,
-            Some(binary(2)),
-        ),
-        ReplayEvent::new(
-            "evnt_hook",
-            ReplayEventType::HookReceived,
-            Some(binary(3)),
-        ),
+        ReplayEvent::new("evnt_error", ReplayEventType::StepFailed, Some(binary(2))),
+        ReplayEvent::new("evnt_hook", ReplayEventType::HookReceived, Some(binary(3))),
     ];
 
     let cache_for_thread = cache.clone();
@@ -148,10 +140,7 @@ fn prewarm_starts_workflow_result_error_and_hook_payloads_concurrently() {
         thread::spawn(move || cache_for_thread.prewarm(&run_for_thread, &events_for_thread));
 
     let deadline = Instant::now() + Duration::from_secs(2);
-    let mut guard = gate
-        .lock
-        .lock()
-        .unwrap_or_else(|error| error.into_inner());
+    let mut guard = gate.lock.lock().unwrap_or_else(|error| error.into_inner());
     while gate.started.load(Ordering::SeqCst) < 4 && Instant::now() < deadline {
         let waited = gate
             .changed
@@ -227,20 +216,13 @@ fn reset_scan_discovers_an_event_inserted_below_the_previous_prefix() {
         }
         Ok(PreparedReplayPayload::from_input(input))
     });
-    let run = WorkflowRunPayload::new(
-        "wrun_reset",
-        ReplayPayload::legacy(ReplayValue::Undefined),
-    );
+    let run = WorkflowRunPayload::new("wrun_reset", ReplayPayload::legacy(ReplayValue::Undefined));
     let first = ReplayEvent::new(
         "evnt_first",
         ReplayEventType::StepCompleted,
         Some(binary(0)),
     );
-    let missing = ReplayEvent::new(
-        "evnt_missing",
-        ReplayEventType::StepFailed,
-        Some(binary(1)),
-    );
+    let missing = ReplayEvent::new("evnt_missing", ReplayEventType::StepFailed, Some(binary(1)));
     let second = ReplayEvent::new(
         "evnt_second",
         ReplayEventType::HookReceived,
@@ -288,11 +270,7 @@ fn legacy_values_bypass_the_cache_and_missing_event_data_is_ignored() {
             ReplayEventType::StepCompleted,
             Some(legacy.clone()),
         ),
-        ReplayEvent::new(
-            "evnt_error",
-            ReplayEventType::StepFailed,
-            Some(legacy),
-        ),
+        ReplayEvent::new("evnt_error", ReplayEventType::StepFailed, Some(legacy)),
         ReplayEvent::new("evnt_hook", ReplayEventType::HookReceived, None),
     ];
     let report = cache.prewarm(&run, &events);

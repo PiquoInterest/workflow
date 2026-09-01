@@ -272,7 +272,8 @@ impl PreparationCell {
                     drop(state);
 
                     let input = ReplayPayload::Binary(Arc::clone(&self.original));
-                    let prepared = match catch_unwind(AssertUnwindSafe(|| preparer.prepare(&input))) {
+                    let prepared = match catch_unwind(AssertUnwindSafe(|| preparer.prepare(&input)))
+                    {
                         Ok(result) => result.map(Arc::new),
                         Err(_) => Err(ReplayCacheError::preparation_panicked()),
                     };
@@ -388,7 +389,8 @@ impl ReplayPayloadCache {
         );
 
         for event in events.iter().skip(start_index) {
-            let (Some(field), Some(payload)) = (event.payload_field(), event.payload.as_ref()) else {
+            let (Some(field), Some(payload)) = (event.payload_field(), event.payload.as_ref())
+            else {
                 continue;
             };
             self.discover_binary(
@@ -573,10 +575,7 @@ fn lock_recover<T>(mutex: &Mutex<T>) -> MutexGuard<'_, T> {
     }
 }
 
-fn wait_recover<'a, T>(
-    condition: &Condvar,
-    guard: MutexGuard<'a, T>,
-) -> MutexGuard<'a, T> {
+fn wait_recover<'a, T>(condition: &Condvar, guard: MutexGuard<'a, T>) -> MutexGuard<'a, T> {
     match condition.wait(guard) {
         Ok(guard) => guard,
         Err(poisoned) => poisoned.into_inner(),
