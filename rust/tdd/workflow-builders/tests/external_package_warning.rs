@@ -86,13 +86,7 @@ fn warns_when_an_external_package_depends_on_workflow_serde() {
     );
 
     let mut session = ExternalPackageWarningSession::default();
-    let warnings = discover(
-        &mut session,
-        &project,
-        &["my-serde-pkg"],
-        "index.ts",
-        "out",
-    );
+    let warnings = discover(&mut session, &project, &["my-serde-pkg"], "index.ts", "out");
     let warning = first_warning(&warnings, "my-serde-pkg");
     assert!(warning.contains("serverExternalPackages"));
     assert!(warning.contains("serialization classes"));
@@ -136,13 +130,7 @@ fn warns_when_external_package_contains_use_step() {
     );
 
     let mut session = ExternalPackageWarningSession::default();
-    let warnings = discover(
-        &mut session,
-        &project,
-        &["my-step-pkg"],
-        "index.ts",
-        "out",
-    );
+    let warnings = discover(&mut session, &project, &["my-step-pkg"], "index.ts", "out");
     assert!(first_warning(&warnings, "my-step-pkg").contains("\"use step\" functions"));
 }
 
@@ -165,9 +153,7 @@ fn warns_when_external_package_contains_use_workflow() {
         "index.ts",
         "out",
     );
-    assert!(
-        first_warning(&warnings, "my-workflow-pkg").contains("\"use workflow\" functions")
-    );
+    assert!(first_warning(&warnings, "my-workflow-pkg").contains("\"use workflow\" functions"));
 }
 
 #[test]
@@ -182,13 +168,7 @@ fn does_not_warn_for_packages_without_workflow_patterns() {
     );
 
     let mut session = ExternalPackageWarningSession::default();
-    let warnings = discover(
-        &mut session,
-        &project,
-        &["plain-pkg"],
-        "index.ts",
-        "out",
-    );
+    let warnings = discover(&mut session, &project, &["plain-pkg"], "index.ts", "out");
     assert!(warnings.is_empty());
 }
 
@@ -231,13 +211,7 @@ fn warns_only_once_per_package_across_discovery_calls() {
     );
 
     let mut session = ExternalPackageWarningSession::default();
-    let mut warnings = discover(
-        &mut session,
-        &project,
-        &["my-serde-pkg"],
-        "index.ts",
-        "out",
-    );
+    let mut warnings = discover(&mut session, &project, &["my-serde-pkg"], "index.ts", "out");
     warnings.extend(discover(
         &mut session,
         &project,
@@ -275,13 +249,7 @@ export class Foo {
     );
 
     let mut session = ExternalPackageWarningSession::default();
-    let warnings = discover(
-        &mut session,
-        &project,
-        &["multi-pkg"],
-        "index.ts",
-        "out",
-    );
+    let warnings = discover(&mut session, &project, &["multi-pkg"], "index.ts", "out");
     let warning = first_warning(&warnings, "multi-pkg");
     assert!(warning.contains("\"use step\" functions"));
     assert!(warning.contains("serialization classes"));
