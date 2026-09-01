@@ -47,10 +47,7 @@ fn serializes_nested_objects() {
         )]),
     )]);
 
-    assert_eq!(
-        get_error_message(&value),
-        r#"{"outer":{"inner":"value"}}"#
-    );
+    assert_eq!(get_error_message(&value), r#"{"outer":{"inner":"value"}}"#);
 }
 
 #[test]
@@ -86,10 +83,7 @@ fn handles_array_errors() {
 
 #[test]
 fn handles_empty_strings() {
-    assert_eq!(
-        get_error_message(&ErrorValue::String(String::new())),
-        ""
-    );
+    assert_eq!(get_error_message(&ErrorValue::String(String::new())), "");
 }
 
 #[test]
