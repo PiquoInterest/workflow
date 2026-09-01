@@ -142,7 +142,7 @@ fn preserves_the_health_check_discriminator_when_a_probe_has_a_run_id() {
     });
     let parsed = parse_queue_payload(fixture.clone()).unwrap();
 
-    assert!(matches!(parsed, QueuePayload::HealthCheck(_)));
+    assert!(matches!(&parsed, QueuePayload::HealthCheck(_)));
     assert_eq!(serde_json::to_value(parsed).unwrap(), fixture);
 }
 
@@ -154,7 +154,7 @@ fn preserves_health_check_payloads_without_a_run_id() {
     });
     let parsed = parse_queue_payload(fixture.clone()).unwrap();
 
-    assert!(matches!(parsed, QueuePayload::HealthCheck(_)));
+    assert!(matches!(&parsed, QueuePayload::HealthCheck(_)));
     assert_eq!(serde_json::to_value(parsed).unwrap(), fixture);
 }
 
@@ -258,8 +258,8 @@ fn run_input_strips_unknown_keys_for_older_consumers() {
     let encoded = serde_json::to_value(parsed).unwrap();
 
     assert!(encoded.get("someFutureField").is_none());
-    assert_eq!(encoded["deploymentId"], "dpl_123");
-    assert_eq!(encoded["workflowName"], "myWorkflow");
+    assert_eq!(encoded["deploymentId"], json!("dpl_123"));
+    assert_eq!(encoded["workflowName"], json!("myWorkflow"));
 }
 
 #[test]
