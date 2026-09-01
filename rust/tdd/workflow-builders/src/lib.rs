@@ -2,6 +2,9 @@
 
 pub mod constants;
 pub mod discovery;
+pub mod manifest_ids;
+pub mod workflow_alias;
+pub mod workflows_extractor;
 
 use std::path::{Path, PathBuf};
 
