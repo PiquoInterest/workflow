@@ -3,9 +3,9 @@
   "sourceCount": 334,
   "declaredTestCount": 5100,
   "statusCounts": {
-    "unported": 278,
+    "unported": 276,
     "partial": 0,
-    "red": 44,
+    "red": 46,
     "green": 12,
     "blocked": 0
   },
@@ -214,9 +214,11 @@
       "kind": "unit",
       "lineCount": 221,
       "declaredTestCount": 5,
-      "status": "unported",
-      "rustTests": [],
-      "notes": ""
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-builders/tests/discover_entries.rs"
+      ],
+      "notes": "All three executable TypeScript cases and their assertions are translated: explicit projectRoot propagation, absWorkingDir fallback, path normalization, single detect-mode transform observation, and transitive import-parent tracking through a bare package specifier. The inventory reports five declarations because it also sees lifecycle callbacks. Final GREEN must exercise the real Rust resolver and transform pipeline rather than returning fixture-specific observations."
     },
     {
       "typescript": "packages/builders/src/esbuild-tsconfig.test.ts",
@@ -238,9 +240,11 @@
       "kind": "unit",
       "lineCount": 372,
       "declaredTestCount": 10,
-      "status": "unported",
-      "rustTests": [],
-      "notes": ""
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-builders/tests/external_package_warning.rs"
+      ],
+      "notes": "All 10 current declarations are translated: @workflow/serde dependency detection, serialization-symbol scanning, use-step and use-workflow detection, plain and pseudo-package suppression, empty-input behavior, per-builder warning deduplication, combined issue reporting, and entry-file detection without a serde dependency. Final GREEN must inspect real package metadata and source through bounded canonical paths and must not hard-code package names or warning fixtures."
     },
     {
       "typescript": "packages/builders/src/fast-discovery.test.ts",
