@@ -1,5 +1,6 @@
 #![forbid(unsafe_code)]
 
+pub mod stream_text_iterator;
 pub mod telemetry;
 
 use std::marker::PhantomData;
