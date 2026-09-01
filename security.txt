@@ -75,3 +75,14 @@ Acknowledgments: https://github.com/PiquoInterest/workflow/blob/main/docs/rust-p
 # All 23 current TypeScript transport assertions are translated at
 # rust/tdd/workflow-ai/tests/workflow_chat_transport.rs. The finding remains an
 # implementation gate until the real Rust transport passes those tests.
+#
+# WF-RUST-017 (TDD RED): Tool approval is an authorization boundary. A tool
+# marked needsApproval, including a dynamic predicate, must receive the
+# validated tool input and pause before execution; no tool result may exist
+# until approval is supplied. Lifecycle and telemetry listeners must run in the
+# defined order, but a failing telemetry integration must not abort an otherwise
+# valid workflow stream. Abort/timeout signals and detailed token accounting
+# must also survive the compatibility layer. The complete DurableAgent
+# compatibility suite is translated at
+# rust/tdd/workflow-ai/tests/durable_agent_compat.rs. Closure requires the real
+# Rust agent loop, callbacks, approval state machine, and usage aggregation.
