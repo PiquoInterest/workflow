@@ -60,9 +60,7 @@ pub enum AsyncOrderingScenario {
 
 /// Runs one future Rust replay scenario through the event consumer, async
 /// payload hydration, promise queue, and delivery-barrier registry.
-pub fn observe_async_deserialization(
-    scenario: AsyncOrderingScenario,
-) -> AsyncOrderingObservation {
+pub fn observe_async_deserialization(scenario: AsyncOrderingScenario) -> AsyncOrderingObservation {
     let _ = scenario;
     panic!("{TDD_RED_MARKER}")
 }
