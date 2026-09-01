@@ -82,11 +82,9 @@ fn rejects_keys_over_the_length_cap_and_names_the_limit() {
 #[test]
 fn counts_key_length_with_javascript_utf16_semantics() {
     let at_cap = "💥".repeat(ATTRIBUTE_KEY_MAX_LENGTH / 2);
+    let at_cap_field = AttributeField::new(at_cap.clone(), Some("v"));
     assert_eq!(
-        normalize(record(vec![AttributeField::new(
-            at_cap.clone(),
-            Some("v"),
-        )])),
+        normalize(record(vec![at_cap_field])),
         Ok(vec![AttributeChange {
             key: at_cap,
             value: Some("v".to_owned()),
