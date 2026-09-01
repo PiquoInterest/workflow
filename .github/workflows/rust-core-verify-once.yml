@@ -64,8 +64,11 @@ jobs:
       - name: Check canonical Rust formatting
         run: cargo fmt --manifest-path crates/workflow-core/Cargo.toml -- --check
 
-      - name: Prove production Rust replay-cache tests are green
+      - name: Prove production Rust replay-cache behavior tests are green
         run: cargo test --locked --manifest-path crates/workflow-core/Cargo.toml --test replay_payload_cache
+
+      - name: Prove production Rust replay-cache security tests are green
+        run: cargo test --locked --manifest-path crates/workflow-core/Cargo.toml --test replay_payload_cache_security
 
       - name: Test all Rust core targets
         run: cargo test --locked --manifest-path crates/workflow-core/Cargo.toml --all-targets
