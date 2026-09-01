@@ -3,9 +3,9 @@
   "sourceCount": 334,
   "declaredTestCount": 5100,
   "statusCounts": {
-    "unported": 231,
+    "unported": 229,
     "partial": 0,
-    "red": 91,
+    "red": 93,
     "green": 12,
     "blocked": 0
   },
@@ -618,9 +618,11 @@
       "kind": "e2e",
       "lineCount": 261,
       "declaredTestCount": 1,
-      "status": "unported",
-      "rustTests": [],
-      "notes": ""
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-core/tests/local_build.rs"
+      ],
+      "notes": "The single describe.each declaration is expanded into all 13 workbench projects. Coverage preserves the SvelteKit import preflight, exact pnpm build invocation, Next Turbopack source-map fixture lifecycle, generic/source-map warning rejection, diagnostics manifests, native ESM import.meta output, and legacy step-route removal. WF-RUST-093 adds explicit hard process-tree deadlines, one shared 8 MiB output budget, interleaved stdout/stderr diagnostics, signal-aware failures, and non-ENOENT artifact-read propagation. Final GREEN must execute real Rust subprocess, builder, artifact, and cleanup paths; fabricated observations are insufficient."
     },
     {
       "typescript": "packages/core/e2e/manifest.test.ts",
@@ -642,9 +644,11 @@
       "kind": "e2e",
       "lineCount": 177,
       "declaredTestCount": 1,
-      "status": "unported",
-      "rustTests": [],
-      "notes": ""
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-core/tests/route_bundle_isolation.rs"
+      ],
+      "notes": "The isolated Next Turbopack hook-resume regression is translated with its exact build target, route bundle path, nonexistent token, 60-second harness deadline, forbidden dynamic-require/world-init failures, and healthy 500 Hook not found result. WF-RUST-094 strengthens the oracle: direct argv execution, Vercel and Node preload environment stripping, output caps, exact line-prefix marker parsing, bounded missing-result diagnostics, and duplicate/empty record rejection. Final GREEN must build and invoke the real route in a fresh sanitized Rust-managed process; fixture-only results are insufficient."
     },
     {
       "typescript": "packages/core/e2e/utils.test.ts",
