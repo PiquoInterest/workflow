@@ -23,9 +23,7 @@ describe('machine-name log formatting security', () => {
       'step//./jobs/\u001b[31mred//run\r\nforged\t\u2028'
     );
 
-    expect(formatted).toBe(
-      'run\\r\\nforged\\t\\u2028 (./jobs/\\u001b[31mred)'
-    );
+    expect(formatted).toBe('run\\r\\nforged\\t\\u2028 (./jobs/\\u001b[31mred)');
     expect(containsLogBreakingCharacter(formatted)).toBe(false);
   });
 
