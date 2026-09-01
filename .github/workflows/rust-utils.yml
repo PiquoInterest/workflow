@@ -13,6 +13,8 @@ on:
       - 'packages/utils/src/parse-name.ts'
       - 'packages/utils/src/parse-name.test.ts'
       - 'packages/utils/src/parse-name-security.test.ts'
+      - 'packages/utils/src/pluralize.ts'
+      - 'packages/utils/src/pluralize.test.ts'
       - 'rust/tdd-red.json'
       - 'rust/test-port-manifest.json'
       - 'rust/test-port-overrides.json'
@@ -31,6 +33,8 @@ on:
       - 'packages/utils/src/parse-name.ts'
       - 'packages/utils/src/parse-name.test.ts'
       - 'packages/utils/src/parse-name-security.test.ts'
+      - 'packages/utils/src/pluralize.ts'
+      - 'packages/utils/src/pluralize.test.ts'
       - 'rust/tdd-red.json'
       - 'rust/test-port-manifest.json'
       - 'rust/test-port-overrides.json'
@@ -93,6 +97,7 @@ jobs:
         run: |
           cargo test --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test check_data_dir
           cargo test --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test parse_name
+          cargo test --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test pluralize
 
       - name: Lint production Rust utilities
         run: cargo clippy --locked --manifest-path crates/workflow-utils/Cargo.toml --all-targets -- -D warnings
@@ -101,6 +106,7 @@ jobs:
         run: |
           cargo clippy --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test check_data_dir -- -D warnings
           cargo clippy --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test parse_name -- -D warnings
+          cargo clippy --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test pluralize -- -D warnings
 
       - name: Run TypeScript utility oracles
         run: |
@@ -108,4 +114,5 @@ jobs:
             packages/utils/src/check-data-dir.test.ts \
             packages/utils/src/check-data-dir-security.test.ts \
             packages/utils/src/parse-name.test.ts \
-            packages/utils/src/parse-name-security.test.ts
+            packages/utils/src/parse-name-security.test.ts \
+            packages/utils/src/pluralize.test.ts
