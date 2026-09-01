@@ -3,9 +3,9 @@
   "sourceCount": 334,
   "declaredTestCount": 5100,
   "statusCounts": {
-    "unported": 229,
+    "unported": 228,
     "partial": 0,
-    "red": 93,
+    "red": 94,
     "green": 12,
     "blocked": 0
   },
@@ -657,9 +657,11 @@
       "kind": "e2e",
       "lineCount": 249,
       "declaredTestCount": 15,
-      "status": "unported",
-      "rustTests": [],
-      "notes": ""
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-core/tests/e2e_utils.rs"
+      ],
+      "notes": "All 15 TypeScript declarations are translated: six source-map matrix cases, five pickup-watchdog cases, three warmup cases, and one interleaved task-local run-tracking case. The Rust suite preserves transient status retries, 500 ms exponential polling capped at 5 s, short-budget sleep clamping, stalled-probe cancellation and infra-event attribution, and per-test isolation. WF-RUST-095 requires the total warmup deadline to include probe creation and bounded cancellation, eliminating a late-probe status read after expiry. WF-RUST-096 replaces whole-URL substring matching with exact hostname classification so remote lookalikes cannot select local-only behavior. Final GREEN must exercise the real Rust runtime, timers, cancellation, infra recorder, and task-local state; scripted observations are insufficient."
     },
     {
       "typescript": "packages/core/src/abort-consistency.test.ts",
