@@ -235,3 +235,18 @@ Acknowledgments: https://github.com/PiquoInterest/workflow/blob/main/docs/rust-p
 # and compare the hostname exactly. Whole-URL substring matching lets remote
 # lookalikes, paths, or query text select local-only behavior. Full analysis is
 # in docs/rust-port/findings/WF-RUST-096.md.
+#
+# WF-RUST-097: Producer capability negotiation fails closed. Missing, malformed,
+# overlong, or numerically inexact producer versions receive only the baseline
+# devl format and raw byte streams. Rust uses real semantic-version ordering for
+# the encr, framed-stream, gzip/zstd, and encp cutoffs. This prevents a modern
+# writer from sending a representation that a legacy consumer cannot decode.
+# Full analysis is in docs/rust-port/findings/WF-RUST-097.md.
+#
+# WF-RUST-098: Retry accounting separates real lifecycle attempts from racing
+# duplicate step_started records. Rust stores internal counts in a checked
+# integer newtype, confines JavaScript numbers to the compatibility boundary,
+# and preserves ownedBy plus bare-plus-largest-owner counting. This prevents
+# concurrent replays from falsely exhausting healthy work while retaining a
+# hard ceiling for genuine timeout retries. Full analysis is in
+# docs/rust-port/findings/WF-RUST-098.md.
