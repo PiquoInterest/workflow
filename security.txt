@@ -84,8 +84,13 @@ Acknowledgments: https://github.com/PiquoInterest/workflow/blob/main/docs/rust-p
 # valid workflow stream. Abort/timeout signals and detailed token accounting
 # must also survive the compatibility layer. The complete DurableAgent
 # compatibility suite is translated at
-# rust/tdd/workflow-ai/tests/durable_agent_compat.rs. Closure requires the real
-# Rust agent loop, callbacks, approval state machine, and usage aggregation.
+# rust/tdd/workflow-ai/tests/durable_agent_compat.rs. The full runtime
+# characterization at rust/tdd/workflow-core/tests/e2e_agent/gaps.rs proves the
+# current TypeScript E2E executes riskyTool without approval, while a separate
+# Rust-only target requires a pending call, zero results, and no execution.
+# Full analysis and closure requirements are recorded in
+# docs/rust-port/findings/WF-RUST-017.md. Closure requires the real Rust agent
+# loop, callbacks, approval state machine, storage, resume, and replay paths.
 #
 # WF-RUST-018 (TDD RED): Tool execution origin and validated input are trust
 # boundaries. Provider-executed tools must never invoke a same-named local
