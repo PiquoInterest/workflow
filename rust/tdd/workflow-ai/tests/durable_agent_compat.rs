@@ -47,9 +47,7 @@ fn simple_usage() -> UsageObservation {
     }
 }
 
-fn expected_instruction_prompt(
-    systems: Vec<CompatPromptMessage>,
-) -> Vec<CompatPromptMessage> {
+fn expected_instruction_prompt(systems: Vec<CompatPromptMessage>) -> Vec<CompatPromptMessage> {
     systems
         .into_iter()
         .chain([
@@ -75,24 +73,21 @@ fn uses_prepare_call_to_transform_provider_options() {
 
 #[test]
 fn uses_prepare_step_from_the_constructor() {
-    let observation =
-        exercise_durable_agent_compat(DurableAgentCompatCase::PrepareStepConstructor);
+    let observation = exercise_durable_agent_compat(DurableAgentCompatCase::PrepareStepConstructor);
 
     assert_eq!(observation.prepare_step_numbers, vec![0]);
 }
 
 #[test]
 fn stream_prepare_step_overrides_constructor_prepare_step() {
-    let observation =
-        exercise_durable_agent_compat(DurableAgentCompatCase::PrepareStepOverride);
+    let observation = exercise_durable_agent_compat(DurableAgentCompatCase::PrepareStepOverride);
 
     assert_eq!(observation.prepare_step_sources, vec!["stream"]);
 }
 
 #[test]
 fn constructor_prepare_step_runs_for_each_tool_loop_step() {
-    let observation =
-        exercise_durable_agent_compat(DurableAgentCompatCase::PrepareStepMultiStep);
+    let observation = exercise_durable_agent_compat(DurableAgentCompatCase::PrepareStepMultiStep);
 
     assert_eq!(observation.prepare_step_numbers, vec![0, 1]);
 }
@@ -113,8 +108,7 @@ fn converts_timeout_to_an_abort_signal() {
 
 #[test]
 fn passes_string_instructions_as_a_system_message() {
-    let observation =
-        exercise_durable_agent_compat(DurableAgentCompatCase::StringInstructions);
+    let observation = exercise_durable_agent_compat(DurableAgentCompatCase::StringInstructions);
 
     assert_eq!(
         observation.prompt,
@@ -127,44 +121,33 @@ fn passes_string_instructions_as_a_system_message() {
 
 #[test]
 fn passes_structured_system_message_instructions() {
-    let observation = exercise_durable_agent_compat(
-        DurableAgentCompatCase::SystemMessageInstructions,
-    );
+    let observation =
+        exercise_durable_agent_compat(DurableAgentCompatCase::SystemMessageInstructions);
 
     assert_eq!(
         observation.prompt,
         expected_instruction_prompt(vec![CompatPromptMessage::System {
             content: "INSTRUCTIONS".to_owned(),
-            provider_options: Some(object(&[(
-                "test",
-                object(&[("value", string("test"))]),
-            )])),
+            provider_options: Some(object(&[("test", object(&[("value", string("test"))]),)])),
         }])
     );
 }
 
 #[test]
 fn passes_an_array_of_structured_system_messages() {
-    let observation = exercise_durable_agent_compat(
-        DurableAgentCompatCase::SystemMessageArrayInstructions,
-    );
+    let observation =
+        exercise_durable_agent_compat(DurableAgentCompatCase::SystemMessageArrayInstructions);
 
     assert_eq!(
         observation.prompt,
         expected_instruction_prompt(vec![
             CompatPromptMessage::System {
                 content: "INSTRUCTIONS_1".to_owned(),
-                provider_options: Some(object(&[(
-                    "test",
-                    object(&[("value", string("test1"))]),
-                )])),
+                provider_options: Some(object(&[("test", object(&[("value", string("test1"))]),)])),
             },
             CompatPromptMessage::System {
                 content: "INSTRUCTIONS_2".to_owned(),
-                provider_options: Some(object(&[(
-                    "test",
-                    object(&[("value", string("test2"))]),
-                )])),
+                provider_options: Some(object(&[("test", object(&[("value", string("test2"))]),)])),
             },
         ])
     );
@@ -172,8 +155,7 @@ fn passes_an_array_of_structured_system_messages() {
 
 #[test]
 fn calls_constructor_on_start() {
-    let observation =
-        exercise_durable_agent_compat(DurableAgentCompatCase::OnStartConstructor);
+    let observation = exercise_durable_agent_compat(DurableAgentCompatCase::OnStartConstructor);
 
     assert_eq!(observation.callback_order, vec!["constructor"]);
 }
@@ -212,32 +194,28 @@ fn passes_complete_on_start_event_information() {
 
 #[test]
 fn calls_constructor_on_step_start() {
-    let observation =
-        exercise_durable_agent_compat(DurableAgentCompatCase::OnStepStartConstructor);
+    let observation = exercise_durable_agent_compat(DurableAgentCompatCase::OnStepStartConstructor);
 
     assert_eq!(observation.callback_order, vec!["constructor"]);
 }
 
 #[test]
 fn calls_stream_on_step_start() {
-    let observation =
-        exercise_durable_agent_compat(DurableAgentCompatCase::OnStepStartMethod);
+    let observation = exercise_durable_agent_compat(DurableAgentCompatCase::OnStepStartMethod);
 
     assert_eq!(observation.callback_order, vec!["method"]);
 }
 
 #[test]
 fn calls_both_on_step_start_callbacks_in_order() {
-    let observation =
-        exercise_durable_agent_compat(DurableAgentCompatCase::OnStepStartBoth);
+    let observation = exercise_durable_agent_compat(DurableAgentCompatCase::OnStepStartBoth);
 
     assert_eq!(observation.callback_order, vec!["constructor", "method"]);
 }
 
 #[test]
 fn passes_complete_on_step_start_event_information() {
-    let observation =
-        exercise_durable_agent_compat(DurableAgentCompatCase::OnStepStartEvent);
+    let observation = exercise_durable_agent_compat(DurableAgentCompatCase::OnStepStartEvent);
 
     assert_eq!(
         observation.on_step_start_event,
@@ -262,24 +240,21 @@ fn calls_constructor_on_step_finish() {
 
 #[test]
 fn calls_stream_on_step_finish() {
-    let observation =
-        exercise_durable_agent_compat(DurableAgentCompatCase::OnStepFinishMethod);
+    let observation = exercise_durable_agent_compat(DurableAgentCompatCase::OnStepFinishMethod);
 
     assert_eq!(observation.callback_order, vec!["method"]);
 }
 
 #[test]
 fn calls_both_on_step_finish_callbacks_in_order() {
-    let observation =
-        exercise_durable_agent_compat(DurableAgentCompatCase::OnStepFinishBoth);
+    let observation = exercise_durable_agent_compat(DurableAgentCompatCase::OnStepFinishBoth);
 
     assert_eq!(observation.callback_order, vec!["constructor", "method"]);
 }
 
 #[test]
 fn passes_the_step_result_to_on_step_finish() {
-    let observation =
-        exercise_durable_agent_compat(DurableAgentCompatCase::OnStepFinishEvent);
+    let observation = exercise_durable_agent_compat(DurableAgentCompatCase::OnStepFinishEvent);
 
     assert_eq!(
         observation.step_finish_event,
@@ -299,33 +274,29 @@ fn passes_the_step_result_to_on_step_finish() {
 
 #[test]
 fn calls_constructor_on_tool_call_start() {
-    let observation = exercise_durable_agent_compat(
-        DurableAgentCompatCase::ToolCallStartConstructor,
-    );
+    let observation =
+        exercise_durable_agent_compat(DurableAgentCompatCase::ToolCallStartConstructor);
 
     assert_eq!(observation.callback_order, vec!["constructor"]);
 }
 
 #[test]
 fn calls_stream_on_tool_call_start() {
-    let observation =
-        exercise_durable_agent_compat(DurableAgentCompatCase::ToolCallStartMethod);
+    let observation = exercise_durable_agent_compat(DurableAgentCompatCase::ToolCallStartMethod);
 
     assert_eq!(observation.callback_order, vec!["method"]);
 }
 
 #[test]
 fn calls_both_on_tool_call_start_callbacks_in_order() {
-    let observation =
-        exercise_durable_agent_compat(DurableAgentCompatCase::ToolCallStartBoth);
+    let observation = exercise_durable_agent_compat(DurableAgentCompatCase::ToolCallStartBoth);
 
     assert_eq!(observation.callback_order, vec!["constructor", "method"]);
 }
 
 #[test]
 fn passes_complete_tool_call_start_event_information() {
-    let observation =
-        exercise_durable_agent_compat(DurableAgentCompatCase::ToolCallStartEvent);
+    let observation = exercise_durable_agent_compat(DurableAgentCompatCase::ToolCallStartEvent);
 
     assert_eq!(
         observation.tool_call_start_event,
@@ -340,33 +311,29 @@ fn passes_complete_tool_call_start_event_information() {
 
 #[test]
 fn calls_constructor_on_tool_call_finish() {
-    let observation = exercise_durable_agent_compat(
-        DurableAgentCompatCase::ToolCallFinishConstructor,
-    );
+    let observation =
+        exercise_durable_agent_compat(DurableAgentCompatCase::ToolCallFinishConstructor);
 
     assert_eq!(observation.callback_order, vec!["constructor"]);
 }
 
 #[test]
 fn calls_stream_on_tool_call_finish() {
-    let observation =
-        exercise_durable_agent_compat(DurableAgentCompatCase::ToolCallFinishMethod);
+    let observation = exercise_durable_agent_compat(DurableAgentCompatCase::ToolCallFinishMethod);
 
     assert_eq!(observation.callback_order, vec!["method"]);
 }
 
 #[test]
 fn calls_both_on_tool_call_finish_callbacks_in_order() {
-    let observation =
-        exercise_durable_agent_compat(DurableAgentCompatCase::ToolCallFinishBoth);
+    let observation = exercise_durable_agent_compat(DurableAgentCompatCase::ToolCallFinishBoth);
 
     assert_eq!(observation.callback_order, vec!["constructor", "method"]);
 }
 
 #[test]
 fn passes_complete_successful_tool_call_finish_information() {
-    let observation =
-        exercise_durable_agent_compat(DurableAgentCompatCase::ToolCallFinishEvent);
+    let observation = exercise_durable_agent_compat(DurableAgentCompatCase::ToolCallFinishEvent);
     let event = observation
         .tool_call_finish_event
         .expect("translated fixture must produce a tool-call finish event");
@@ -389,8 +356,7 @@ fn passes_complete_successful_tool_call_finish_information() {
 
 #[test]
 fn calls_constructor_on_finish() {
-    let observation =
-        exercise_durable_agent_compat(DurableAgentCompatCase::OnFinishConstructor);
+    let observation = exercise_durable_agent_compat(DurableAgentCompatCase::OnFinishConstructor);
 
     assert_eq!(observation.callback_order, vec!["constructor"]);
 }
@@ -426,8 +392,7 @@ fn passes_complete_on_finish_event_information() {
 
 #[test]
 fn exposes_finish_reason_and_total_usage_on_the_result() {
-    let observation =
-        exercise_durable_agent_compat(DurableAgentCompatCase::StreamResultUsage);
+    let observation = exercise_durable_agent_compat(DurableAgentCompatCase::StreamResultUsage);
     let usage = observation
         .stream_result_usage
         .expect("translated fixture must expose stream result usage");
@@ -439,8 +404,7 @@ fn exposes_finish_reason_and_total_usage_on_the_result() {
 
 #[test]
 fn aggregates_the_full_v6_usage_shape_across_steps() {
-    let observation =
-        exercise_durable_agent_compat(DurableAgentCompatCase::AggregateDetailedUsage);
+    let observation = exercise_durable_agent_compat(DurableAgentCompatCase::AggregateDetailedUsage);
 
     assert_eq!(
         observation.detailed_usage,
@@ -460,8 +424,7 @@ fn aggregates_the_full_v6_usage_shape_across_steps() {
 
 #[test]
 fn calls_per_call_integrations_for_every_lifecycle_event() {
-    let observation =
-        exercise_durable_agent_compat(DurableAgentCompatCase::PerCallIntegrations);
+    let observation = exercise_durable_agent_compat(DurableAgentCompatCase::PerCallIntegrations);
 
     assert_eq!(
         observation.integration_events,
@@ -480,24 +443,18 @@ fn calls_per_call_integrations_for_every_lifecycle_event() {
 
 #[test]
 fn calls_globally_registered_integration_listeners() {
-    let observation =
-        exercise_durable_agent_compat(DurableAgentCompatCase::GlobalIntegrations);
+    let observation = exercise_durable_agent_compat(DurableAgentCompatCase::GlobalIntegrations);
 
     assert_eq!(
         observation.integration_events,
-        vec![
-            "global-onStart",
-            "global-onStepFinish",
-            "global-onFinish",
-        ]
+        vec!["global-onStart", "global-onStepFinish", "global-onFinish",]
     );
 }
 
 #[test]
 fn calls_integrations_alongside_agent_callbacks_in_order() {
-    let observation = exercise_durable_agent_compat(
-        DurableAgentCompatCase::IntegrationsAlongsideCallbacks,
-    );
+    let observation =
+        exercise_durable_agent_compat(DurableAgentCompatCase::IntegrationsAlongsideCallbacks);
 
     assert_eq!(
         observation.integration_events,
@@ -514,17 +471,15 @@ fn calls_integrations_alongside_agent_callbacks_in_order() {
 
 #[test]
 fn integration_listener_failures_do_not_break_streaming() {
-    let observation = exercise_durable_agent_compat(
-        DurableAgentCompatCase::IntegrationListenerFailure,
-    );
+    let observation =
+        exercise_durable_agent_compat(DurableAgentCompatCase::IntegrationListenerFailure);
 
     assert!(observation.stream_completed);
 }
 
 #[test]
 fn static_tool_approval_pauses_without_a_tool_result() {
-    let observation =
-        exercise_durable_agent_compat(DurableAgentCompatCase::StaticToolApproval);
+    let observation = exercise_durable_agent_compat(DurableAgentCompatCase::StaticToolApproval);
 
     assert_eq!(
         observation.tool_calls,
@@ -538,16 +493,14 @@ fn static_tool_approval_pauses_without_a_tool_result() {
 
 #[test]
 fn dynamic_tool_approval_receives_the_validated_input() {
-    let observation =
-        exercise_durable_agent_compat(DurableAgentCompatCase::DynamicToolApproval);
+    let observation = exercise_durable_agent_compat(DurableAgentCompatCase::DynamicToolApproval);
 
     assert_eq!(observation.approval_input, Some(tool_input("test")));
 }
 
 #[test]
 fn dynamic_tool_approval_pauses_without_a_tool_result() {
-    let observation =
-        exercise_durable_agent_compat(DurableAgentCompatCase::DynamicToolApproval);
+    let observation = exercise_durable_agent_compat(DurableAgentCompatCase::DynamicToolApproval);
 
     assert_eq!(observation.tool_calls.len(), 1);
     assert_eq!(observation.tool_calls[0].tool_name, "testTool");
