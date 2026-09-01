@@ -12,5 +12,8 @@ path = "src/lib.rs"
 
 [workspace]
 
+[dependencies]
+workflow-utils = { path = "../../../crates/workflow-utils" }
+
 [lints.rust]
 unsafe_code = "forbid"
