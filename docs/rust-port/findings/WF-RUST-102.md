@@ -2,14 +2,28 @@
 
 ## Status
 
-TDD RED. The TypeScript characterization and translated Rust rejection tests are committed. Production Rust behavior is not yet implemented, so this entry is not a mitigation claim.
+Implementation complete; permanent GREEN validation pending.
+
+The expected-RED workflow run `33557800452` succeeded before production implementation. It proved the current TypeScript characterization, compiled the translated Rust security target, observed the exact registered panic marker, regenerated the manifest, and committed the TDD-RED security record as `33b85b2a90a30b5ddca5e788560685b2f27794dc`.
+
+Production Rust security tests, implementation, exports, and translated-suite wiring were then committed sequentially as:
+
+- `6bb44ae74d12af43023f422aa33f359a7c85339f`
+- `585db13272de07c7f54d11e681e4536ad2a22ee3`
+- `03e73e20f6fb2db979af7a34e1c2c4929fc06338`
+- `97a446af6fc99f7b484fbd4d65a2ff3d65bf3cfc`
+- `2859337d4a6cc1c25bd4a4a36e334acb952f0816`
+
+Canonical Rust 1.87 formatting was applied without behavioral changes in `51f557aa1b10d2e057548751b8327525fff199d6`. This document does not claim closure until the permanent read-only utility lane passes on that formatted implementation and a separate guarded promotion updates the security and parity ledgers.
 
 ## Affected boundary
 
 - `packages/utils/src/debug-log.ts`
 - `packages/utils/src/debug-log-security.test.ts`
+- `crates/workflow-utils/src/debug_log.rs`
+- `crates/workflow-utils/tests/debug_log_security.rs`
+- `rust/tdd/workflow-utils/tests/debug_log.rs`
 - `rust/tdd/workflow-utils/tests/debug_log_security.rs`
-- the future production `workflow-utils` debug gate
 
 ## Existing TypeScript behavior
 
@@ -29,31 +43,32 @@ Diagnostic arguments can contain run identifiers, transport details, URLs, retry
 
 The impact is bounded by the diagnostic arguments supplied by each caller. The finding does not claim that secrets are always present, only that the gate can expose data its operator attempted not to enable.
 
-## Required Rust behavior
+## Implemented Rust behavior
 
-Rust must parse the selector as comma- or whitespace-delimited tokens and enable the sink only when at least one positive token is either:
+Rust parses the selector as comma- or whitespace-delimited tokens. It enables the sink only when at least one positive token is either:
 
 - exactly `*`; or
 - prefixed with `workflow:`.
 
-Tokens prefixed by `-` must never enable logging, and a larger unrelated token that merely contains `workflow:` must not match. Rejected selectors must not invoke any sink method or format diagnostic arguments.
+An exact `-*` token or any token prefixed by `-workflow:` disables workflow diagnostics and takes precedence over positive tokens. Larger unrelated tokens that merely contain `workflow:` do not match. Rejected selectors return before invoking any sink method.
 
-The Rust implementation must also avoid logging or exposing arguments through `Debug`, panic text, or validation errors while determining whether the selector is enabled.
+`DebugArgument` has a custom `Debug` implementation that redacts text values and reports only the number of structured fields. This prevents assertion failures or derived sink diagnostics from echoing the payload values while preserving equality and cloning for parity tests.
 
 ## TDD evidence
 
 - `packages/utils/src/debug-log-security.test.ts` characterizes the unsafe TypeScript acceptance and proves that arguments reach `console.debug` under an explicitly negated selector.
 - `rust/tdd/workflow-utils/tests/debug_log_security.rs` requires both selectors to be rejected and requires the injected sink to remain empty.
-- `rust/tdd-red.d/utils-debug-log-security.json` records the exact expected-RED marker until production Rust exists.
+- `crates/workflow-utils/tests/debug_log_security.rs` additionally requires negative-selector precedence, a zero-call sink, and redacted `Debug` output.
+- `rust/tdd-red.d/utils-debug-log-security.json` records the exact expected-RED marker until guarded GREEN promotion.
 - `rust/test-port-overrides.d/utils-debug-log-security.json` maps both TypeScript declarations to the translated Rust target.
 
 ## Closure requirements
 
 This finding is closed only after:
 
-1. the expected-RED Rust test has been observed failing for the registered implementation marker;
-2. production Rust implements token-aware matching and silent suppression;
-3. the six existing compatibility tests and both security tests pass against production Rust;
-4. Rustfmt and Clippy pass with warnings denied;
-5. the TypeScript characterization remains explicitly documented as an intentional security difference, or TypeScript is patched with an updated regression; and
-6. `security.txt`, the security rules, the logic/security ledger, and the generated test-port manifest are promoted only after CI evidence is green.
+1. the permanent read-only utility workflow passes the six existing compatibility tests, both translated security tests, and the three direct production security tests;
+2. Rustfmt and Clippy pass with warnings denied;
+3. the TypeScript characterization remains explicitly documented as an intentional security difference, or TypeScript is patched with an updated regression;
+4. the base and security expected-RED registrations are removed only after the GREEN proof;
+5. `security.txt`, the security rules, the logic/security ledger, and the generated test-port manifest are promoted by a branch-head-guarded workflow; and
+6. the temporary promotion workflow is removed afterward in a separate commit.
