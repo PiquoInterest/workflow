@@ -39,6 +39,9 @@ jobs:
       - name: Install JavaScript dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Build TypeScript oracle dependency graph
+        run: pnpm --filter '@workflow/core...' build
+
       - name: Check canonical formatting
         run: cargo fmt --manifest-path crates/workflow-core/Cargo.toml -- --check
 
