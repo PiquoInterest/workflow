@@ -15,6 +15,7 @@ pub mod capabilities;
 pub mod classify_error;
 pub mod context_errors;
 pub mod define_hook;
+pub mod delivery_barrier_coverage;
 pub mod delivery_barrier_dispenser;
 pub mod describe_error;
 pub mod dev_hmr;

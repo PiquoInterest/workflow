@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "entries": [
+    {
+      "typescript": "packages/core/src/delivery-barrier-coverage.test.ts",
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-core/tests/delivery_barrier_coverage.rs"
+      ],
+      "notes": "All 11 TypeScript declarations are translated as 21 executable Rust cases after expanding both six-value consumer-hop matrices. Coverage preserves step-behind-step ordering across drain windows, wait/hook delivery behind an earlier step at 0/1/3/8/20/50 continuation hops, hook-behind-hook async-iterator ordering, abort-listener ordering, parked-chain idle reachability and lowest-first retirement, all-armed batch idle blocking, suspension snapshots for parallel and single-step controls, and termination with log-order draws enabled or disabled. Availability and replay-integrity cases require committed deliveries to prevent premature suspension without making abandoned payload chains gate their own cleanup; regressions otherwise produce dormant runs, deadlocks, retained barriers, or ULID replay divergence. Final GREEN must exercise the real Rust event consumer, barrier graph, quiescence turnstile, idle scheduler, deterministic ID allocator, and WorkflowSuspension snapshot; scenario-specific observations are insufficient."
+    }
+  ]
+}
