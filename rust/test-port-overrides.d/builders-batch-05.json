@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "entries": [
+    {
+      "typescript": "packages/builders/src/resolve-sourcemap.test.ts",
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-builders/tests/resolve_sourcemap.rs"
+      ],
+      "notes": "All 16 sourcemap declarations are translated across explicit config, defaults, WORKFLOW_SOURCEMAP parsing, 0/1 aliases, invalid-value fallback, watch-mode development detection, NODE_ENV development detection, and the derived enabled flag. Final GREEN must preserve precedence as explicit config over environment over the caller default, while treating every non-false mode as enabled."
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "cases": [
+    {
+      "typescript": "packages/builders/src/resolve-sourcemap.test.ts",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--manifest-path",
+        "rust/tdd/workflow-builders/Cargo.toml",
+        "--test",
+        "resolve_sourcemap"
+      ],
+      "failureMarker": "TDD RED: packages/builders/src/resolve-sourcemap.test.ts implementation pending"
+    }
+  ]
+}
