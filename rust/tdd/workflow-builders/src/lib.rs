@@ -1,5 +1,7 @@
 #![forbid(unsafe_code)]
 
+pub mod constants;
+
 use std::path::{Path, PathBuf};
 
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
