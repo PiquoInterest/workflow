@@ -64,3 +64,14 @@ Acknowledgments: https://github.com/PiquoInterest/workflow/blob/main/docs/rust-p
 # input retention and per-call metadata separation, are translated at
 # rust/tdd/workflow-ai/tests/stream_text_iterator.rs. Closure requires the real
 # Rust iterator and prompt builder to pass; the expected panic is not a fix.
+#
+# WF-RUST-016 (TDD RED): Chat reconnection consumes partially overlapping,
+# attacker-influenced stream windows. Negative tail offsets must resolve with
+# checked arithmetic and safely fall back when the server header is absent or
+# invalid. Orphan deltas and outputs must not reach the UI consumer without a
+# matching start/full-input chunk, while self-contained tool calls remain
+# valid. Abort signals must survive send-to-reconnect transitions, and error
+# formatting must never collapse structured failures to "[object Object]".
+# All 23 current TypeScript transport assertions are translated at
+# rust/tdd/workflow-ai/tests/workflow_chat_transport.rs. The finding remains an
+# implementation gate until the real Rust transport passes those tests.
