@@ -36,9 +36,7 @@ pub struct DeliveryBarrierObservation {
 /// Replays one future Rust delivery-barrier scenario through event
 /// consumption, detached delivery continuations, idle detection, and
 /// suspension snapshotting.
-pub fn observe_delivery_barrier(
-    scenario: DeliveryBarrierScenario,
-) -> DeliveryBarrierObservation {
+pub fn observe_delivery_barrier(scenario: DeliveryBarrierScenario) -> DeliveryBarrierObservation {
     let _ = scenario;
     panic!("{TDD_RED_MARKER}")
 }

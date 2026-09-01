@@ -29,14 +29,10 @@ macro_rules! wait_behind_step_case {
     ($name:ident, $hops:expr) => {
         #[test]
         fn $name() {
-            let observation = observe(DeliveryBarrierScenario::WaitBehindStep {
-                extra_hops: $hops,
-            });
+            let observation =
+                observe(DeliveryBarrierScenario::WaitBehindStep { extra_hops: $hops });
             assert_eq!(observation.extra_hops, Some($hops));
-            assert_suspended_with_pending_steps(
-                &observation,
-                &["afterStep", "afterSleep"],
-            );
+            assert_suspended_with_pending_steps(&observation, &["afterStep", "afterSleep"]);
         }
     };
 }
@@ -52,14 +48,10 @@ macro_rules! hook_behind_step_case {
     ($name:ident, $hops:expr) => {
         #[test]
         fn $name() {
-            let observation = observe(DeliveryBarrierScenario::HookBehindStep {
-                extra_hops: $hops,
-            });
+            let observation =
+                observe(DeliveryBarrierScenario::HookBehindStep { extra_hops: $hops });
             assert_eq!(observation.extra_hops, Some($hops));
-            assert_suspended_with_pending_steps(
-                &observation,
-                &["afterStep", "afterHook"],
-            );
+            assert_suspended_with_pending_steps(&observation, &["afterStep", "afterHook"]);
         }
     };
 }
@@ -74,25 +66,18 @@ hook_behind_step_case!(hook_behind_step_fifty_hops, EXTRA_HOPS[5]);
 #[test]
 fn earlier_hook_payload_delivers_first_for_an_async_iterator_consumer() {
     let observation = observe(DeliveryBarrierScenario::HookBehindHook);
-    assert_suspended_with_pending_steps(
-        &observation,
-        &["afterFirst", "afterSecond"],
-    );
+    assert_suspended_with_pending_steps(&observation, &["afterFirst", "afterSecond"]);
 }
 
 #[test]
 fn earlier_step_result_delivers_before_abort_listener_continuation() {
     let observation = observe(DeliveryBarrierScenario::AbortBehindStep);
-    assert_suspended_with_pending_steps(
-        &observation,
-        &["afterStep", "afterAbort"],
-    );
+    assert_suspended_with_pending_steps(&observation, &["afterStep", "afterAbort"]);
 }
 
 #[test]
 fn idle_unwinds_a_step_parked_behind_a_wait_and_unclaimed_payload() {
-    let observation =
-        observe(DeliveryBarrierScenario::ParkedChainIdleReachability);
+    let observation = observe(DeliveryBarrierScenario::ParkedChainIdleReachability);
     assert_eq!(observation.initial_barriers, 3);
     assert_eq!(observation.pre_idle_order, Vec::<String>::new());
     assert_eq!(observation.reaches_idle, Some(true));
@@ -110,25 +95,17 @@ fn all_armed_step_batch_blocks_idle_until_delivery() {
 
 #[test]
 fn parallel_batch_suspension_snapshot_carries_the_follow_up_step() {
-    let observation =
-        observe(DeliveryBarrierScenario::ParallelBatchSuspensionSnapshot);
+    let observation = observe(DeliveryBarrierScenario::ParallelBatchSuspensionSnapshot);
     assert!(observation.suspended);
-    assert_eq!(
-        observation.suspension_snapshot_steps,
-        owned(&["followUp"])
-    );
+    assert_eq!(observation.suspension_snapshot_steps, owned(&["followUp"]));
     assert_eq!(observation.replay_error, None);
 }
 
 #[test]
 fn single_step_suspension_control_carries_the_follow_up_step() {
-    let observation =
-        observe(DeliveryBarrierScenario::SingleStepSuspensionControl);
+    let observation = observe(DeliveryBarrierScenario::SingleStepSuspensionControl);
     assert!(observation.suspended);
-    assert_eq!(
-        observation.suspension_snapshot_steps,
-        owned(&["followUp"])
-    );
+    assert_eq!(observation.suspension_snapshot_steps, owned(&["followUp"]));
     assert_eq!(observation.replay_error, None);
 }
 
