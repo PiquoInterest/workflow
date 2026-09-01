@@ -1,0 +1,306 @@
+name: Rust core attribute promote once
+
+on:
+  push:
+    branches:
+      - pro/rust-repository-port
+    paths:
+      - '.github/workflows/rust-core-attribute-promote-once.yml'
+
+concurrency:
+  group: rust-core-attribute-promote-once
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  promote:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Checkout exact migration branch
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: pro/rust-repository-port
+          fetch-depth: 0
+
+      - name: Install Rust 1.87
+        uses: actions-rust-lang/setup-rust-toolchain@46268bd060767258de96ed93c1251119784f2ab6 # v1.16.1
+        with:
+          toolchain: 1.87.0
+          components: clippy,rustfmt
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v5.0.0
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 22.x
+          cache: pnpm
+
+      - name: Install JavaScript dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build TypeScript oracle dependency graph
+        run: pnpm --filter '@workflow/core...' build
+
+      - name: Reprove TypeScript and production Rust attribute parity
+        run: |
+          set -euo pipefail
+          cargo fmt --manifest-path crates/workflow-core/Cargo.toml -- --check
+          cargo test --locked --manifest-path crates/workflow-core/Cargo.toml --test attribute_changes
+          cargo clippy --locked --manifest-path crates/workflow-core/Cargo.toml --all-targets -- -D warnings
+          pnpm exec vitest run packages/core/src/attribute-changes.test.ts
+          cargo build --locked --manifest-path crates/workflow-core/Cargo.toml --example attribute_changes_conformance
+          WORKFLOW_RUST_ATTRIBUTE_CHANGES_CONFORMANCE_BIN=crates/workflow-core/target/debug/examples/attribute_changes_conformance \
+            pnpm exec vitest run rust/conformance/attribute-changes-parity.test.ts
+
+      - name: Promote the proven source and record WF-RUST-029
+        run: |
+          set -euo pipefail
+          git pull --rebase origin pro/rust-repository-port
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          source = 'packages/core/src/attribute-changes.test.ts'
+
+          red_path = Path('rust/tdd-red.d/core-batch-04.json')
+          red = json.loads(red_path.read_text())
+          original_cases = red['cases']
+          red['cases'] = [case for case in original_cases if case['typescript'] != source]
+          if len(original_cases) - len(red['cases']) != 1:
+              raise SystemExit('expected exactly one attribute RED case')
+          if not any(case['typescript'] == 'packages/core/src/abort-replay-ordering.test.ts' for case in red['cases']):
+              raise SystemExit('unrelated abort RED case was lost')
+          red_path.write_text(json.dumps(red, indent=2) + '\n')
+
+          override_path = Path('rust/test-port-overrides.d/core-batch-04.json')
+          override = json.loads(override_path.read_text())
+          matches = [entry for entry in override['entries'] if entry['typescript'] == source]
+          if len(matches) != 1:
+              raise SystemExit('expected exactly one attribute override')
+          entry = matches[0]
+          if entry['status'] != 'red':
+              raise SystemExit(f"attribute override was not RED: {entry['status']}")
+          entry['status'] = 'green'
+          entry['rustTests'] = [
+              'crates/workflow-core/tests/attribute_changes.rs',
+              'rust/conformance/attribute-changes-parity.test.ts',
+          ]
+          entry['notes'] = (
+              'The 11 declared TypeScript tests execute as 14 cases and remain green. '
+              'Production Rust has 14 direct cases plus a 16-fixture differential suite covering '
+              'ordered conversion, undefined-to-null deletion, malformed runtime values, exact '
+              'batch/key/value caps, reserved namespaces, UTF-8 value bytes, and JavaScript UTF-16 '
+              'key length including astral boundaries. Core delegates to the production Rust World '
+              'validator and wraps failures as FatalError. WF-RUST-029 records the security fix '
+              'that prevents scalar-count implementations from admitting keys rejected by the '
+              'TypeScript boundary. GitHub Actions run 33524700140 passed Rustfmt, direct Rust '
+              'tests, all targets, Clippy, TypeScript oracles, and differential parity.'
+          )
+          override_path.write_text(json.dumps(override, indent=2) + '\n')
+
+          lib_path = Path('rust/tdd/workflow-core/src/lib.rs')
+          lib_text = lib_path.read_text()
+          module_line = 'pub mod attribute_changes;\n'
+          if lib_text.count(module_line) != 1:
+              raise SystemExit('attribute TDD module declaration was not unique')
+          lib_path.write_text(lib_text.replace(module_line, '', 1))
+
+          for stale_path in [
+              Path('rust/tdd/workflow-core/src/attribute_changes.rs'),
+              Path('rust/tdd/workflow-core/tests/attribute_changes.rs'),
+          ]:
+              if not stale_path.is_file():
+                  raise SystemExit(f'missing TDD file: {stale_path}')
+              stale_path.unlink()
+
+          finding = '''# WF-RUST-029: Attribute key limits must use JavaScript UTF-16 semantics
+
+**Status:** Fixed in production Rust; TypeScript remains the compatibility oracle.
+
+## Boundary
+
+The TypeScript attribute API limits keys with JavaScript `String.length`, which
+counts UTF-16 code units. A direct Rust translation that counts Unicode scalar
+values would treat each supplementary character as one unit instead of two. For
+example, 129 `💥` characters are 258 JavaScript units and must be rejected even
+though Rust sees only 129 scalar values.
+
+Attribute values use a different rule: their limit is the UTF-8 byte length sent
+on the wire. Key and value validation therefore cannot share a generic Rust
+"string length" check.
+
+## Security and integrity impact
+
+A scalar-count Rust implementation could admit attribute keys that the
+TypeScript boundary rejects. Once persisted, those keys could fail on another
+runtime, create language-dependent replay behavior, or bypass the intended
+resource cap. Divergent error-prefix slicing could also expose a different
+amount of rejected key material than the established TypeScript contract.
+
+## Fix
+
+Production `workflow-core` delegates attribute validation to the production
+`workflow-world` validator. Rust now:
+
+- counts keys with `encode_utf16().count()`;
+- counts values with UTF-8 bytes;
+- preserves the exact 256-unit, 256-byte, and 64-change limits;
+- reproduces JavaScript's 32-UTF-16-unit `slice()` plus `JSON.stringify()`
+  diagnostic, including a prefix that splits a surrogate pair;
+- wraps validation failures as the core `FatalError` before an event can be
+  created.
+
+No rejected attribute value is reflected in an error. Overlong-key diagnostics
+retain only the same bounded prefix already emitted by TypeScript.
+
+## TDD and parity evidence
+
+- TypeScript GREEN oracle: `packages/core/src/attribute-changes.test.ts`
+  executes 14 cases, including astral keys exactly at and above the cap.
+- Rust RED translation first ran from
+  `rust/tdd/workflow-core/tests/attribute_changes.rs` and reached its registered
+  source-specific panic marker in GitHub Actions run `33521655664`.
+- Production Rust tests: `crates/workflow-core/tests/attribute_changes.rs`.
+- Differential suite: `rust/conformance/attribute-changes-parity.test.ts`.
+- GitHub Actions run `33524700140` passed Rustfmt, 14 direct Rust cases, all
+  Rust targets, Clippy with warnings denied, 69 TypeScript oracle cases, and the
+  exact TypeScript-to-Rust differential checks.
+
+## Remaining retirement condition
+
+All `setAttributes` event creation must cross the Rust normalization boundary
+before the TypeScript implementation can be removed.
+'''
+          finding_path = Path('docs/rust-port/findings/WF-RUST-029.md')
+          if finding_path.exists():
+              raise SystemExit('WF-RUST-029 finding already exists')
+          finding_path.write_text(finding)
+
+          ledger_path = Path('docs/rust-port/TYPESCRIPT_LOGIC_AND_SECURITY_FIXES.md')
+          ledger = ledger_path.read_text()
+          if '## WF-RUST-029:' in ledger:
+              raise SystemExit('WF-RUST-029 already exists in the ledger')
+          ledger_entry = '''## WF-RUST-029: Rust attribute limits could diverge on astral Unicode
+
+**Status:** Fixed in production Rust; TypeScript behavior is unchanged and green.
+
+**Affected code:** `packages/core/src/attribute-changes.ts`,
+`packages/world/src/attributes-validation.ts`,
+`crates/workflow-core/src/attribute_changes.rs`, and
+`crates/workflow-world/src/attributes.rs`.
+
+**Migration risk:** TypeScript measures attribute-key length with JavaScript
+UTF-16 code units. A naive Rust port using Unicode scalar count would accept
+keys such as 129 supplementary characters because Rust sees 129 scalars while
+JavaScript sees 258 units. Values are intentionally different and are limited
+by UTF-8 wire bytes.
+
+**Impact:** Cross-language admission differences could persist attributes that
+another runtime refuses, make replay depend on the executing language, and
+weaken the intended resource cap. Unbounded or differently sliced validation
+diagnostics could also reveal more rejected key material than the established
+TypeScript behavior.
+
+**TypeScript GREEN characterization:**
+`packages/core/src/attribute-changes.test.ts` now proves a 256-UTF-16-unit
+astral key is accepted and a 258-unit key is rejected, while retaining all
+existing malformed-input, namespace, batch, and UTF-8 value checks.
+
+**Rust fix:** Production core delegates to the shared Rust World validator.
+Keys use `encode_utf16().count()`, values use UTF-8 bytes, and overlong-key
+messages reproduce JavaScript's bounded 32-unit `slice()` and
+`JSON.stringify()` behavior, including split surrogate pairs. Core wraps the
+shared validation error as `FatalError` before event creation.
+
+**Regression evidence:**
+
+- `packages/core/src/attribute-changes.test.ts`
+- `crates/workflow-core/src/attribute_changes.rs`
+- `crates/workflow-core/tests/attribute_changes.rs`
+- `crates/workflow-core/examples/attribute_changes_conformance.rs`
+- `crates/workflow-world/src/attributes.rs`
+- `rust/conformance/attribute-changes-parity.test.ts`
+- GitHub Actions run `33524700140`, where TypeScript, direct Rust, all-target,
+  Rustfmt, Clippy, and differential checks passed.
+
+**Remaining TypeScript retirement condition:** Every attribute-event producer
+must use the Rust normalization boundary before the TypeScript helper is
+removed.
+
+'''
+          ledger_anchor = '## WF-RUST-099: Replay cache keys were not bound to binary payload identity\n'
+          if ledger.count(ledger_anchor) != 1:
+              raise SystemExit('WF-RUST-099 ledger anchor was not unique')
+          ledger_path.write_text(ledger.replace(ledger_anchor, ledger_entry + ledger_anchor, 1))
+
+          security_path = Path('security.txt')
+          security = security_path.read_text()
+          if '# WF-RUST-029:' in security:
+              raise SystemExit('WF-RUST-029 already exists in security.txt')
+          security_entry = '''# WF-RUST-029: Attribute-key limits are measured with JavaScript UTF-16
+# semantics, while values remain limited by UTF-8 wire bytes. Production Rust
+# delegates to the shared World validator and preserves the exact 256-unit,
+# 256-byte, 64-change, and reserved-namespace boundaries. This prevents a
+# scalar-count port from admitting astral-Unicode keys rejected by TypeScript
+# and keeps overlong-key diagnostics bounded to the same 32-unit prefix. The
+# TypeScript oracle, 14 direct Rust cases, and a 16-fixture differential suite
+# passed in GitHub Actions run 33524700140. Full analysis is in
+# docs/rust-port/findings/WF-RUST-029.md.
+#
+'''
+          security_anchor = '# WF-RUST-090 (TDD RED):'
+          if security.count(security_anchor) != 1:
+              raise SystemExit('WF-RUST-090 security anchor was not unique')
+          security_path.write_text(security.replace(security_anchor, security_entry + security_anchor, 1))
+
+          workflow_path = Path('.github/workflows/rust-core-attribute-promote-once.yml')
+          if not workflow_path.is_file():
+              raise SystemExit('one-shot workflow was not present')
+          workflow_path.unlink()
+          PY
+
+      - name: Refresh and validate the checked-in migration manifest
+        run: |
+          set -euo pipefail
+          node scripts/rust-port-test-inventory.mjs \
+            --write-json /tmp/rust-port-test-inventory.json
+          node scripts/bootstrap-rust-test-port-manifest.mjs \
+            /tmp/rust-port-test-inventory.json \
+            rust/test-port-manifest.json
+          node scripts/apply-rust-test-port-overrides.mjs \
+            rust/test-port-manifest.json \
+            rust/test-port-overrides.json
+          node scripts/rust-port-test-inventory.mjs \
+            --check rust/test-port-manifest.json
+          git diff --check
+
+      - name: Commit the atomic GREEN promotion
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add \
+            .github/workflows/rust-core-attribute-promote-once.yml \
+            crates/workflow-core \
+            crates/workflow-world/src/attributes.rs \
+            docs/rust-port \
+            rust/tdd \
+            rust/tdd-red.d/core-batch-04.json \
+            rust/test-port-manifest.json \
+            rust/test-port-overrides.d/core-batch-04.json \
+            security.txt
+          git commit --signoff -m 'feat(rust-core): promote attribute normalization parity'
+          for attempt in 1 2 3; do
+            if git push origin HEAD:pro/rust-repository-port; then
+              exit 0
+            fi
+            git fetch origin pro/rust-repository-port
+            git rebase origin/pro/rust-repository-port
+          done
+          echo 'failed to push GREEN promotion after three fast-forward retries' >&2
+          exit 1
