@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "sourceCount": 340,
-  "declaredTestCount": 5117,
+  "sourceCount": 341,
+  "declaredTestCount": 5119,
   "statusCounts": {
     "unported": 223,
     "partial": 0,
-    "red": 96,
+    "red": 97,
     "green": 21,
     "blocked": 0
   },
@@ -2277,6 +2277,19 @@
         "crates/workflow-utils/tests/check_data_dir_security.rs"
       ],
       "notes": "All 23 TypeScript compatibility assertions execute against the production workflow-utils crate through the translated Rust suite. Five additional Rust security tests reject regular files, path-component suffix lookalikes, and user-qualified tilde confusion. The focused TypeScript compatibility and security suites must remain green in .github/workflows/rust-utils.yml."
+    },
+    {
+      "typescript": "packages/utils/src/debug-log-security.test.ts",
+      "sourceSha256": "034e3ff9745daa1b09c356e989371ca7e1a43872a667f40ddbec3eef40ec5ebf",
+      "surface": "packages/utils",
+      "kind": "unit",
+      "lineCount": 33,
+      "declaredTestCount": 2,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-utils/tests/debug_log_security.rs"
+      ],
+      "notes": "Both TypeScript security declarations are translated. TypeScript intentionally characterizes the legacy substring matcher accepting unrelated and explicitly negated selectors and forwarding diagnostic arguments. Rust must tokenize selectors, reject those values, and emit nothing so diagnostic payloads cannot be exposed by selector confusion. WF-RUST-102 tracks the intentional security difference."
     },
     {
       "typescript": "packages/utils/src/debug-log.test.ts",
