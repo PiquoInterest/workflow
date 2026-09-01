@@ -2,6 +2,8 @@
 
 use std::collections::BTreeMap;
 
+pub mod node_http;
+
 pub type Environment = BTreeMap<String, String>;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
