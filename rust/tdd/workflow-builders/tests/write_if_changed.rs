@@ -123,7 +123,7 @@ fn has_same_content_is_false_when_the_file_cannot_be_read() {
     let target = root.join("locked.js");
     fs::write(&target, "secret").unwrap();
     let original_mode = fs::metadata(&target).unwrap().permissions().mode();
-    fs::set_permissions(&target, fs::Permissions::from_mode(0)).unwrap();
+    fs::set_permissions(&target, fs::Permissions::from_mode(0o0)).unwrap();
 
     if fs::read(&target).is_ok() {
         fs::set_permissions(&target, fs::Permissions::from_mode(original_mode)).unwrap();
