@@ -3,9 +3,9 @@
   "sourceCount": 334,
   "declaredTestCount": 5100,
   "statusCounts": {
-    "unported": 276,
+    "unported": 273,
     "partial": 0,
-    "red": 46,
+    "red": 49,
     "green": 12,
     "blocked": 0
   },
@@ -275,9 +275,11 @@
       "kind": "unit",
       "lineCount": 195,
       "declaredTestCount": 7,
-      "status": "unported",
-      "rustTests": [],
-      "notes": ""
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-builders/tests/manifest_ids.rs"
+      ],
+      "notes": "All seven duplicate-ID declarations are translated: divergent step and workflow bodies fail closed, identical pnpm peer copies deduplicate while retaining both manifest file entries, missing hashes fail closed, symbol-name mismatches are rejected, and re-merging the same file is idempotent. This is security-sensitive because accepting a duplicate ID from different source can substitute the code executed for a durable step. Final GREEN must use the real cryptographic source digest and preserve first-registration ownership."
     },
     {
       "typescript": "packages/builders/src/module-specifier.test.ts",
@@ -378,9 +380,11 @@
       "kind": "unit",
       "lineCount": 97,
       "declaredTestCount": 5,
-      "status": "unported",
-      "rustTests": [],
-      "notes": ""
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-builders/tests/workflow_alias.rs"
+      ],
+      "notes": "All five current declarations are translated with real files and a directory symlink: workflows and src/workflows aliases, unrelated-file rejection, realpath containment rather than basename matching, and symlinked app alias recovery. Final GREEN must canonicalize paths without allowing an external same-name file to acquire an application alias."
     },
     {
       "typescript": "packages/builders/src/workflow-bundle-boundary.test.ts",
@@ -400,9 +404,11 @@
       "kind": "unit",
       "lineCount": 85,
       "declaredTestCount": 2,
-      "status": "unported",
-      "rustTests": [],
-      "notes": ""
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-builders/tests/workflows_extractor.rs"
+      ],
+      "notes": "Both extraction declarations are translated with actual bundle files: escaped Unicode identifiers inside workflowCode template literals must parse without diagnostics, and pure annotations around WORKFLOW_USE_STEP proxies must still produce the exact workflow and step IDs. Final GREEN must parse the bundle rather than matching only the fixture text."
     },
     {
       "typescript": "packages/builders/src/write-if-changed.test.ts",
