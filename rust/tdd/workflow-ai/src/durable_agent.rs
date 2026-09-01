@@ -170,6 +170,7 @@ pub struct DurableAgentObservation {
     pub prepare_step_forwarded: bool,
     pub prepare_step: Option<PrepareStepObservation>,
     pub messages_per_round: Vec<String>,
+    pub message_lengths_per_round: Vec<usize>,
     pub generation_settings: Option<GenerationSettingsObservation>,
     pub max_steps: Option<usize>,
     pub tool_choice: Option<String>,
