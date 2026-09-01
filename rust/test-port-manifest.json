@@ -3,9 +3,9 @@
   "sourceCount": 334,
   "declaredTestCount": 5100,
   "statusCounts": {
-    "unported": 244,
+    "unported": 242,
     "partial": 0,
-    "red": 78,
+    "red": 80,
     "green": 12,
     "blocked": 0
   },
@@ -776,9 +776,11 @@
       "kind": "unit",
       "lineCount": 243,
       "declaredTestCount": 12,
-      "status": "unported",
-      "rustTests": [],
-      "notes": ""
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-core/tests/context_errors.rs"
+      ],
+      "notes": "All 12 TypeScript declarations are translated as 16 executable Rust tests after expanding the four-way FatalError gate. Coverage preserves exact context phrasing and docs framing, active-workflow naming, generic fallback, fatal/no-retry classification, redirected caller stacks, lazy pretty terminal rendering, one-copy detail lines, and plain ANSI-free stored message/stack data. WF-RUST-022 records the prior functionName enumeration and ANSI persistence regressions. Final GREEN must use the production Rust error type and formatter; prebuilt strings or hidden serializable function-name fields are insufficient."
     },
     {
       "typescript": "packages/core/src/define-hook.test.ts",
@@ -822,9 +824,11 @@
       "kind": "unit",
       "lineCount": 365,
       "declaredTestCount": 34,
-      "status": "unported",
-      "rustTests": [],
-      "notes": ""
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-core/tests/describe_error.rs"
+      ],
+      "notes": "All 34 TypeScript declarations are translated directly. Coverage preserves live and persisted attribution for user, serialization, context, runtime, corruption, replay-timeout, max-delivery, max-event, World-contract, and deployment-mismatch failures; precomputed typed codes override live classification; missing or unknown persisted values default safely to USER_ERROR; and all eight snapshot payloads retain exact static hints. Security-relevant behavior requires classification from trusted enum/code/name boundaries rather than untrusted message text, and hints must remain static so attacker-controlled error messages cannot alter operator guidance. Final GREEN must share the production Rust classification enum and persisted-signal parser."
     },
     {
       "typescript": "packages/core/src/duplicate-event-fixtures.test.ts",
