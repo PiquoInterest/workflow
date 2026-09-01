@@ -36,9 +36,7 @@ pub type InferDurableAgentUiMessage<Agent, Metadata> =
     UiMessage<Metadata, InferDurableAgentTools<Agent>>;
 
 pub fn durable_agent_type_contract() {
-    panic!(
-        "TDD RED: packages/ai/src/agent/durable-agent-types.test.ts implementation pending"
-    )
+    panic!("TDD RED: packages/ai/src/agent/durable-agent-types.test.ts implementation pending")
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
