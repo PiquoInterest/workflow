@@ -2332,10 +2332,10 @@
     },
     {
       "typescript": "packages/utils/src/parse-name-security.test.ts",
-      "sourceSha256": "d7ba8da3b0facc44539d0504852624e5086b2fa258c651edee1544a018edc874",
+      "sourceSha256": "bbd5920ad03523fbb69150aeca95170ba42c31a9858a3d4325538fe7c7a0b9a7",
       "surface": "packages/utils",
       "kind": "unit",
-      "lineCount": 46,
+      "lineCount": 48,
       "declaredTestCount": 3,
       "status": "unported",
       "rustTests": [],
