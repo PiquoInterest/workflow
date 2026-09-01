@@ -3,9 +3,9 @@
   "sourceCount": 334,
   "declaredTestCount": 5100,
   "statusCounts": {
-    "unported": 268,
+    "unported": 267,
     "partial": 0,
-    "red": 54,
+    "red": 55,
     "green": 12,
     "blocked": 0
   },
@@ -314,9 +314,11 @@
       "kind": "unit",
       "lineCount": 399,
       "declaredTestCount": 11,
-      "status": "unported",
-      "rustTests": [],
-      "notes": ""
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-builders/tests/pseudo_package_esbuild_plugin.rs"
+      ],
+      "notes": "All 11 pseudo-package and dynamic-import declarations are translated with real temporary entry files and node_modules package trees. Coverage requires the four Next marker packages to resolve to empty modules, preserves unrelated code, leaves a missing marker unresolved without the plugin, inlines ordinary and nested dynamic imports, and retains explicitly external dynamic imports. Final GREEN must use the real Rust bundle graph; pseudo-module replacement must be exact-name only so attacker-controlled lookalike specifiers cannot be erased, while workflow bundles must not leave runtime import() edges that the sandbox cannot execute."
     },
     {
       "typescript": "packages/builders/src/resolve-sourcemap.test.ts",
