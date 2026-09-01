@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "entries": [
+    {
+      "typescript": "packages/core/src/async-deserialization-ordering.test.ts",
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-core/tests/async_deserialization_ordering.rs"
+      ],
+      "notes": "All nine TypeScript declarations are translated directly. Coverage preserves event-log settlement order across inverse async hydration delays, sequential and ten-way concurrent steps, hook payloads, mixed completed/failed steps with FatalError identity, sleeps interleaved with steps, and different step functions. Availability regressions require buffered hook hydration failures to remain inert until claimed so no unhandled rejection can crash the process, and require abandoned hook delivery barriers to retire after a later branch proceeds. Final GREEN must exercise the real Rust event consumer, replay payload cache, class registry, async hydrator, promise queue, sleep/hook/step primitives, and idle barrier retirement; precomputed observations are insufficient."
+    }
+  ]
+}
