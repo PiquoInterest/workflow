@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "cases": [
+    {
+      "typescript": "packages/builders/src/constants.test.ts",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--manifest-path",
+        "rust/tdd/workflow-builders/Cargo.toml",
+        "--test",
+        "constants"
+      ],
+      "failureMarker": "TDD RED: packages/builders/src/constants.test.ts implementation pending"
+    }
+  ]
+}
