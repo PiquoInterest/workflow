@@ -1,5 +1,6 @@
 #![forbid(unsafe_code)]
 
+pub mod durable_agent_compat;
 pub mod stream_text_iterator;
 pub mod telemetry;
 pub mod workflow_chat_transport;
