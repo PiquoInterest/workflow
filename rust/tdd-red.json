@@ -72,6 +72,11 @@
       "failureMarker": "TDD RED: packages/world/src/node-http-flag.test.ts implementation pending"
     },
     {
+      "typescript": "packages/world/src/node-http.test.ts",
+      "command": ["cargo", "test", "--locked", "--manifest-path", "rust/tdd/workflow-world/Cargo.toml", "--test", "node_http"],
+      "failureMarker": "TDD RED: packages/world/src/node-http.test.ts implementation pending"
+    },
+    {
       "typescript": "packages/world/src/recovery.test.ts",
       "command": ["cargo", "test", "--locked", "--manifest-path", "rust/tdd/workflow-world/Cargo.toml", "--test", "recovery"],
       "failureMarker": "TDD RED: packages/world/src/recovery.test.ts implementation pending"
