@@ -58,6 +58,25 @@ describe('normalizeAttributeChanges', () => {
       );
     });
 
+    it('counts key length with JavaScript UTF-16 semantics', () => {
+      const atCap = '💥'.repeat(ATTRIBUTE_KEY_MAX_LENGTH / 2);
+      expect(normalizeAttributeChanges({ [atCap]: 'v' })).toEqual([
+        { key: atCap, value: 'v' },
+      ]);
+
+      const overCap = '💥'.repeat(ATTRIBUTE_KEY_MAX_LENGTH / 2 + 1);
+      let caught: unknown;
+      try {
+        normalizeAttributeChanges({ [overCap]: 'v' });
+      } catch (err) {
+        caught = err;
+      }
+      expect(caught).toBeInstanceOf(FatalError);
+      expect((caught as Error).message).toContain(
+        `Attribute key length ${ATTRIBUTE_KEY_MAX_LENGTH + 2} exceeds limit ${ATTRIBUTE_KEY_MAX_LENGTH}`
+      );
+    });
+
     it('rejects values over the byte cap, naming the limit', () => {
       let caught: unknown;
       try {

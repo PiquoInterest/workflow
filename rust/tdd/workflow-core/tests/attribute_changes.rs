@@ -80,6 +80,31 @@ fn rejects_keys_over_the_length_cap_and_names_the_limit() {
 }
 
 #[test]
+fn counts_key_length_with_javascript_utf16_semantics() {
+    let at_cap = "💥".repeat(ATTRIBUTE_KEY_MAX_LENGTH / 2);
+    assert_eq!(
+        normalize(record(vec![AttributeField::new(
+            at_cap.clone(),
+            Some("v"),
+        )])),
+        Ok(vec![AttributeChange {
+            key: at_cap,
+            value: Some("v".to_owned()),
+        }])
+    );
+
+    let error = normalize(record(vec![AttributeField::new(
+        "💥".repeat(ATTRIBUTE_KEY_MAX_LENGTH / 2 + 1),
+        Some("v"),
+    )]))
+    .unwrap_err();
+    assert!(error.contains(&format!(
+        "Attribute key length {} exceeds limit {ATTRIBUTE_KEY_MAX_LENGTH}",
+        ATTRIBUTE_KEY_MAX_LENGTH + 2
+    )));
+}
+
+#[test]
 fn rejects_values_over_the_utf8_byte_cap_and_names_the_byte_length() {
     let error = normalize(record(vec![AttributeField::new(
         "note",

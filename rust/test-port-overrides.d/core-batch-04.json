@@ -16,7 +16,7 @@
       "rustTests": [
         "rust/tdd/workflow-core/tests/attribute_changes.rs"
       ],
-      "notes": "All 10 TypeScript declarations are translated as 13 executable Rust cases after expanding non-object inputs. Coverage preserves insertion order, undefined-to-null deletion, empty records, plain-object rejection with actionable type names, UTF-16 key limits, UTF-8 value byte limits, reserved-prefix opt-in, and exact 64-attribute batch boundaries. Security-relevant cases require malformed runtime values to fail before event creation and byte-based validation to prevent multibyte values from bypassing storage limits. Final GREEN must share the real Rust World validator and wrap validation failures in the Rust FatalError boundary rather than duplicating constants or messages."
+      "notes": "All 11 TypeScript declarations are translated as 14 executable Rust cases after expanding non-object inputs. Coverage preserves insertion order, undefined-to-null deletion, empty records, plain-object rejection with actionable type names, JavaScript UTF-16 key limits including astral Unicode boundaries, UTF-8 value byte limits, reserved-prefix opt-in, and exact 64-attribute batch boundaries. Security-relevant cases require malformed runtime values to fail before event creation and prevent Unicode or multibyte inputs from bypassing storage limits. Final GREEN must share the real Rust World validator and wrap validation failures in the Rust FatalError boundary rather than duplicating constants or messages."
     },
     {
       "typescript": "packages/core/src/abort-replay-ordering.test.ts",
