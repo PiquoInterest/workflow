@@ -3820,7 +3820,7 @@
     },
     {
       "typescript": "rust/conformance/attribute-changes-parity.test.ts",
-      "sourceSha256": "f790ccfe58646c00dc4fffb0f6c00e70de0cd90b0e2c68e6e8f615e2948bc8a3",
+      "sourceSha256": "f4d3ed3c793ffad04d376c92706affb6f384eaed542963c602a82e43a2afbb7d",
       "surface": "root",
       "kind": "unit",
       "lineCount": 182,
