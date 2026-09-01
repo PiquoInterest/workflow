@@ -174,7 +174,7 @@ Acknowledgments: https://github.com/PiquoInterest/workflow/blob/main/docs/rust-p
 # Otherwise runs can wedge or later correlation draws can become timing-based
 # and corrupt deterministic replay. All three production-shape TypeScript cases
 # are translated at
-# rust/tdd/workflow-core/tests/delivery_barrier_dispenser.rs. Full analysis is
+# rust/tdd/workflow-core/tests/delivery_barrier-dispenser.rs. Full analysis is
 # in docs/rust-port/findings/WF-RUST-026.md. Closure requires the real event
 # consumer, barrier registry, scheduler, and correlation allocator.
 #
@@ -250,3 +250,14 @@ Acknowledgments: https://github.com/PiquoInterest/workflow/blob/main/docs/rust-p
 # concurrent replays from falsely exhausting healthy work while retaining a
 # hard ceiling for genuine timeout retries. Full analysis is in
 # docs/rust-port/findings/WF-RUST-098.md.
+#
+# WF-RUST-099: Active TypeScript and production Rust replay caches bind each
+# workflow/event key to an immutable copy of its exact bytes. Reusing a logical
+# key with different bytes is a terminal integrity conflict; the conflicting
+# payload is never prepared, in-flight waiters reject, and fixed diagnostics do
+# not expose run IDs, event IDs, payload bytes, or key material. Cache entries
+# are published before extensible preparation code runs, and same-key re-entry
+# fails without duplicate work or recursion. TypeScript and Rust regression
+# targets cover caller/preparer mutation, typed-array method override, in-flight
+# conflicts, terminal retention, and synchronous re-entry. Full analysis is in
+# docs/rust-port/findings/WF-RUST-099.md.
