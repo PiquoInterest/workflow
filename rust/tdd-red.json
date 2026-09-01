@@ -67,19 +67,6 @@
       "failureMarker": "TDD RED: packages/utils/src/parse-name.test.ts implementation pending"
     },
     {
-      "typescript": "packages/utils/src/debug-log.test.ts",
-      "command": [
-        "cargo",
-        "test",
-        "--locked",
-        "--manifest-path",
-        "rust/tdd/workflow-utils/Cargo.toml",
-        "--test",
-        "debug_log"
-      ],
-      "failureMarker": "TDD RED: packages/utils/src/debug-log.test.ts implementation pending"
-    },
-    {
       "typescript": "packages/utils/src/get-port.test.ts",
       "command": [
         "cargo",

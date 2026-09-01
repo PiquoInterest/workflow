@@ -69,3 +69,11 @@ Identifiers read from workflow state, adapters, or legacy records remain
 untrusted when rendered for logs. Single-line formatters must escape C0, C1,
 DEL, CR, LF, tab, U+2028, and U+2029 rather than allowing terminal controls or
 line injection. WF-RUST-101 applies this rule to machine workflow and step names.
+
+## Debug selector gating and diagnostic redaction
+
+Debug namespace configuration is untrusted text. Match complete comma- or
+whitespace-delimited tokens, apply explicit negative selectors before positive
+selectors, and return before formatting or forwarding arguments when disabled.
+Diagnostic wrapper types must not expose payload values through derived or
+custom `Debug` output. WF-RUST-102 applies this rule to workflow utility logs.

@@ -284,11 +284,13 @@ Acknowledgments: https://github.com/PiquoInterest/workflow/blob/main/docs/rust-p
 # docs/rust-port/findings/WF-RUST-101.md.
 
 #
-# WF-RUST-102: TDD RED. The TypeScript debug gate enables workflow
-# diagnostics whenever the complete DEBUG string merely contains
-# "workflow:", including unrelated and explicitly negated selector
-# tokens. The TypeScript characterization proves diagnostic arguments
-# are forwarded under that condition. The translated Rust tests require
-# token-aware matching and a silent sink, but production Rust is not yet
-# implemented, so this entry is not a mitigation claim. Full analysis is
-# in docs/rust-port/findings/WF-RUST-102.md.
+# WF-RUST-102: TypeScript workflow debug gating uses whole-string substring
+# matching, so unrelated names such as myworkflow:* and explicitly negated
+# selectors such as app:*,-workflow:* still forward diagnostic arguments. The
+# TypeScript characterization keeps that privacy defect reproducible. Rust
+# parses comma/whitespace-delimited selector tokens, gives -* and -workflow:*
+# precedence, rejects larger substring lookalikes, returns before touching the
+# sink, and redacts Debug output for diagnostic values. The expected-RED proof
+# and permanent GREEN run 33558964834 cover six compatibility, two translated
+# security, and three direct production security tests. Full analysis is in
+# docs/rust-port/findings/WF-RUST-102.md.

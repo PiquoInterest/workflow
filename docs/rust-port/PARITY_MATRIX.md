@@ -40,3 +40,9 @@ Status meanings:
 | CLI and workbenches | NOT STARTED | Port CLI behavior and make all examples execute through the Rust runtime. |
 | Repository-wide Rust-only E2E | NOT STARTED | Existing package tests, workbench E2E, race reproduction, upgrade/rollback, and security tests must pass with TypeScript runtime disabled. |
 | TypeScript runtime deletion | BLOCKED | Allowed only after every applicable row is PROVEN and Rust-only CI is green. |
+
+## Utility security promotions
+
+| Contract | Status | Evidence |
+| --- | --- | --- |
+| Debug selector gating and diagnostic redaction | PROVEN | TypeScript legacy characterization plus production and translated Rust tests; read-only workflow run `33558964834`; WF-RUST-102 |

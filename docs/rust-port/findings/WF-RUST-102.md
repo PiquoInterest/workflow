@@ -2,7 +2,7 @@
 
 ## Status
 
-Implementation complete; permanent GREEN validation pending.
+Closed at the production Rust debug boundary.
 
 The expected-RED workflow run `33557800452` succeeded before production implementation. It proved the current TypeScript characterization, compiled the translated Rust security target, observed the exact registered panic marker, regenerated the manifest, and committed the TDD-RED security record as `33b85b2a90a30b5ddca5e788560685b2f27794dc`.
 
@@ -14,7 +14,7 @@ Production Rust security tests, implementation, exports, and translated-suite wi
 - `97a446af6fc99f7b484fbd4d65a2ff3d65bf3cfc`
 - `2859337d4a6cc1c25bd4a4a36e334acb952f0816`
 
-Canonical Rust 1.87 formatting was applied without behavioral changes in `51f557aa1b10d2e057548751b8327525fff199d6`. This document does not claim closure until the permanent read-only utility lane passes on that formatted implementation and a separate guarded promotion updates the security and parity ledgers.
+Canonical Rust 1.87 formatting was applied without behavioral changes in `51f557aa1b10d2e057548751b8327525fff199d6`. The permanent read-only utility lane passed on the formatted implementation in workflow run `33558964834`. A branch-head-guarded promotion then removed the expected-RED registrations and updated the security and parity ledgers.
 
 ## Affected boundary
 

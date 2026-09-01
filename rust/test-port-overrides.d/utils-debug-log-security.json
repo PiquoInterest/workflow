@@ -3,11 +3,12 @@
   "entries": [
     {
       "typescript": "packages/utils/src/debug-log-security.test.ts",
-      "status": "red",
+      "status": "green",
       "rustTests": [
-        "rust/tdd/workflow-utils/tests/debug_log_security.rs"
+        "rust/tdd/workflow-utils/tests/debug_log_security.rs",
+        "crates/workflow-utils/tests/debug_log_security.rs"
       ],
-      "notes": "Both TypeScript security declarations are translated. TypeScript intentionally characterizes the legacy substring matcher accepting unrelated and explicitly negated selectors and forwarding diagnostic arguments. Rust must tokenize selectors, reject those values, and emit nothing so diagnostic payloads cannot be exposed by selector confusion. WF-RUST-102 tracks the intentional security difference."
+      "notes": "The two TypeScript declarations intentionally characterize the legacy substring matcher accepting unrelated and explicitly negated selectors and forwarding diagnostic arguments. The Rust translation and direct production tests require token-aware rejection, zero sink calls, negative-selector precedence, and redacted Debug output. Verified by read-only Rust utility workflow run 33558964834."
     }
   ]
 }

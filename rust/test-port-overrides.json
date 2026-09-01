@@ -48,9 +48,12 @@
     },
     {
       "typescript": "packages/utils/src/debug-log.test.ts",
-      "status": "red",
-      "rustTests": ["rust/tdd/workflow-utils/tests/debug_log.rs"],
-      "notes": "All six selector and sink assertions are translated with an injected five-level log sink so disabled logging can be proven silent."
+      "status": "green",
+      "rustTests": [
+        "rust/tdd/workflow-utils/tests/debug_log.rs",
+        "crates/workflow-utils/tests/debug_log_security.rs"
+      ],
+      "notes": "All six TypeScript selector and sink assertions execute against production workflow-utils. Rust additionally rejects substring-confused and explicitly negated workflow selectors, never invokes the sink when disabled, and redacts Debug output for diagnostic payloads. TypeScript intentionally remains an oracle for the legacy unsafe behavior documented as WF-RUST-102."
     },
     {
       "typescript": "packages/utils/src/check-data-dir.test.ts",

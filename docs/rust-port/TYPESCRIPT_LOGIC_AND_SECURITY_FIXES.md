@@ -393,3 +393,14 @@ verbatim into log-oriented strings. The committed regression is observed RED
 against that source. TypeScript and Rust now escape log-breaking controls while
 preserving ordinary parser and display-name behavior. Full evidence and closure
 requirements are in `docs/rust-port/findings/WF-RUST-101.md`.
+
+## WF-RUST-102: Debug selector substring confusion
+
+The TypeScript debug gate treats any `DEBUG` string containing `workflow:` as
+an enable signal, including unrelated namespaces and explicit negative tokens.
+The committed TypeScript characterization proves that diagnostic arguments are
+forwarded under those conditions. Rust uses token-aware matching, negative
+selector precedence, a zero-call disabled path, and payload-redacting `Debug`
+implementations. The pre-implementation Rust target is observed RED and the
+permanent utility lane is GREEN in run `33558964834`. Full evidence is in
+`docs/rust-port/findings/WF-RUST-102.md`.
