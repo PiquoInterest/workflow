@@ -3,9 +3,9 @@
   "sourceCount": 334,
   "declaredTestCount": 5100,
   "statusCounts": {
-    "unported": 260,
+    "unported": 259,
     "partial": 0,
-    "red": 62,
+    "red": 63,
     "green": 12,
     "blocked": 0
   },
@@ -454,9 +454,11 @@
       "kind": "unit",
       "lineCount": 439,
       "declaredTestCount": 12,
-      "status": "unported",
-      "rustTests": [],
-      "notes": ""
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-cli/tests/bulk_cancel.rs"
+      ],
+      "notes": "All 12 TypeScript declarations are translated. Coverage preserves the 1..=500 integer limit, exact summary and per-run failure text, zero-result behavior, pending/running-only selection, round-robin page merging before truncation, single-call cancelMany behavior, bounded per-run fallback, has-more guidance, failure exit status, and confirmation decline without side effects. Security-relevant cases prove terminal runs cannot be pulled into an unpinned cancellation batch, an unconfirmed command cannot issue backend writes, and one status page cannot starve another before the global limit is applied. Final GREEN must use the real Rust World/CLI boundary and validate backend bulk results rather than manufacturing fixture observations."
     },
     {
       "typescript": "packages/cli/src/lib/inspect/hydration.test.ts",
