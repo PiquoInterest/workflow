@@ -23,6 +23,39 @@ The manifest check fails when a test is added, renamed, deleted, or edited
 without an explicit Rust-port review. Deleted tests are never dropped
 silently.
 
+## Current progress
+
+At branch commit `7e0ea4d360cd0ec8da3a9d187af8c501233fc19b` the checked-in manifest records:
+
+- 334 TypeScript test files and 5,100 declared tests in the locked corpus;
+- 39 source files fully translated into expected-RED Rust suites;
+- 12 source files green against production Rust behavior;
+- 283 source files not yet translated;
+- no entries marked partial or blocked.
+
+The latest AI tranche translates all 51 declarations from:
+
+- `packages/ai/src/agent/do-stream-step.test.ts`;
+- `packages/ai/src/agent/tools-to-model-tools.test.ts`;
+- `packages/ai/src/agent/telemetry.test.ts`.
+
+The translated suites cover provider-stream normalization, malformed tool-call
+input retention, partial metadata merging, model-tool projection, telemetry
+parity, and the `recordInputs` and `recordOutputs` privacy controls. These tests
+remain intentionally RED. They do not count as production implementation or as
+closed security findings.
+
+Large generated registries are split into reviewed fragments:
+
+- `rust/tdd-red.d/*.json` registers source-specific expected-RED commands and
+  failure markers;
+- `rust/test-port-overrides.d/*.json` records the Rust test files, review notes,
+  and status for each translated TypeScript source.
+
+The runner and manifest bootstrap load fragments in deterministic filename
+order and reject duplicate source paths. This lets each migration chunk remain
+small without weakening the complete-corpus checks.
+
 ## Statuses
 
 - `unported`: inventoried, but no Rust test target exists yet.
@@ -35,7 +68,8 @@ silently.
   framework harness that has not yet been reproduced in Rust.
 
 A non-`unported` or non-`blocked` entry must reference an existing Rust test
-file. A `red` entry must also appear in `rust/tdd-red.json`.
+file. A `red` entry must also appear in the base `rust/tdd-red.json` file or a
+reviewed `rust/tdd-red.d/*.json` fragment.
 
 ## RED verification
 
@@ -46,6 +80,11 @@ A RED test is accepted only when:
 2. the output contains its exact recorded failure marker;
 3. it is not terminated by a signal; and
 4. it does not unexpectedly pass.
+
+Before any expected failure is accepted, CI runs Rustfmt, compiles every test
+target without executing it, and runs Clippy with warnings denied. This keeps a
+syntax error, missing dependency, type error, or lint failure from being
+misreported as a successful TDD RED state.
 
 This distinguishes a missing implementation from compilation failures,
 misconfigured runners, missing dependencies, timeouts, and unrelated panics.
@@ -72,6 +111,10 @@ layer is intentionally patched. The Rust test proves rejection or safe
 normalization. Differential tests cover valid inputs, while intentional
 security differences are named and documented instead of being hidden as
 parity failures.
+
+Security-sensitive requirements that are only translated, but not implemented,
+are explicitly labeled `TDD RED` in `security.txt`. A panic marker proves that
+the intended implementation is still absent. It never counts as mitigation.
 
 ## Retirement gate
 
