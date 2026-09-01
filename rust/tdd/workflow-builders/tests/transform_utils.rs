@@ -271,18 +271,14 @@ fn computed_property_does_not_match_string_literals() {
 
 #[test]
 fn detect_patterns_marks_serde_imports() {
-    let result = detect_workflow_patterns(
-        "import { WORKFLOW_SERIALIZE } from '@workflow/serde';",
-    );
+    let result = detect_workflow_patterns("import { WORKFLOW_SERIALIZE } from '@workflow/serde';");
     assert!(result.has_serde);
     assert!(result.has_serde_import);
 }
 
 #[test]
 fn detect_patterns_marks_direct_serde_symbols() {
-    let result = detect_workflow_patterns(
-        "static [Symbol.for('workflow-serialize')](instance) {}",
-    );
+    let result = detect_workflow_patterns("static [Symbol.for('workflow-serialize')](instance) {}");
     assert!(result.has_serde);
     assert!(result.has_serde_symbol);
 }
@@ -498,8 +494,5 @@ fn should_transform_accepts_sdk_files_with_serde_patterns() {
 
 #[test]
 fn should_transform_rejects_files_without_relevant_patterns() {
-    assert!(!should_transform_file(
-        "/app/lib/utils.ts",
-        no_patterns()
-    ));
+    assert!(!should_transform_file("/app/lib/utils.ts", no_patterns()));
 }
