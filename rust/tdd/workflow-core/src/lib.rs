@@ -17,6 +17,7 @@ pub mod describe_error;
 pub mod dev_hmr;
 pub mod duplicate_event_fixtures;
 pub mod duplicate_events;
+pub mod e2e_utils;
 pub mod encryption;
 pub mod flushable_stream;
 pub mod local_build;
