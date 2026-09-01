@@ -130,3 +130,13 @@ Acknowledgments: https://github.com/PiquoInterest/workflow/blob/main/docs/rust-p
 # to avoid treating nonce bytes as a serialization format prefix. Full analysis
 # is in docs/rust-port/findings/WF-RUST-021.md. Closure requires the production
 # Rust serialization path and cross-language encrypted fixtures.
+#
+# WF-RUST-022 (TDD RED): Context errors are persisted and logged state. Internal
+# functionName fields must not be enumerable, stored messages and stacks must
+# contain no ANSI control bytes, and lazy terminal rendering must not duplicate
+# framed details. All four context violations remain fatal because replay
+# cannot repair a wrong calling context. The Rust suite at
+# rust/tdd/workflow-core/tests/context_errors.rs also requires caller-directed
+# stack capture. Full analysis is in
+# docs/rust-port/findings/WF-RUST-022.md. Closure requires production error,
+# serialization, rendering, and fatal-classification paths.
