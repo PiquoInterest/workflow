@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "sourceCount": 339,
-  "declaredTestCount": 5114,
+  "sourceCount": 340,
+  "declaredTestCount": 5117,
   "statusCounts": {
-    "unported": 223,
+    "unported": 224,
     "partial": 0,
     "red": 98,
     "green": 18,
@@ -2329,6 +2329,17 @@
         "rust/tdd/workflow-utils/tests/module_scope_state.rs"
       ],
       "notes": "All 19 package-discovery and static-analysis assertions are translated, including cross-file empty collections, static fields, this resolution, .mts sources, and per-copy annotations."
+    },
+    {
+      "typescript": "packages/utils/src/parse-name-security.test.ts",
+      "sourceSha256": "2adcabcad69e628353d180ace063efa1614ef9b5a4a66a37045e22120c42a422",
+      "surface": "packages/utils",
+      "kind": "unit",
+      "lineCount": 34,
+      "declaredTestCount": 3,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
     },
     {
       "typescript": "packages/utils/src/parse-name.test.ts",
