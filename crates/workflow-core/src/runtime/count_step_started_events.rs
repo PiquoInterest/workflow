@@ -172,7 +172,9 @@ pub fn count_step_started_events(
         StepStartScope::Unscoped => by_owner
             .values()
             .try_fold(bare, |total, owner_count| checked_add(total, *owner_count))?,
-        StepStartScope::OwnedBy(message_id) => by_owner.get(message_id.as_str()).copied().unwrap_or(0),
+        StepStartScope::OwnedBy(message_id) => {
+            by_owner.get(message_id.as_str()).copied().unwrap_or(0)
+        }
         StepStartScope::TotalAttempts => {
             let max_owner = by_owner.values().copied().max().unwrap_or(0);
             checked_add(bare, max_owner)?
