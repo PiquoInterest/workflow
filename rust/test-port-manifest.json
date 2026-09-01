@@ -1035,10 +1035,10 @@
     },
     {
       "typescript": "packages/core/src/replay-payload-cache-security.test.ts",
-      "sourceSha256": "17f53d1e8a6bd2664187580a462d6a472614adc94b246775535e5d75b571a222",
+      "sourceSha256": "f1518f0207263e0acfe58297e78821bf4c8a39367ff1dcce88c047681e4d444e",
       "surface": "packages/core",
       "kind": "unit",
-      "lineCount": 65,
+      "lineCount": 67,
       "declaredTestCount": 2,
       "status": "red",
       "rustTests": [
