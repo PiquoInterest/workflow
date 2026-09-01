@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "entries": [
+    {
+      "typescript": "packages/core/e2e/local-build.test.ts",
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-core/tests/local_build.rs"
+      ],
+      "notes": "The single describe.each declaration is expanded into all 13 workbench projects. Coverage preserves the SvelteKit import preflight, exact pnpm build invocation, Next Turbopack source-map fixture lifecycle, generic/source-map warning rejection, diagnostics manifests, native ESM import.meta output, and legacy step-route removal. WF-RUST-093 adds explicit hard process-tree deadlines, one shared 8 MiB output budget, interleaved stdout/stderr diagnostics, signal-aware failures, and non-ENOENT artifact-read propagation. Final GREEN must execute real Rust subprocess, builder, artifact, and cleanup paths; fabricated observations are insufficient."
+    }
+  ]
+}

@@ -19,6 +19,7 @@ pub mod duplicate_event_fixtures;
 pub mod duplicate_events;
 pub mod encryption;
 pub mod flushable_stream;
+pub mod local_build;
 pub mod log_format;
 pub mod log_order_draws;
 pub mod logger;
