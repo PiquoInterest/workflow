@@ -6,20 +6,31 @@ on:
       - pro/rust-repository-port
     paths:
       - '.github/workflows/rust-core-verify-once.yml'
+      - 'packages/core/src/capabilities.ts'
+      - 'packages/core/src/capabilities.test.ts'
+      - 'packages/core/src/serialization/types.ts'
+      - 'packages/core/src/replay-payload-cache.ts'
+      - 'packages/core/src/replay-payload-cache.test.ts'
+      - 'packages/core/src/replay-payload-cache-security.test.ts'
+      - 'packages/core/src/runtime/count-step-started-events.ts'
+      - 'packages/core/src/runtime/count-step-started-events.test.ts'
+      - 'crates/workflow-core/**'
+      - 'rust/conformance/capabilities-parity.test.ts'
+      - 'rust/conformance/count-step-started-events-parity.test.ts'
+      - 'docs/rust-port/TYPESCRIPT_LOGIC_AND_SECURITY_FIXES.md'
+      - 'pnpm-lock.yaml'
 
 permissions:
   contents: read
 
 jobs:
   verify:
-    name: Verify replay-cache Rust implementation
+    name: Verify replay-cache TypeScript oracle and Rust implementation
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
-      - name: Checkout migration branch
+      - name: Checkout triggering commit
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
-        with:
-          ref: pro/rust-repository-port
 
       - name: Install Rust 1.87
         uses: actions-rust-lang/setup-rust-toolchain@46268bd060767258de96ed93c1251119784f2ab6
@@ -42,22 +53,25 @@ jobs:
       - name: Build TypeScript oracle dependency graph
         run: pnpm --filter '@workflow/core...' build
 
-      - name: Check canonical formatting
-        run: cargo fmt --manifest-path crates/workflow-core/Cargo.toml -- --check
-
-      - name: Test Rust core
-        run: cargo test --locked --manifest-path crates/workflow-core/Cargo.toml --all-targets
-
-      - name: Lint Rust core
-        run: cargo clippy --locked --manifest-path crates/workflow-core/Cargo.toml --all-targets -- -D warnings
-
-      - name: Run TypeScript oracles
+      - name: Prove TypeScript characterization and compatibility oracles are green
         run: |
           pnpm exec vitest run \
             packages/core/src/capabilities.test.ts \
             packages/core/src/replay-payload-cache.test.ts \
             packages/core/src/replay-payload-cache-security.test.ts \
             packages/core/src/runtime/count-step-started-events.test.ts
+
+      - name: Check canonical Rust formatting
+        run: cargo fmt --manifest-path crates/workflow-core/Cargo.toml -- --check
+
+      - name: Prove production Rust replay-cache tests are green
+        run: cargo test --locked --manifest-path crates/workflow-core/Cargo.toml --test replay_payload_cache
+
+      - name: Test all Rust core targets
+        run: cargo test --locked --manifest-path crates/workflow-core/Cargo.toml --all-targets
+
+      - name: Lint Rust core
+        run: cargo clippy --locked --manifest-path crates/workflow-core/Cargo.toml --all-targets -- -D warnings
 
       - name: Build differential runners
         run: cargo build --locked --manifest-path crates/workflow-core/Cargo.toml --examples
