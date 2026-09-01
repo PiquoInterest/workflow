@@ -99,15 +99,17 @@ fn json_stringify_utf16_prefix(value: &str, max_units: Option<usize>) -> String 
             0x000d => output.push_str("\\r"),
             0x0000..=0x001f => push_json_unicode_escape(&mut output, unit),
             0xd800..=0xdbff => {
-                let Some(low) = units.peek().copied().filter(|low| (0xdc00..=0xdfff).contains(low))
+                let Some(low) = units
+                    .peek()
+                    .copied()
+                    .filter(|low| (0xdc00..=0xdfff).contains(low))
                 else {
                     push_json_unicode_escape(&mut output, unit);
                     continue;
                 };
                 units.next();
-                let code_point = 0x1_0000
-                    + ((u32::from(unit) - 0xd800) << 10)
-                    + (u32::from(low) - 0xdc00);
+                let code_point =
+                    0x1_0000 + ((u32::from(unit) - 0xd800) << 10) + (u32::from(low) - 0xdc00);
                 output.push(
                     char::from_u32(code_point)
                         .expect("paired UTF-16 surrogates always form a Unicode scalar value"),
