@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "sourceCount": 336,
-  "declaredTestCount": 5103,
+  "sourceCount": 337,
+  "declaredTestCount": 5104,
   "statusCounts": {
     "unported": 222,
     "partial": 0,
-    "red": 100,
+    "red": 101,
     "green": 14,
     "blocked": 0
   },
@@ -1032,6 +1032,19 @@
       "status": "unported",
       "rustTests": [],
       "notes": ""
+    },
+    {
+      "typescript": "packages/core/src/replay-payload-cache-security.test.ts",
+      "sourceSha256": "84fc4859348cffa8b1b1bca73a81299cc00681a06a4783f54552619b3e4db8cf",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 32,
+      "declaredTestCount": 1,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-core/tests/replay_payload_cache_security.rs"
+      ],
+      "notes": "WF-RUST-097 characterization. TypeScript currently aliases a second binary payload to the first cached preparation when the event ID and field are reused, so the conflicting bytes are never authenticated, decrypted, or decompressed. The Rust RED target requires immutable cache-key binding: different bytes for one run/event key fail with a static integrity error, do not call the preparer again, and do not reflect the event ID or payload. Final GREEN must enforce this inside the production cache cell rather than in a test-only wrapper."
     },
     {
       "typescript": "packages/core/src/replay-payload-cache.test.ts",
