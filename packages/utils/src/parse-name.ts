@@ -156,22 +156,37 @@ function shortNameFromSanitized(tag: string, name: string): string | null {
   return shortName || null;
 }
 
-const SINGLE_LINE_CONTROL_CHARACTERS =
-  /[\u0000-\u001f\u007f-\u009f\u2028\u2029]/g;
+function isSingleLineControlCodePoint(codePoint: number): boolean {
+  return (
+    codePoint <= 0x1f ||
+    (codePoint >= 0x7f && codePoint <= 0x9f) ||
+    codePoint === 0x2028 ||
+    codePoint === 0x2029
+  );
+}
 
 function escapeSingleLine(value: string): string {
-  return value.replace(SINGLE_LINE_CONTROL_CHARACTERS, (character) => {
-    switch (character) {
-      case '\n':
-        return '\\n';
-      case '\r':
-        return '\\r';
-      case '\t':
-        return '\\t';
-      default:
-        return `\\u${character.charCodeAt(0).toString(16).padStart(4, '0')}`;
+  const escaped: string[] = [];
+  for (const character of value) {
+    if (character === '\n') {
+      escaped.push('\\n');
+    } else if (character === '\r') {
+      escaped.push('\\r');
+    } else if (character === '\t') {
+      escaped.push('\\t');
+    } else {
+      const codePoint = character.codePointAt(0);
+      if (
+        codePoint !== undefined &&
+        isSingleLineControlCodePoint(codePoint)
+      ) {
+        escaped.push(`\\u${codePoint.toString(16).padStart(4, '0')}`);
+      } else {
+        escaped.push(character);
+      }
     }
-  });
+  }
+  return escaped.join('');
 }
 
 function formatParsedName(
