@@ -3,9 +3,9 @@
   "sourceCount": 334,
   "declaredTestCount": 5100,
   "statusCounts": {
-    "unported": 306,
+    "unported": 305,
     "partial": 12,
-    "red": 16,
+    "red": 17,
     "green": 0,
     "blocked": 0
   },
@@ -3501,9 +3501,11 @@
       "kind": "unit",
       "lineCount": 465,
       "declaredTestCount": 23,
-      "status": "unported",
-      "rustTests": [],
-      "notes": ""
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-world/tests/node_http.rs"
+      ],
+      "notes": "All 23 GET/POST, content-length, compression, streaming, abort, timeout, socket-reset, cancellation, queueing, and keep-alive declarations are translated against the planned Rust client contract. Final GREEN requires the same assertions against real loopback sockets rather than only a scripted contract harness."
     },
     {
       "typescript": "packages/world/src/queue.test.ts",
