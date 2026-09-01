@@ -1,12 +1,12 @@
 import { execFileSync } from 'node:child_process';
 import path from 'node:path';
+import { describe, expect, it } from 'vitest';
+import { normalizeAttributeChanges } from '../../packages/core/src/attribute-changes.js';
 import {
   ATTRIBUTE_KEY_MAX_LENGTH,
   ATTRIBUTE_MAX_PER_RUN,
   ATTRIBUTE_VALUE_MAX_BYTES,
-} from '@workflow/world';
-import { describe, expect, it } from 'vitest';
-import { normalizeAttributeChanges } from '../../packages/core/src/attribute-changes.js';
+} from '../../packages/world/src/attributes-validation.js';
 
 interface Success {
   ok: true;
