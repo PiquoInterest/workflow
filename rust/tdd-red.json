@@ -82,6 +82,31 @@
       "failureMarker": "TDD RED: packages/builders/src/vercel-build-output-api.test.ts implementation pending"
     },
     {
+      "typescript": "packages/ai/src/agent/durable-agent-types.test.ts",
+      "command": ["cargo", "test", "--locked", "--manifest-path", "rust/tdd/workflow-ai/Cargo.toml", "--test", "durable_agent_types"],
+      "failureMarker": "TDD RED: packages/ai/src/agent/durable-agent-types.test.ts implementation pending"
+    },
+    {
+      "typescript": "packages/ai/src/get-error-message.test.ts",
+      "command": ["cargo", "test", "--locked", "--manifest-path", "rust/tdd/workflow-ai/Cargo.toml", "--test", "get_error_message"],
+      "failureMarker": "TDD RED: packages/ai/src/get-error-message.test.ts implementation pending"
+    },
+    {
+      "typescript": "packages/ai/src/module-scope-state.test.ts",
+      "command": ["cargo", "test", "--locked", "--manifest-path", "rust/tdd/workflow-ai/Cargo.toml", "--test", "module_scope_state"],
+      "failureMarker": "TDD RED: packages/ai/src/module-scope-state.test.ts implementation pending"
+    },
+    {
+      "typescript": "packages/ai/src/stream-iterator.test.ts",
+      "command": ["cargo", "test", "--locked", "--manifest-path", "rust/tdd/workflow-ai/Cargo.toml", "--test", "stream_iterator"],
+      "failureMarker": "TDD RED: packages/ai/src/stream-iterator.test.ts implementation pending"
+    },
+    {
+      "typescript": "packages/ai/src/workflow-chat-transport.stream-repair.test.ts",
+      "command": ["cargo", "test", "--locked", "--manifest-path", "rust/tdd/workflow-ai/Cargo.toml", "--test", "workflow_chat_transport_stream_repair"],
+      "failureMarker": "TDD RED: packages/ai/src/workflow-chat-transport.stream-repair.test.ts implementation pending"
+    },
+    {
       "typescript": "packages/errors/src/ansi.test.ts",
       "command": ["cargo", "test", "--locked", "--manifest-path", "rust/tdd/workflow-errors/Cargo.toml", "--test", "ansi"],
       "failureMarker": "TDD RED: packages/errors/src/ansi.test.ts implementation pending"
