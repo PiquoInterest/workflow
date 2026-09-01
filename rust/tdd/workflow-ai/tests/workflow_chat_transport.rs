@@ -39,8 +39,7 @@ fn chunk_types(chunks: &[OutputChunk]) -> Vec<&str> {
 
 #[test]
 fn constructs_with_the_default_fetch_implementation() {
-    let observation =
-        exercise_workflow_chat_transport(WorkflowChatTransportCase::DefaultFetch);
+    let observation = exercise_workflow_chat_transport(WorkflowChatTransportCase::DefaultFetch);
 
     assert!(observation.constructed);
     assert!(!observation.custom_fetch_selected);
@@ -48,8 +47,7 @@ fn constructs_with_the_default_fetch_implementation() {
 
 #[test]
 fn constructs_with_a_custom_fetch_implementation() {
-    let observation =
-        exercise_workflow_chat_transport(WorkflowChatTransportCase::CustomFetch);
+    let observation = exercise_workflow_chat_transport(WorkflowChatTransportCase::CustomFetch);
 
     assert!(observation.constructed);
     assert!(observation.custom_fetch_selected);
@@ -57,8 +55,7 @@ fn constructs_with_a_custom_fetch_implementation() {
 
 #[test]
 fn accepts_and_stores_transport_callbacks() {
-    let observation =
-        exercise_workflow_chat_transport(WorkflowChatTransportCase::CallbackStorage);
+    let observation = exercise_workflow_chat_transport(WorkflowChatTransportCase::CallbackStorage);
 
     assert!(observation.constructed);
     assert!(observation.callbacks_stored);
@@ -66,18 +63,16 @@ fn accepts_and_stores_transport_callbacks() {
 
 #[test]
 fn defaults_max_consecutive_errors_to_three() {
-    let observation = exercise_workflow_chat_transport(
-        WorkflowChatTransportCase::DefaultMaxConsecutiveErrors,
-    );
+    let observation =
+        exercise_workflow_chat_transport(WorkflowChatTransportCase::DefaultMaxConsecutiveErrors);
 
     assert_eq!(observation.max_consecutive_errors, 3);
 }
 
 #[test]
 fn accepts_a_custom_max_consecutive_error_limit() {
-    let observation = exercise_workflow_chat_transport(
-        WorkflowChatTransportCase::CustomMaxConsecutiveErrors,
-    );
+    let observation =
+        exercise_workflow_chat_transport(WorkflowChatTransportCase::CustomMaxConsecutiveErrors);
 
     assert_eq!(observation.max_consecutive_errors, 5);
 }
@@ -115,8 +110,7 @@ fn applies_a_custom_send_endpoint_and_body() {
 
 #[test]
 fn surfaces_non_successful_send_responses() {
-    let observation =
-        exercise_workflow_chat_transport(WorkflowChatTransportCase::ResponseError);
+    let observation = exercise_workflow_chat_transport(WorkflowChatTransportCase::ResponseError);
 
     assert_eq!(
         observation.terminal_error.as_deref(),
@@ -126,9 +120,8 @@ fn surfaces_non_successful_send_responses() {
 
 #[test]
 fn applies_a_custom_reconnect_endpoint_and_headers() {
-    let observation = exercise_workflow_chat_transport(
-        WorkflowChatTransportCase::CustomReconnectRequest,
-    );
+    let observation =
+        exercise_workflow_chat_transport(WorkflowChatTransportCase::CustomReconnectRequest);
 
     assert_eq!(
         observation.prepare_reconnect_input,
@@ -155,9 +148,8 @@ fn applies_a_custom_reconnect_endpoint_and_headers() {
 
 #[test]
 fn forwards_the_abort_signal_to_reconnect_fetches() {
-    let observation = exercise_workflow_chat_transport(
-        WorkflowChatTransportCase::ReconnectAbortSignal,
-    );
+    let observation =
+        exercise_workflow_chat_transport(WorkflowChatTransportCase::ReconnectAbortSignal);
 
     assert_eq!(
         observation.fetch_calls,
@@ -173,9 +165,8 @@ fn forwards_the_abort_signal_to_reconnect_fetches() {
 
 #[test]
 fn reuses_the_abort_signal_when_send_falls_back_to_reconnect() {
-    let observation = exercise_workflow_chat_transport(
-        WorkflowChatTransportCase::SendReconnectAbortSignal,
-    );
+    let observation =
+        exercise_workflow_chat_transport(WorkflowChatTransportCase::SendReconnectAbortSignal);
 
     assert_eq!(
         observation.fetch_calls,
@@ -200,9 +191,8 @@ fn reuses_the_abort_signal_when_send_falls_back_to_reconnect() {
 
 #[test]
 fn resolves_a_negative_start_index_from_the_tail_header() {
-    let observation = exercise_workflow_chat_transport(
-        WorkflowChatTransportCase::NegativeStartIndexWithTail,
-    );
+    let observation =
+        exercise_workflow_chat_transport(WorkflowChatTransportCase::NegativeStartIndexWithTail);
 
     assert_eq!(observation.fetch_calls.len(), 2);
     assert_eq!(
@@ -217,9 +207,8 @@ fn resolves_a_negative_start_index_from_the_tail_header() {
 
 #[test]
 fn falls_back_to_zero_when_a_negative_resume_has_no_tail_header() {
-    let observation = exercise_workflow_chat_transport(
-        WorkflowChatTransportCase::NegativeStartIndexWithoutTail,
-    );
+    let observation =
+        exercise_workflow_chat_transport(WorkflowChatTransportCase::NegativeStartIndexWithoutTail);
 
     assert_eq!(observation.fetch_calls.len(), 2);
     assert_eq!(
@@ -249,16 +238,18 @@ fn falls_back_to_zero_when_the_tail_header_is_not_numeric() {
         observation.fetch_calls[1].url,
         "/api/chat/test-chat/stream?startIndex=0"
     );
-    assert!(observation.warnings.iter().any(|warning| {
-        warning.contains("valid \"x-workflow-stream-tail-index\"")
-    }));
+    assert!(
+        observation
+            .warnings
+            .iter()
+            .any(|warning| { warning.contains("valid \"x-workflow-stream-tail-index\"") })
+    );
 }
 
 #[test]
 fn drops_orphan_reasoning_chunks_and_warns_only_once() {
-    let observation = exercise_workflow_chat_transport(
-        WorkflowChatTransportCase::OrphanReasoningChunks,
-    );
+    let observation =
+        exercise_workflow_chat_transport(WorkflowChatTransportCase::OrphanReasoningChunks);
 
     assert_eq!(
         chunk_types(&observation.chunks),
@@ -277,8 +268,7 @@ fn drops_orphan_reasoning_chunks_and_warns_only_once() {
 
 #[test]
 fn drops_orphan_text_chunks_and_warns_only_once() {
-    let observation =
-        exercise_workflow_chat_transport(WorkflowChatTransportCase::OrphanTextChunks);
+    let observation = exercise_workflow_chat_transport(WorkflowChatTransportCase::OrphanTextChunks);
 
     assert_eq!(observation.chunks, vec![chunk("finish", None)]);
     assert_eq!(observation.warnings.len(), 1);
@@ -286,8 +276,7 @@ fn drops_orphan_text_chunks_and_warns_only_once() {
 
 #[test]
 fn drops_orphan_streamed_tool_chunks_and_warns_only_once() {
-    let observation =
-        exercise_workflow_chat_transport(WorkflowChatTransportCase::OrphanToolChunks);
+    let observation = exercise_workflow_chat_transport(WorkflowChatTransportCase::OrphanToolChunks);
 
     assert_eq!(observation.chunks, vec![chunk("finish", None)]);
     assert_eq!(observation.warnings.len(), 1);
@@ -295,9 +284,8 @@ fn drops_orphan_streamed_tool_chunks_and_warns_only_once() {
 
 #[test]
 fn passes_non_streamed_tool_calls_and_their_outputs() {
-    let observation = exercise_workflow_chat_transport(
-        WorkflowChatTransportCase::NonStreamedToolChunks,
-    );
+    let observation =
+        exercise_workflow_chat_transport(WorkflowChatTransportCase::NonStreamedToolChunks);
 
     assert_eq!(
         chunk_types(&observation.chunks),
@@ -313,9 +301,8 @@ fn passes_non_streamed_tool_calls_and_their_outputs() {
 
 #[test]
 fn recovers_a_streamed_tool_call_at_the_full_input_chunk() {
-    let observation = exercise_workflow_chat_transport(
-        WorkflowChatTransportCase::RecoverStreamedToolCall,
-    );
+    let observation =
+        exercise_workflow_chat_transport(WorkflowChatTransportCase::RecoverStreamedToolCall);
 
     assert_eq!(
         chunk_types(&observation.chunks),
@@ -326,9 +313,8 @@ fn recovers_a_streamed_tool_call_at_the_full_input_chunk() {
 
 #[test]
 fn passes_streamed_tool_chunks_when_the_start_is_in_the_window() {
-    let observation = exercise_workflow_chat_transport(
-        WorkflowChatTransportCase::StreamedToolCallWithStart,
-    );
+    let observation =
+        exercise_workflow_chat_transport(WorkflowChatTransportCase::StreamedToolCallWithStart);
 
     assert_eq!(
         chunk_types(&observation.chunks),
@@ -343,9 +329,8 @@ fn passes_streamed_tool_chunks_when_the_start_is_in_the_window() {
 
 #[test]
 fn does_not_activate_the_orphan_filter_for_non_negative_start_indices() {
-    let observation = exercise_workflow_chat_transport(
-        WorkflowChatTransportCase::NonNegativeStartIndex,
-    );
+    let observation =
+        exercise_workflow_chat_transport(WorkflowChatTransportCase::NonNegativeStartIndex);
 
     assert_eq!(
         observation.chunks,
@@ -389,8 +374,7 @@ fn invokes_the_send_callback_with_the_response_and_options() {
 
 #[test]
 fn invokes_the_end_callback_when_the_stream_finishes() {
-    let observation =
-        exercise_workflow_chat_transport(WorkflowChatTransportCase::OnChatEnd);
+    let observation = exercise_workflow_chat_transport(WorkflowChatTransportCase::OnChatEnd);
 
     assert_eq!(observation.on_chat_end_calls.len(), 1);
     assert_eq!(
