@@ -3,9 +3,9 @@
   "sourceCount": 335,
   "declaredTestCount": 5101,
   "statusCounts": {
-    "unported": 225,
+    "unported": 224,
     "partial": 0,
-    "red": 97,
+    "red": 98,
     "green": 13,
     "blocked": 0
   },
@@ -1117,9 +1117,11 @@
       "kind": "unit",
       "lineCount": 166,
       "declaredTestCount": 9,
-      "status": "unported",
-      "rustTests": [],
-      "notes": ""
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-core/tests/count_step_started_events.rs"
+      ],
+      "notes": "All nine TypeScript declarations are expanded into 16 executable Rust cases. Coverage preserves exact 1-based attempt advancement for zero, one, and Number.MAX_SAFE_INTEGER - 1; the shared RangeError contract for negative, fractional, maximum, above-maximum, NaN, and infinite inputs; null/empty logs; step/event filtering; owner-scoped counts; totalAttempts as bare starts plus the largest single owner; the workflow#3069 racer regression; real repeated-owner timeout ceilings; and mixed owned-to-bare retry ceilings. Security and availability behavior requires exact safe-integer accounting and prevents racing one-off owner stamps from falsely exhausting a healthy step's retry budget while still bounding genuine retries. Final GREEN must share the production Rust event model and executor retry counter, preserve owner-message identity, and avoid lossy floating-point or saturating arithmetic."
     },
     {
       "typescript": "packages/core/src/runtime/cross-environment-delivery.test.ts",
