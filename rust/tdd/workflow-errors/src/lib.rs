@@ -61,21 +61,14 @@ pub fn workflow_build_error(
     panic!("TDD RED: packages/errors/src/build-error.test.ts implementation pending")
 }
 
-pub fn corrupted_event_log_error(
-    message: &str,
-    cause: Option<CauseToken>,
-) -> ErrorDescriptor {
+pub fn corrupted_event_log_error(message: &str, cause: Option<CauseToken>) -> ErrorDescriptor {
     let _ = (message, cause);
-    panic!(
-        "TDD RED: packages/errors/src/corrupted-event-log-error.test.ts implementation pending"
-    )
+    panic!("TDD RED: packages/errors/src/corrupted-event-log-error.test.ts implementation pending")
 }
 
 pub fn replay_divergence_error(message: &str, event_id: &str) -> ErrorDescriptor {
     let _ = (message, event_id);
-    panic!(
-        "TDD RED: packages/errors/src/replay-divergence-error.test.ts implementation pending"
-    )
+    panic!("TDD RED: packages/errors/src/replay-divergence-error.test.ts implementation pending")
 }
 
 pub fn runtime_decryption_error(
@@ -84,9 +77,7 @@ pub fn runtime_decryption_error(
     context: Option<BTreeMap<String, DiagnosticValue>>,
 ) -> ErrorDescriptor {
     let _ = (message, cause, context);
-    panic!(
-        "TDD RED: packages/errors/src/runtime-decryption-error.test.ts implementation pending"
-    )
+    panic!("TDD RED: packages/errors/src/runtime-decryption-error.test.ts implementation pending")
 }
 
 pub fn serialization_error(
@@ -123,9 +114,7 @@ pub fn is_fatal(candidate: &GuardCandidate) -> bool {
 
 pub fn scan_module_scope_state(package_path: &str) -> Vec<String> {
     let _ = package_path;
-    panic!(
-        "TDD RED: packages/errors/src/module-scope-state.test.ts implementation pending"
-    )
+    panic!("TDD RED: packages/errors/src/module-scope-state.test.ts implementation pending")
 }
 
 pub mod ansi {

@@ -2,7 +2,10 @@ use workflow_errors_tdd::ansi;
 
 #[test]
 fn frame_renders_a_single_line_title_with_no_contents() {
-    assert_eq!(ansi::frame("something went wrong", &[]), "something went wrong");
+    assert_eq!(
+        ansi::frame("something went wrong", &[]),
+        "something went wrong"
+    );
 }
 
 #[test]
@@ -31,10 +34,7 @@ fn frame_indents_continuation_lines_under_their_branch() {
 
 #[test]
 fn code_wraps_a_token_in_dim_backticks_and_italics() {
-    assert_eq!(
-        ansi::code("fn()"),
-        "<i><dim>`</dim>fn()<dim>`</dim></i>"
-    );
+    assert_eq!(ansi::code("fn()"), "<i><dim>`</dim>fn()<dim>`</dim></i>");
 }
 
 #[test]

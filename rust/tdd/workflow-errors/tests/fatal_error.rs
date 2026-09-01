@@ -1,8 +1,6 @@
 use std::collections::BTreeSet;
 
-use workflow_errors_tdd::{
-    GuardCandidate, PropertyValue, fatal_error, is_fatal,
-};
+use workflow_errors_tdd::{GuardCandidate, PropertyValue, fatal_error, is_fatal};
 
 #[test]
 fn returns_true_for_direct_fatal_error_instances() {

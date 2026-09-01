@@ -1,6 +1,4 @@
-use workflow_errors_tdd::{
-    CauseToken, GuardCandidate, corrupted_event_log_error, is_named_error,
-};
+use workflow_errors_tdd::{CauseToken, GuardCandidate, corrupted_event_log_error, is_named_error};
 
 #[test]
 fn sets_the_name_and_extends_workflow_runtime_error() {

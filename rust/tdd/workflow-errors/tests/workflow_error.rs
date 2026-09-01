@@ -14,7 +14,11 @@ fn uses_its_public_class_name_and_passes_its_own_type_guard() {
 
 #[test]
 fn keeps_documentation_framing_stable() {
-    let error = workflow_error("event history is invalid", Some("corrupted-event-log"), None);
+    let error = workflow_error(
+        "event history is invalid",
+        Some("corrupted-event-log"),
+        None,
+    );
 
     assert_eq!(
         error.message,

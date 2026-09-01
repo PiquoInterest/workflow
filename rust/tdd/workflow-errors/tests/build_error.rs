@@ -1,6 +1,4 @@
-use workflow_errors_tdd::{
-    CauseToken, GuardCandidate, is_named_error, workflow_build_error,
-};
+use workflow_errors_tdd::{CauseToken, GuardCandidate, is_named_error, workflow_build_error};
 
 #[test]
 fn sets_the_name_and_extends_workflow_error() {
