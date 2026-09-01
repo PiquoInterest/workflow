@@ -57,6 +57,51 @@
       "failureMarker": "TDD RED: packages/utils/src/module-scope-state.test.ts implementation pending"
     },
     {
+      "typescript": "packages/errors/src/ansi.test.ts",
+      "command": ["cargo", "test", "--locked", "--manifest-path", "rust/tdd/workflow-errors/Cargo.toml", "--test", "ansi"],
+      "failureMarker": "TDD RED: packages/errors/src/ansi.test.ts implementation pending"
+    },
+    {
+      "typescript": "packages/errors/src/build-error.test.ts",
+      "command": ["cargo", "test", "--locked", "--manifest-path", "rust/tdd/workflow-errors/Cargo.toml", "--test", "build_error"],
+      "failureMarker": "TDD RED: packages/errors/src/build-error.test.ts implementation pending"
+    },
+    {
+      "typescript": "packages/errors/src/corrupted-event-log-error.test.ts",
+      "command": ["cargo", "test", "--locked", "--manifest-path", "rust/tdd/workflow-errors/Cargo.toml", "--test", "corrupted_event_log_error"],
+      "failureMarker": "TDD RED: packages/errors/src/corrupted-event-log-error.test.ts implementation pending"
+    },
+    {
+      "typescript": "packages/errors/src/fatal-error.test.ts",
+      "command": ["cargo", "test", "--locked", "--manifest-path", "rust/tdd/workflow-errors/Cargo.toml", "--test", "fatal_error"],
+      "failureMarker": "TDD RED: packages/errors/src/fatal-error.test.ts implementation pending"
+    },
+    {
+      "typescript": "packages/errors/src/module-scope-state.test.ts",
+      "command": ["cargo", "test", "--locked", "--manifest-path", "rust/tdd/workflow-errors/Cargo.toml", "--test", "module_scope_state"],
+      "failureMarker": "TDD RED: packages/errors/src/module-scope-state.test.ts implementation pending"
+    },
+    {
+      "typescript": "packages/errors/src/replay-divergence-error.test.ts",
+      "command": ["cargo", "test", "--locked", "--manifest-path", "rust/tdd/workflow-errors/Cargo.toml", "--test", "replay_divergence_error"],
+      "failureMarker": "TDD RED: packages/errors/src/replay-divergence-error.test.ts implementation pending"
+    },
+    {
+      "typescript": "packages/errors/src/runtime-decryption-error.test.ts",
+      "command": ["cargo", "test", "--locked", "--manifest-path", "rust/tdd/workflow-errors/Cargo.toml", "--test", "runtime_decryption_error"],
+      "failureMarker": "TDD RED: packages/errors/src/runtime-decryption-error.test.ts implementation pending"
+    },
+    {
+      "typescript": "packages/errors/src/serialization-error.test.ts",
+      "command": ["cargo", "test", "--locked", "--manifest-path", "rust/tdd/workflow-errors/Cargo.toml", "--test", "serialization_error"],
+      "failureMarker": "TDD RED: packages/errors/src/serialization-error.test.ts implementation pending"
+    },
+    {
+      "typescript": "packages/errors/src/workflow-error.test.ts",
+      "command": ["cargo", "test", "--locked", "--manifest-path", "rust/tdd/workflow-errors/Cargo.toml", "--test", "workflow_error"],
+      "failureMarker": "TDD RED: packages/errors/src/workflow-error.test.ts implementation pending"
+    },
+    {
       "typescript": "packages/world/src/analytics.test.ts",
       "command": ["cargo", "test", "--locked", "--manifest-path", "rust/tdd/workflow-world/Cargo.toml", "--test", "analytics"],
       "failureMarker": "TDD RED: packages/world/src/analytics.test.ts implementation pending"
