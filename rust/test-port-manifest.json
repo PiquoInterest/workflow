@@ -3,9 +3,9 @@
   "sourceCount": 334,
   "declaredTestCount": 5100,
   "statusCounts": {
-    "unported": 258,
+    "unported": 257,
     "partial": 0,
-    "red": 64,
+    "red": 65,
     "green": 12,
     "blocked": 0
   },
@@ -534,9 +534,11 @@
       "kind": "e2e",
       "lineCount": 302,
       "declaredTestCount": 3,
-      "status": "unported",
-      "rustTests": [],
-      "notes": ""
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-core/tests/build_errors.rs"
+      ],
+      "notes": "All four executable TypeScript paths are translated, including the conditionally registered dual-entry package case that the manifest declaration counter currently undercounts. Coverage preserves direct Node.js-module diagnostics, top-level external-package attribution when only its ESM entry reaches a Node builtin, Bun-specific wording, file location, step-function guidance, documentation links, and reporting all fs/path/crypto violations in one build. Security-relevant behavior requires workflow sandbox violations to fail closed and aggregate every forbidden import instead of stopping after the first, while transitive diagnostics name the dependency the user can act on rather than silently selecting its safer CJS entry. Final GREEN must execute the real Rust compiler/build graph against temporary source and package fixtures; regex-only source scanning is insufficient."
     },
     {
       "typescript": "packages/core/e2e/dev.test.ts",
