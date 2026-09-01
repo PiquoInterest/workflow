@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "sourceCount": 337,
-  "declaredTestCount": 5106,
+  "sourceCount": 338,
+  "declaredTestCount": 5108,
   "statusCounts": {
-    "unported": 222,
+    "unported": 223,
     "partial": 0,
     "red": 99,
     "green": 16,
@@ -3817,6 +3817,17 @@
         "rust/conformance/step-state-security.test.ts"
       ],
       "notes": "All contradictory-state, null-smuggling, unsafe-attempt, checked-next-attempt, and legacy compatibility fixtures pass in direct and differential Rust tests. Verified by Rust port workflow run 33455424866."
+    },
+    {
+      "typescript": "rust/conformance/attribute-changes-parity.test.ts",
+      "sourceSha256": "f790ccfe58646c00dc4fffb0f6c00e70de0cd90b0e2c68e6e8f615e2948bc8a3",
+      "surface": "root",
+      "kind": "unit",
+      "lineCount": 182,
+      "declaredTestCount": 2,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
     },
     {
       "typescript": "rust/conformance/capabilities-parity.test.ts",
