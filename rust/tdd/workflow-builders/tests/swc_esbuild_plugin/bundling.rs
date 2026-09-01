@@ -1,16 +1,11 @@
 use workflow_builders_tdd::swc_plugin::SwcMode;
 
-use super::support::{
-    TestRoot, build, options, passthrough, set_entries_to_bundle, write_file,
-};
+use super::support::{TestRoot, build, options, passthrough, set_entries_to_bundle, write_file};
 
 fn assert_rewrites_extension(input_ext: &str, output_ext: &str) {
     let root = TestRoot::new(&format!("rewrite-{}", &input_ext[1..]));
     let outdir = root.join("out");
-    let dependency = root.write(
-        &format!("src/dep{input_ext}"),
-        "export const dep = {};",
-    );
+    let dependency = root.write(&format!("src/dep{input_ext}"), "export const dep = {};");
     let step = root.write(
         "src/step.ts",
         "import { dep } from './dep';\nconsole.log(dep);",
@@ -207,10 +202,7 @@ fn externalizes_nested_bare_packages_that_only_resolve_from_a_bundled_package() 
 fn assert_preserves_extension(input_ext: &str) {
     let root = TestRoot::new(&format!("preserve-{}", &input_ext[1..]));
     let outdir = root.join("out");
-    let dependency = root.write(
-        &format!("src/dep{input_ext}"),
-        "export const dep = {};",
-    );
+    let dependency = root.write(&format!("src/dep{input_ext}"), "export const dep = {};");
     let step = root.write(
         "src/step.ts",
         "import { dep } from './dep';\nconsole.log(dep);",
@@ -248,11 +240,7 @@ fn preserves_externalized_cts_extensions_by_default() {
 
 fn transitive_local_fixture(
     root: &TestRoot,
-) -> (
-    std::path::PathBuf,
-    std::path::PathBuf,
-    std::path::PathBuf,
-) {
+) -> (std::path::PathBuf, std::path::PathBuf, std::path::PathBuf) {
     let helper = root.write(
         "shared/helpers.ts",
         "export const HELPER_VALUE = \"from-helper\";",

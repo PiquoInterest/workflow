@@ -103,11 +103,7 @@ pub struct SwcPluginBuildOptions {
 }
 
 impl SwcPluginBuildOptions {
-    pub fn new(
-        mode: SwcMode,
-        abs_working_dir: PathBuf,
-        entry_points: Vec<PathBuf>,
-    ) -> Self {
+    pub fn new(mode: SwcMode, abs_working_dir: PathBuf, entry_points: Vec<PathBuf>) -> Self {
         Self {
             mode,
             abs_working_dir,
@@ -186,7 +182,5 @@ pub fn build_with_swc_plugin(
     options: &SwcPluginBuildOptions,
 ) -> Result<SwcPluginBuildObservation, Box<SwcPluginBuildFailure>> {
     let _ = options;
-    panic!(
-        "TDD RED: packages/builders/src/swc-esbuild-plugin.test.ts implementation pending"
-    )
+    panic!("TDD RED: packages/builders/src/swc-esbuild-plugin.test.ts implementation pending")
 }

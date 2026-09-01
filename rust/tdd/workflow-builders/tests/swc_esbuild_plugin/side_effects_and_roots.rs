@@ -1,14 +1,11 @@
-use workflow_builders_tdd::swc_plugin::{
-    SwcMode, SwcPluginBuildOptions, TransformOutput,
-};
+use workflow_builders_tdd::swc_plugin::{SwcMode, SwcPluginBuildOptions, TransformOutput};
 
 use super::support::{
     TestRoot, build, options, passthrough, set_entries_to_bundle, set_side_effect_entries,
     side_effect_package, virtual_options, write_file,
 };
 
-const SIDE_EFFECT_CODE: &str =
-    "globalThis.__registered = globalThis.__registered || [];\n\
+const SIDE_EFFECT_CODE: &str = "globalThis.__registered = globalThis.__registered || [];\n\
      globalThis.__registered.push(\"my-pkg\");";
 
 #[test]
@@ -116,11 +113,7 @@ fn preserves_local_side_effect_entries_under_side_effects_false_package_metadata
 #[test]
 fn does_not_override_side_effect_metadata_for_unlisted_modules() {
     let root = TestRoot::new("side-effect-exact-scope");
-    let listed = side_effect_package(
-        &root,
-        "entry-pkg",
-        "globalThis.__entryRegistered = true;",
-    );
+    let listed = side_effect_package(&root, "entry-pkg", "globalThis.__entryRegistered = true;");
     let unlisted = side_effect_package(
         &root,
         "non-entry-pkg",
@@ -180,8 +173,7 @@ fn project_options(
 
 #[test]
 fn passes_explicit_project_root_to_the_transform() {
-    let (_root, app_root, package_root, workflow) =
-        project_root_fixture("project-root-explicit");
+    let (_root, app_root, package_root, workflow) = project_root_fixture("project-root-explicit");
     let mut options = project_options(package_root, workflow.clone());
     options.project_root = Some(app_root.clone());
 
@@ -223,8 +215,7 @@ fn passes_module_specifier_root_separately_from_project_root() {
 
 #[test]
 fn defaults_project_and_module_specifier_roots_to_abs_working_dir() {
-    let (_root, _app_root, package_root, workflow) =
-        project_root_fixture("project-root-default");
+    let (_root, _app_root, package_root, workflow) = project_root_fixture("project-root-default");
     let options = project_options(package_root.clone(), workflow.clone());
 
     let observation = build(options);

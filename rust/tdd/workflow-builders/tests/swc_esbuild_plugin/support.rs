@@ -58,7 +58,11 @@ pub fn relative(root: &Path, path: &Path) -> String {
     normalized(path.strip_prefix(root).unwrap())
 }
 
-pub fn options(root: &TestRoot, mode: SwcMode, entry_points: Vec<PathBuf>) -> SwcPluginBuildOptions {
+pub fn options(
+    root: &TestRoot,
+    mode: SwcMode,
+    entry_points: Vec<PathBuf>,
+) -> SwcPluginBuildOptions {
     SwcPluginBuildOptions::new(mode, root.0.clone(), entry_points)
 }
 

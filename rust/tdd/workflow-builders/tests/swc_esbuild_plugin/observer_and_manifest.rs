@@ -76,11 +76,7 @@ fn fails_the_build_when_two_files_emit_the_same_step_id() {
     let first = root.write("src/confirmation.ts", "export const first = true;");
     let second = root.write("src/reschedule.ts", "export const second = true;");
     let id = "step//shared-package@1.0.0//sendMessage";
-    let mut options = options(
-        &root,
-        SwcMode::Step,
-        vec![first.clone(), second.clone()],
-    );
+    let mut options = options(&root, SwcMode::Step, vec![first.clone(), second.clone()]);
     observer_recording(&mut options);
     transformed(
         &mut options,
@@ -121,11 +117,7 @@ fn deduplicates_identical_pnpm_peer_variant_copies_emitting_the_same_step_id() {
         source,
     );
     let id = "step//shared-package@1.0.0//sendMessage";
-    let mut options = options(
-        &root,
-        SwcMode::Step,
-        vec![first.clone(), second.clone()],
-    );
+    let mut options = options(&root, SwcMode::Step, vec![first.clone(), second.clone()]);
     observer_recording(&mut options);
     transformed(
         &mut options,
@@ -164,11 +156,7 @@ fn fails_the_build_when_pnpm_style_copies_with_different_contents_emit_the_same_
         "export const sendMessage = 2;",
     );
     let id = "step//shared-package@1.0.0//sendMessage";
-    let mut options = options(
-        &root,
-        SwcMode::Step,
-        vec![first.clone(), second.clone()],
-    );
+    let mut options = options(&root, SwcMode::Step, vec![first.clone(), second.clone()]);
     transformed(
         &mut options,
         &first,

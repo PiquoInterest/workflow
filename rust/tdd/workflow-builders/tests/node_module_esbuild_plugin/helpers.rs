@@ -17,7 +17,10 @@ impl TestRoot {
         let path = std::env::current_dir()
             .unwrap()
             .join("target/tdd-fixtures")
-            .join(format!("node-module-helper-{label}-{}-{nonce}", std::process::id()));
+            .join(format!(
+                "node-module-helper-{label}-{}-{nonce}",
+                std::process::id()
+            ));
         fs::create_dir_all(&path).unwrap();
         Self(path.canonicalize().unwrap())
     }
@@ -39,10 +42,8 @@ impl Drop for TestRoot {
 #[test]
 fn gets_package_name_from_simple_node_modules_paths() {
     assert_eq!(
-        get_package_name(
-            "/Users/adrianlam/GitHub/workflow/node_modules/node-fetch/src/index.js"
-        )
-        .as_deref(),
+        get_package_name("/Users/adrianlam/GitHub/workflow/node_modules/node-fetch/src/index.js")
+            .as_deref(),
         Some("node-fetch")
     );
 }
@@ -226,11 +227,7 @@ describe('fixture', () => {
 fn returns_no_location_for_nonexistent_files() {
     let root = TestRoot::new("missing-file");
     assert_eq!(
-        get_violation_location(
-            &root.0,
-            Path::new("non-existent-file.ts"),
-            "some-package"
-        ),
+        get_violation_location(&root.0, Path::new("non-existent-file.ts"), "some-package"),
         None
     );
 }
@@ -259,8 +256,5 @@ fn returns_no_location_for_an_unused_but_parseable_import() {
     );
     let relative = file.strip_prefix(&root.0).unwrap();
 
-    assert_eq!(
-        get_violation_location(&root.0, relative, "node:http"),
-        None
-    );
+    assert_eq!(get_violation_location(&root.0, relative, "node:http"), None);
 }

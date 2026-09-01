@@ -18,7 +18,10 @@ impl TestRoot {
         let path = std::env::current_dir()
             .unwrap()
             .join("target/tdd-fixtures")
-            .join(format!("node-module-{label}-{}-{nonce}", std::process::id()));
+            .join(format!(
+                "node-module-{label}-{}-{nonce}",
+                std::process::id()
+            ));
         fs::create_dir_all(&path).unwrap();
         Self(path.canonicalize().unwrap())
     }
@@ -73,8 +76,8 @@ fn errors_on_fs_imports() {
       }
     "#,
     );
-    let observation = inspect_node_module_boundary(&NodeModuleBoundaryOptions::new(entry.clone()))
-        .unwrap();
+    let observation =
+        inspect_node_module_boundary(&NodeModuleBoundaryOptions::new(entry.clone())).unwrap();
 
     assert_eq!(observation.errors.len(), 1);
     let violation = &observation.errors[0];
@@ -160,10 +163,7 @@ fn reports_each_used_node_import() {
     assert!(fs_violation.text.contains("which is a Node.js module"));
     assert!(path_violation.text.contains("which is a Node.js module"));
     let relative_entry = root.relative(&entry);
-    assert_eq!(
-        fs_violation.location.as_ref().unwrap().file,
-        relative_entry
-    );
+    assert_eq!(fs_violation.location.as_ref().unwrap().file, relative_entry);
     assert!(
         fs_violation
             .location
@@ -385,8 +385,7 @@ fn unused_node_exports_in_shared_modules_are_tree_shaken() {
     "#,
     );
 
-    let observation =
-        inspect_node_module_boundary(&NodeModuleBoundaryOptions::new(entry)).unwrap();
+    let observation = inspect_node_module_boundary(&NodeModuleBoundaryOptions::new(entry)).unwrap();
     assert!(observation.errors.is_empty());
 }
 
@@ -417,18 +416,24 @@ fn referenced_node_exports_in_shared_modules_still_fail() {
     "#,
     );
 
-    let observation =
-        inspect_node_module_boundary(&NodeModuleBoundaryOptions::new(entry)).unwrap();
+    let observation = inspect_node_module_boundary(&NodeModuleBoundaryOptions::new(entry)).unwrap();
     let texts = observation
         .errors
         .iter()
         .map(|error| error.text.as_str())
         .collect::<Vec<_>>();
-    assert!(texts.iter().any(|text| text.contains("\"node:fs/promises\"")));
+    assert!(
+        texts
+            .iter()
+            .any(|text| text.contains("\"node:fs/promises\""))
+    );
     assert!(texts.iter().any(|text| text.contains("\"node:path\"")));
     let relative_shared = root.relative(&shared);
     assert!(observation.errors.iter().all(|error| {
-        error.location.as_ref().map(|location| location.file.as_str())
+        error
+            .location
+            .as_ref()
+            .map(|location| location.file.as_str())
             == Some(relative_shared.as_str())
     }));
 }
@@ -452,7 +457,11 @@ fn source_locations_skip_jsdoc_mentions() {
 
     assert_eq!(observation.errors.len(), 1);
     let violation = &observation.errors[0];
-    assert!(violation.text.contains("\"stream\" which is a Node.js module"));
+    assert!(
+        violation
+            .text
+            .contains("\"stream\" which is a Node.js module")
+    );
     let line_text = &violation.location.as_ref().unwrap().line_text;
     assert!(line_text.contains("new Writable()"));
     assert!(!line_text.contains('*'));
@@ -501,7 +510,11 @@ fn comment_delimiters_inside_strings_do_not_hide_real_usage() {
 
     assert_eq!(observation.errors.len(), 1);
     let violation = &observation.errors[0];
-    assert!(violation.text.contains("\"stream\" which is a Node.js module"));
+    assert!(
+        violation
+            .text
+            .contains("\"stream\" which is a Node.js module")
+    );
     assert!(
         violation
             .location
@@ -552,7 +565,11 @@ fn errors_on_bun_subpath_imports() {
 
     assert_eq!(observation.errors.len(), 1);
     let violation = &observation.errors[0];
-    assert!(violation.text.contains("\"bun:sqlite\" which is a Bun module"));
+    assert!(
+        violation
+            .text
+            .contains("\"bun:sqlite\" which is a Bun module")
+    );
     assert!(violation.text.contains("Bun modules are not available"));
     assert_eq!(
         violation.location.as_ref().unwrap().file,
