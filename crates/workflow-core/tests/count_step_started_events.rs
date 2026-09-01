@@ -1,8 +1,6 @@
-// Port of packages/core/src/runtime/count-step-started-events.test.ts.
-// Keep these assertions unchanged when the implementation moves from RED to production Rust.
-use workflow_core_tdd::runtime::count_step_started_events::{
+use workflow_core::runtime::count_step_started_events::{
     MAX_STEP_ATTEMPT, STEP_ATTEMPT_ADVANCE_ERROR, StepEvent, StepStartScope,
-    count_step_started_events, next_step_attempt,
+    count_step_started_events, next_step_attempt, next_step_attempt_from_js_number,
 };
 
 const STEP_ID: &str = "step_TARGET";
@@ -19,12 +17,13 @@ macro_rules! advance_case {
     ($name:ident, $prior:expr, $expected:expr) => {
         #[test]
         fn $name() {
-            assert_eq!(next_step_attempt($prior), Ok($expected));
+            assert_eq!(next_step_attempt_from_js_number($prior), Ok($expected));
         }
     };
 }
 
 advance_case!(advances_zero_to_one, 0.0, 1);
+advance_case!(advances_negative_zero_to_one, -0.0, 1);
 advance_case!(advances_one_to_two, 1.0, 2);
 advance_case!(
     advances_the_last_safe_prior_without_precision_loss,
@@ -36,7 +35,7 @@ macro_rules! reject_case {
     ($name:ident, $prior:expr) => {
         #[test]
         fn $name() {
-            let error = next_step_attempt($prior).unwrap_err();
+            let error = next_step_attempt_from_js_number($prior).unwrap_err();
             assert_eq!(error.message, STEP_ATTEMPT_ADVANCE_ERROR);
         }
     };
@@ -54,15 +53,20 @@ reject_case!(
 );
 reject_case!(rejects_nan_prior_counts, f64::NAN);
 reject_case!(rejects_positive_infinity_prior_counts, f64::INFINITY);
+reject_case!(rejects_negative_infinity_prior_counts, f64::NEG_INFINITY);
 
 #[test]
 fn returns_zero_for_absent_and_empty_logs() {
     assert_eq!(
-        count_step_started_events(None, STEP_ID, StepStartScope::Unscoped),
+        count_step_started_events(None, STEP_ID, StepStartScope::Unscoped)
+            .unwrap()
+            .get(),
         0
     );
     assert_eq!(
-        count_step_started_events(Some(&[]), STEP_ID, StepStartScope::Unscoped),
+        count_step_started_events(Some(&[]), STEP_ID, StepStartScope::Unscoped)
+            .unwrap()
+            .get(),
         0
     );
 }
@@ -76,7 +80,9 @@ fn unscoped_count_includes_every_matching_start_only() {
         StepEvent::completed(STEP_ID),
     ];
     assert_eq!(
-        count_step_started_events(Some(&events), STEP_ID, StepStartScope::Unscoped),
+        count_step_started_events(Some(&events), STEP_ID, StepStartScope::Unscoped)
+            .unwrap()
+            .get(),
         2
     );
 }
@@ -91,7 +97,9 @@ fn owned_scope_counts_only_the_selected_queue_message() {
         start(Some("msg_OWNER")),
     ];
     assert_eq!(
-        count_step_started_events(Some(&events), STEP_ID, owned("msg_OWNER")),
+        count_step_started_events(Some(&events), STEP_ID, owned("msg_OWNER"))
+            .unwrap()
+            .get(),
         2
     );
 }
@@ -106,7 +114,9 @@ fn total_attempts_adds_bare_starts_to_the_largest_single_owner() {
         start(None),
     ];
     assert_eq!(
-        count_step_started_events(Some(&events), STEP_ID, StepStartScope::TotalAttempts),
+        count_step_started_events(Some(&events), STEP_ID, StepStartScope::TotalAttempts)
+            .unwrap()
+            .get(),
         3
     );
 }
@@ -121,18 +131,20 @@ fn racing_invocations_do_not_exhaust_the_owned_recovery_retry_ceiling() {
     ];
     let max_retries = 3;
 
-    let unscoped = count_step_started_events(Some(&events), STEP_ID, StepStartScope::Unscoped);
-    let unscoped_attempt = next_step_attempt(unscoped as f64).unwrap();
+    let unscoped =
+        count_step_started_events(Some(&events), STEP_ID, StepStartScope::Unscoped).unwrap();
+    let unscoped_attempt = next_step_attempt(unscoped);
     assert!(unscoped_attempt > max_retries + 1);
 
-    let owner_count = count_step_started_events(Some(&events), STEP_ID, owned("msg_OWNER"));
-    let owner_attempt = next_step_attempt(owner_count as f64).unwrap();
+    let owner_count =
+        count_step_started_events(Some(&events), STEP_ID, owned("msg_OWNER")).unwrap();
+    let owner_attempt = next_step_attempt(owner_count);
     assert_eq!(owner_attempt, 2);
     assert!(owner_attempt <= max_retries + 1);
 
     let total_count =
-        count_step_started_events(Some(&events), STEP_ID, StepStartScope::TotalAttempts);
-    let total_attempt = next_step_attempt(total_count as f64).unwrap();
+        count_step_started_events(Some(&events), STEP_ID, StepStartScope::TotalAttempts).unwrap();
+    let total_attempt = next_step_attempt(total_count);
     assert_eq!(total_attempt, 3);
     assert!(total_attempt <= max_retries + 1);
 }
@@ -145,8 +157,8 @@ fn real_timeout_retries_by_one_owner_still_trip_the_ceiling() {
         start(Some("msg_OWNER")),
         start(Some("msg_OWNER")),
     ];
-    let count = count_step_started_events(Some(&events), STEP_ID, owned("msg_OWNER"));
-    let attempt = next_step_attempt(count as f64).unwrap();
+    let count = count_step_started_events(Some(&events), STEP_ID, owned("msg_OWNER")).unwrap();
+    let attempt = next_step_attempt(count);
     assert!(attempt > 4);
 }
 
@@ -159,8 +171,9 @@ fn mixed_owned_then_bare_retries_trip_the_combined_background_ceiling() {
         start(None),
         start(None),
     ];
-    let count = count_step_started_events(Some(&events), STEP_ID, StepStartScope::TotalAttempts);
-    let attempt = next_step_attempt(count as f64).unwrap();
+    let count =
+        count_step_started_events(Some(&events), STEP_ID, StepStartScope::TotalAttempts).unwrap();
+    let attempt = next_step_attempt(count);
     assert_eq!(attempt, 6);
     assert!(attempt > 4);
 }

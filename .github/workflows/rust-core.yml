@@ -1,4 +1,4 @@
-name: Rust core capability parity
+name: Rust core parity
 
 on:
   push:
@@ -8,20 +8,34 @@ on:
       - 'crates/workflow-core/**'
       - 'packages/core/src/capabilities.ts'
       - 'packages/core/src/capabilities.test.ts'
+      - 'packages/core/src/runtime/count-step-started-events.ts'
+      - 'packages/core/src/runtime/count-step-started-events.test.ts'
       - 'rust/conformance/capabilities-parity.test.ts'
+      - 'rust/conformance/count-step-started-events-parity.test.ts'
       - 'rust/test-port-manifest.json'
       - 'rust/test-port-overrides.d/core-batch-04.json'
+      - 'rust/test-port-overrides.d/core-count-step-started-events.json'
       - 'rust/tdd-red.d/core-batch-04.json'
+      - 'rust/tdd-red.d/core-count-step-started-events.json'
+      - 'docs/rust-port/**'
+      - 'security.txt'
       - '.github/workflows/rust-core.yml'
   pull_request:
     paths:
       - 'crates/workflow-core/**'
       - 'packages/core/src/capabilities.ts'
       - 'packages/core/src/capabilities.test.ts'
+      - 'packages/core/src/runtime/count-step-started-events.ts'
+      - 'packages/core/src/runtime/count-step-started-events.test.ts'
       - 'rust/conformance/capabilities-parity.test.ts'
+      - 'rust/conformance/count-step-started-events-parity.test.ts'
       - 'rust/test-port-manifest.json'
       - 'rust/test-port-overrides.d/core-batch-04.json'
+      - 'rust/test-port-overrides.d/core-count-step-started-events.json'
       - 'rust/tdd-red.d/core-batch-04.json'
+      - 'rust/tdd-red.d/core-count-step-started-events.json'
+      - 'docs/rust-port/**'
+      - 'security.txt'
       - '.github/workflows/rust-core.yml'
   workflow_dispatch:
 
@@ -33,10 +47,10 @@ permissions:
   contents: read
 
 jobs:
-  capabilities:
-    name: Capability negotiation, tests, and differential parity
+  core-contracts:
+    name: Capability and retry-accounting differential parity
     runs-on: ubuntu-24.04
-    timeout-minutes: 20
+    timeout-minutes: 30
     steps:
       - name: Checkout repository
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
@@ -59,22 +73,30 @@ jobs:
       - name: Install JavaScript dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Build TypeScript oracle packages
+        run: pnpm turbo run build --filter='!./workbench/*'
+
       - name: Check Rust formatting
         run: cargo fmt --manifest-path crates/workflow-core/Cargo.toml -- --check
 
-      - name: Compile and test Rust capability contracts
+      - name: Compile and test Rust core contracts
         run: cargo test --locked --manifest-path crates/workflow-core/Cargo.toml --all-targets
 
-      - name: Lint Rust capability contracts
+      - name: Lint Rust core contracts
         run: cargo clippy --locked --manifest-path crates/workflow-core/Cargo.toml --all-targets -- -D warnings
 
-      - name: Run the TypeScript oracle
-        run: pnpm exec vitest run packages/core/src/capabilities.test.ts
+      - name: Run TypeScript oracles
+        run: |
+          pnpm exec vitest run \
+            packages/core/src/capabilities.test.ts \
+            packages/core/src/runtime/count-step-started-events.test.ts
 
-      - name: Build the Rust differential runner
-        run: cargo build --locked --manifest-path crates/workflow-core/Cargo.toml --example capabilities_conformance
+      - name: Build Rust differential runners
+        run: cargo build --locked --manifest-path crates/workflow-core/Cargo.toml --examples
 
       - name: Compare TypeScript and Rust behavior
         run: |
           WORKFLOW_RUST_CAPABILITIES_CONFORMANCE_BIN=crates/workflow-core/target/debug/examples/capabilities_conformance \
             pnpm exec vitest run rust/conformance/capabilities-parity.test.ts
+          WORKFLOW_RUST_STEP_ATTEMPT_CONFORMANCE_BIN=crates/workflow-core/target/debug/examples/count_step_started_events_conformance \
+            pnpm exec vitest run rust/conformance/count-step-started-events-parity.test.ts

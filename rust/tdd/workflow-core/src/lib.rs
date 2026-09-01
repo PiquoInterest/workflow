@@ -31,6 +31,5 @@ pub mod manifest_e2e;
 pub mod module_scope_state;
 pub mod region_routing;
 pub mod route_bundle_isolation;
-pub mod runtime;
 pub mod runtime_import;
 pub mod world_singleton;
