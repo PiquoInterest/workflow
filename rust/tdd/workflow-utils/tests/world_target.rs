@@ -1,4 +1,4 @@
-use workflow_utils_tdd::{
+use workflow_utils::{
     Environment, is_vercel_world_target, resolve_workflow_target_world, uses_vercel_world,
 };
 
