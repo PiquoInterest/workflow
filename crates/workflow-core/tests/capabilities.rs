@@ -189,13 +189,7 @@ fn whitespace_and_build_metadata_follow_node_semver_normalization() {
 
 #[test]
 fn malformed_numeric_components_fail_closed() {
-    for version in [
-        "01.0.0",
-        "1.00.0",
-        "1.0.00",
-        "5.0.0-beta.01",
-        "V5.0.0",
-    ] {
+    for version in ["01.0.0", "1.00.0", "1.0.00", "5.0.0-beta.01", "V5.0.0"] {
         assert_eq!(
             get_run_capabilities(Some(version)),
             RunCapabilities::default(),
