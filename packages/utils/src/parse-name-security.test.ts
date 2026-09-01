@@ -1,7 +1,21 @@
 import { describe, expect, it } from 'vitest';
 import { formatStepName, formatWorkflowName } from './parse-name';
 
-const LOG_BREAKING_CHARACTERS = /[\u0000-\u001f\u007f-\u009f\u2028\u2029]/u;
+function containsLogBreakingCharacter(value: string): boolean {
+  for (const character of value) {
+    const codePoint = character.codePointAt(0);
+    if (
+      codePoint !== undefined &&
+      (codePoint <= 0x1f ||
+        (codePoint >= 0x7f && codePoint <= 0x9f) ||
+        codePoint === 0x2028 ||
+        codePoint === 0x2029)
+    ) {
+      return true;
+    }
+  }
+  return false;
+}
 
 describe('machine-name log formatting security', () => {
   it('escapes controls in parsed function and module names', () => {
@@ -12,14 +26,14 @@ describe('machine-name log formatting security', () => {
     expect(formatted).toBe(
       'run\\r\\nforged\\t\\u2028 (./jobs/\\u001b[31mred)'
     );
-    expect(formatted).not.toMatch(LOG_BREAKING_CHARACTERS);
+    expect(containsLogBreakingCharacter(formatted)).toBe(false);
   });
 
   it('escapes controls when formatting falls back to a legacy name', () => {
     const formatted = formatWorkflowName('legacy\nforged\u001b]8;;target\u0007');
 
     expect(formatted).toBe('legacy\\nforged\\u001b]8;;target\\u0007');
-    expect(formatted).not.toMatch(LOG_BREAKING_CHARACTERS);
+    expect(containsLogBreakingCharacter(formatted)).toBe(false);
   });
 
   it('preserves ordinary parsed and fallback rendering', () => {
