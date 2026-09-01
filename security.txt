@@ -113,3 +113,12 @@ Acknowledgments: https://github.com/PiquoInterest/workflow/blob/main/docs/rust-p
 # counter on every exit. Full analysis is in
 # docs/rust-port/findings/WF-RUST-019.md; the finding remains open for Rust until
 # the real event consumer and hydration path pass it.
+#
+# WF-RUST-020 (TDD RED): Permanently missing event payloads are corruption, not
+# transient transport failures. Retrying them can turn one missing object into
+# sustained read amplification and queue starvation; one captured run made
+# 12,932 reads in 26 minutes. The Rust classification test requires a typed
+# CorruptedEventLog error to be terminal while retaining retries for 429, 5xx,
+# TRANSPORT, and TIMEOUT. Full analysis is in
+# docs/rust-port/findings/WF-RUST-020.md. Closure requires the production stream
+# parser and redelivery policy to consume the typed classification.

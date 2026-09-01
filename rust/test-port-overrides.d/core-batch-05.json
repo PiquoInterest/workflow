@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "entries": [
+    {
+      "typescript": "packages/core/src/classify-error.test.ts",
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-core/tests/classify_error.rs"
+      ],
+      "notes": "All 28 TypeScript declarations are translated directly. Coverage preserves stable terminal categories for replay corruption, event limits, divergence, runtime/deployment/user errors, backend contract failures, transport errors, throttling, native OperationError, and non-Error throws. Retry classification keeps 429, 5xx, TRANSPORT, and TIMEOUT retryable while making 4xx, parse/schema violations, TooEarly pacing, plain values, and permanently lost event payloads terminal. WF-RUST-020 records the read-amplification and availability consequence of retrying an unrecoverable payload. Final GREEN must dispatch on the real Rust error enum/typed World metadata and may not infer categories from untrusted message text."
+    }
+  ]
+}
