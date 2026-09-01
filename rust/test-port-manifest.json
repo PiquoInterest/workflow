@@ -3,9 +3,9 @@
   "sourceCount": 334,
   "declaredTestCount": 5100,
   "statusCounts": {
-    "unported": 282,
+    "unported": 281,
     "partial": 0,
-    "red": 40,
+    "red": 41,
     "green": 12,
     "blocked": 0
   },
@@ -156,9 +156,11 @@
       "kind": "unit",
       "lineCount": 883,
       "declaredTestCount": 23,
-      "status": "unported",
-      "rustTests": [],
-      "notes": ""
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-ai/tests/workflow_chat_transport.rs"
+      ],
+      "notes": "All 23 current declarations are translated: constructor options, send/reconnect request shaping, response errors, abort-signal propagation and reuse, negative start-index resolution, malformed tail-header fallback, orphan reasoning/text/tool filtering, non-streamed and recovered tool calls, non-negative resume behavior, object-error formatting, and send/end callbacks. Final GREEN must execute the real Rust transport and stream normalizer."
     },
     {
       "typescript": "packages/builders/src/base-builder-logging.test.ts",
