@@ -1,8 +1,8 @@
 #![forbid(unsafe_code)]
 
 use std::sync::{
-    atomic::{AtomicUsize, Ordering},
     Arc, Barrier,
+    atomic::{AtomicUsize, Ordering},
 };
 use std::thread;
 
