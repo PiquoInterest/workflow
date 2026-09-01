@@ -181,6 +181,7 @@ pub fn fields(values: &[(&str, Option<&str>)]) -> BTreeMap<String, Option<String
         .collect()
 }
 
+#[allow(dead_code)]
 pub fn page<T>(data: Vec<T>, cursor: Option<&str>, has_more: bool) -> Page<T> {
     Page::new(data, cursor, has_more)
 }
