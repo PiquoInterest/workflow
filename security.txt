@@ -122,3 +122,11 @@ Acknowledgments: https://github.com/PiquoInterest/workflow/blob/main/docs/rust-p
 # TRANSPORT, and TIMEOUT. Full analysis is in
 # docs/rust-port/findings/WF-RUST-020.md. Closure requires the production stream
 # parser and redelivery policy to consume the typed classification.
+#
+# WF-RUST-021 (TDD RED): Authenticated workflow encryption requires exact
+# 32-byte keys, fresh 12-byte nonces, a 16-byte GCM tag, and typed failures for
+# truncation, tampering, wrong keys, and invalid key usage. The Rust suite at
+# rust/tdd/workflow-core/tests/encryption.rs also requires low-level diagnostics
+# to avoid treating nonce bytes as a serialization format prefix. Full analysis
+# is in docs/rust-port/findings/WF-RUST-021.md. Closure requires the production
+# Rust serialization path and cross-language encrypted fixtures.
