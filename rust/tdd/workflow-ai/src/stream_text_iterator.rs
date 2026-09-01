@@ -51,7 +51,5 @@ pub fn exercise_stream_text_iterator(
     case: StreamTextIteratorCase,
 ) -> StreamTextIteratorObservation {
     let _ = case;
-    panic!(
-        "TDD RED: packages/ai/src/agent/stream-text-iterator.test.ts implementation pending"
-    )
+    panic!("TDD RED: packages/ai/src/agent/stream-text-iterator.test.ts implementation pending")
 }
