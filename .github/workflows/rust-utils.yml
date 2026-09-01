@@ -75,6 +75,12 @@ jobs:
       - name: Install JavaScript dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Check focused TypeScript formatting and lint
+        run: |
+          pnpm exec biome ci \
+            packages/utils/src/parse-name.ts \
+            packages/utils/src/parse-name-security.test.ts
+
       - name: Check Rust formatting
         run: |
           cargo fmt --manifest-path crates/workflow-utils/Cargo.toml -- --check
