@@ -216,10 +216,7 @@ fn normalizes_tool_calls_object_format_to_a_string() {
 fn parses_valid_json_tool_call_input() {
     assert_eq!(
         safe_parse_tool_call_input(Some(r#"{"city":"San Francisco"}"#)),
-        ToolCallInput::Object(vec![(
-            "city".to_owned(),
-            "San Francisco".to_owned()
-        )])
+        ToolCallInput::Object(vec![("city".to_owned(), "San Francisco".to_owned())])
     );
 }
 
@@ -247,13 +244,15 @@ fn streamed_malformed_tool_call_input_does_not_abort_the_step() {
 
     assert_eq!(result.tool_calls.len(), 1);
     assert_eq!(result.tool_calls[0].input, malformed);
-    assert!(result.written_chunks.contains(
-        &UiMessageChunkObservation::ToolInputAvailable {
-            tool_call_id: "call-1".to_owned(),
-            tool_name: "getWeather".to_owned(),
-            input: malformed,
-        }
-    ));
+    assert!(
+        result
+            .written_chunks
+            .contains(&UiMessageChunkObservation::ToolInputAvailable {
+                tool_call_id: "call-1".to_owned(),
+                tool_name: "getWeather".to_owned(),
+                input: malformed,
+            })
+    );
 }
 
 #[test]

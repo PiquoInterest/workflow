@@ -3,9 +3,9 @@
   "sourceCount": 334,
   "declaredTestCount": 5100,
   "statusCounts": {
-    "unported": 286,
+    "unported": 284,
     "partial": 0,
-    "red": 36,
+    "red": 38,
     "green": 12,
     "blocked": 0
   },
@@ -17,9 +17,11 @@
       "kind": "unit",
       "lineCount": 256,
       "declaredTestCount": 30,
-      "status": "unported",
-      "rustTests": [],
-      "notes": ""
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-ai/tests/do_stream_step.rs"
+      ],
+      "notes": "All 30 finish-reason normalization, tool-input parsing, malformed streamed tool-call, and response-metadata merge declarations are translated. The malformed-input case is security-relevant because provider-controlled stream data must not crash a run or be silently reinterpreted."
     },
     {
       "typescript": "packages/ai/src/agent/durable-agent-compat.test.ts",
@@ -85,9 +87,11 @@
       "kind": "unit",
       "lineCount": 222,
       "declaredTestCount": 12,
-      "status": "unported",
-      "rustTests": [],
-      "notes": ""
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-ai/tests/tools_to_model_tools.rs"
+      ],
+      "notes": "All 12 function, provider, mixed, optional strict/inputExamples/providerOptions, dynamic-tool, and empty-tool declarations are translated. The Rust type model makes provider-only and function-only fields distinct before implementation."
     },
     {
       "typescript": "packages/ai/src/get-error-message.test.ts",

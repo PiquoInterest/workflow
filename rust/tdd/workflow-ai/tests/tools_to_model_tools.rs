@@ -71,10 +71,7 @@ fn preserves_provider_tool_type_id_and_args() {
     let args = object(&[("maxUses", ModelValue::Number(5))]);
     let result = tools_to_model_tools(vec![(
         "webSearch".to_owned(),
-        ToolDefinition::Provider(provider_tool(
-            "anthropic.web_search",
-            Some(args.clone()),
-        )),
+        ToolDefinition::Provider(provider_tool("anthropic.web_search", Some(args.clone()))),
     )]);
 
     assert_eq!(
@@ -96,10 +93,7 @@ fn handles_mixed_function_and_provider_tools() {
         ),
         (
             "webSearch".to_owned(),
-            ToolDefinition::Provider(provider_tool(
-                "anthropic.web_search",
-                Some(object(&[])),
-            )),
+            ToolDefinition::Provider(provider_tool("anthropic.web_search", Some(object(&[])))),
         ),
     ]);
 
