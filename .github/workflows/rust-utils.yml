@@ -10,10 +10,14 @@ on:
       - 'packages/utils/src/check-data-dir.ts'
       - 'packages/utils/src/check-data-dir.test.ts'
       - 'packages/utils/src/check-data-dir-security.test.ts'
+      - 'packages/utils/src/parse-name.ts'
+      - 'packages/utils/src/parse-name.test.ts'
+      - 'packages/utils/src/parse-name-security.test.ts'
       - 'rust/tdd-red.json'
       - 'rust/test-port-manifest.json'
       - 'rust/test-port-overrides.json'
       - 'rust/test-port-overrides.d/utils-check-data-dir-security.json'
+      - 'rust/test-port-overrides.d/utils-parse-name-security.json'
       - 'docs/rust-port/**'
       - 'security.txt'
       - '.github/workflows/rust-utils.yml'
@@ -24,10 +28,14 @@ on:
       - 'packages/utils/src/check-data-dir.ts'
       - 'packages/utils/src/check-data-dir.test.ts'
       - 'packages/utils/src/check-data-dir-security.test.ts'
+      - 'packages/utils/src/parse-name.ts'
+      - 'packages/utils/src/parse-name.test.ts'
+      - 'packages/utils/src/parse-name-security.test.ts'
       - 'rust/tdd-red.json'
       - 'rust/test-port-manifest.json'
       - 'rust/test-port-overrides.json'
       - 'rust/test-port-overrides.d/utils-check-data-dir-security.json'
+      - 'rust/test-port-overrides.d/utils-parse-name-security.json'
       - 'docs/rust-port/**'
       - 'security.txt'
       - '.github/workflows/rust-utils.yml'
@@ -41,8 +49,8 @@ permissions:
   contents: read
 
 jobs:
-  data-dir-contract:
-    name: Workflow data directory parity and security
+  utility-contracts:
+    name: Utility parity and security
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
@@ -75,17 +83,23 @@ jobs:
       - name: Run production Rust utility tests
         run: cargo test --locked --manifest-path crates/workflow-utils/Cargo.toml --all-targets
 
-      - name: Run the complete translated TypeScript data-dir suite in Rust
-        run: cargo test --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test check_data_dir
+      - name: Run complete translated TypeScript suites in Rust
+        run: |
+          cargo test --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test check_data_dir
+          cargo test --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test parse_name
 
       - name: Lint production Rust utilities
         run: cargo clippy --locked --manifest-path crates/workflow-utils/Cargo.toml --all-targets -- -D warnings
 
-      - name: Lint the translated Rust data-dir suite
-        run: cargo clippy --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test check_data_dir -- -D warnings
+      - name: Lint translated Rust suites
+        run: |
+          cargo clippy --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test check_data_dir -- -D warnings
+          cargo clippy --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test parse_name -- -D warnings
 
       - name: Run TypeScript utility oracles
         run: |
           pnpm exec vitest run \
             packages/utils/src/check-data-dir.test.ts \
-            packages/utils/src/check-data-dir-security.test.ts
+            packages/utils/src/check-data-dir-security.test.ts \
+            packages/utils/src/parse-name.test.ts \
+            packages/utils/src/parse-name-security.test.ts
