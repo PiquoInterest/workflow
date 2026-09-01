@@ -86,3 +86,15 @@ Acknowledgments: https://github.com/PiquoInterest/workflow/blob/main/docs/rust-p
 # compatibility suite is translated at
 # rust/tdd/workflow-ai/tests/durable_agent_compat.rs. Closure requires the real
 # Rust agent loop, callbacks, approval state machine, and usage aggregation.
+#
+# WF-RUST-018 (TDD RED): Tool execution origin and validated input are trust
+# boundaries. Provider-executed tools must never invoke a same-named local
+# implementation. Schema-invalid local input must not execute; it is returned
+# to the model as an error-text result so a corrected retry can execute exactly
+# once. Client-only tools pause the loop without fabricating a result. Context,
+# repaired inputs, provider results, and parallel calls must remain associated
+# with the correct call ID. UI collection must stay independent of finish-chunk
+# emission so sendFinish=false cannot leak or synthesize terminal output. All
+# 48 current TypeScript assertions are translated under
+# rust/tdd/workflow-ai/tests/durable_agent/. Closure requires the real Rust
+# agent loop, tool dispatcher, repair path, callbacks, and UI stream writer.
