@@ -79,46 +79,49 @@ pub struct ParsedName {
     pub function_name: String,
 }
 
+impl From<workflow_utils::ParsedName> for ParsedName {
+    fn from(parsed: workflow_utils::ParsedName) -> Self {
+        Self {
+            short_name: parsed.short_name,
+            module_specifier: parsed.module_specifier,
+            function_name: parsed.function_name,
+        }
+    }
+}
+
 #[must_use]
 pub fn parse_workflow_name(name: &str) -> Option<ParsedName> {
-    let _ = name;
-    panic!("TDD RED: packages/utils/src/parse-name.test.ts implementation pending")
+    workflow_utils::parse_workflow_name(name).map(Into::into)
 }
 
 #[must_use]
 pub fn parse_step_name(name: &str) -> Option<ParsedName> {
-    let _ = name;
-    panic!("TDD RED: packages/utils/src/parse-name.test.ts implementation pending")
+    workflow_utils::parse_step_name(name).map(Into::into)
 }
 
 #[must_use]
 pub fn parse_class_name(name: &str) -> Option<ParsedName> {
-    let _ = name;
-    panic!("TDD RED: packages/utils/src/parse-name.test.ts implementation pending")
+    workflow_utils::parse_class_name(name).map(Into::into)
 }
 
 #[must_use]
 pub fn format_step_name(name: &str) -> String {
-    let _ = name;
-    panic!("TDD RED: packages/utils/src/parse-name.test.ts implementation pending")
+    workflow_utils::format_step_name(name)
 }
 
 #[must_use]
 pub fn format_workflow_name(name: &str) -> String {
-    let _ = name;
-    panic!("TDD RED: packages/utils/src/parse-name.test.ts implementation pending")
+    workflow_utils::format_workflow_name(name)
 }
 
 #[must_use]
 pub fn step_display_name(name: &str) -> String {
-    let _ = name;
-    panic!("TDD RED: packages/utils/src/parse-name.test.ts implementation pending")
+    workflow_utils::step_display_name(name)
 }
 
 #[must_use]
 pub fn workflow_display_name(name: &str) -> String {
-    let _ = name;
-    panic!("TDD RED: packages/utils/src/parse-name.test.ts implementation pending")
+    workflow_utils::workflow_display_name(name)
 }
 
 /// Planned process-wide, versioned registry corresponding to the JavaScript
