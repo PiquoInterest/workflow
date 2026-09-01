@@ -5,22 +5,23 @@ import {
   type ReplayPayloadPreparer,
 } from './replay-payload-cache.js';
 
-function makeRun(id: string, readable: Uint8Array): WorkflowRun {
+function makeRun(runId: string, input: unknown): WorkflowRun {
+  const now = new Date();
   return {
-    id,
-    deploymentId: 'dpl_replay_cache_security',
-    worldId: 'world_replay_cache_security',
-    workflowName: 'cache-security-test',
-    specVersion: 2,
+    runId,
     status: 'running',
-    executionContext: {},
-    eventLogs: [],
-    readable,
+    deploymentId: 'dpl_replay_cache_security',
+    workflowName: 'workflow//test//cache-security',
+    input,
+    attributes: {},
+    startedAt: now,
+    createdAt: now,
+    updatedAt: now,
   };
 }
 
 describe('ReplayPayloadCache conflicting-key characterization', () => {
-  it('resolves conflicting bytes from the first cached workflow input', async () => {
+  it('aliases conflicting bytes to the first cached workflow input', async () => {
     const firstPayload = new Uint8Array([1]);
     const conflictingPayload = new Uint8Array([2]);
     const preparer = vi.fn<ReplayPayloadPreparer>((value) => ({ data: value }));
@@ -33,6 +34,7 @@ describe('ReplayPayloadCache conflicting-key characterization', () => {
       makeRun('wrun_conflicting_payload', conflictingPayload)
     );
 
+    expect(conflicting).toBe(first);
     await expect(first).resolves.toEqual({ data: firstPayload });
     await expect(conflicting).resolves.toEqual({ data: firstPayload });
     expect(preparer).toHaveBeenCalledOnce();
