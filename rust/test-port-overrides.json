@@ -74,6 +74,36 @@
       "notes": "All nine TypeScript assertions are mirrored against the existing Rust time implementation. Status remains partial until the new direct mirror test passes the branch workflow; differential coverage already exists separately."
     },
     {
+      "typescript": "packages/builders/src/base-builder-logging.test.ts",
+      "status": "red",
+      "rustTests": ["rust/tdd/workflow-builders/tests/base_builder_logging.rs"],
+      "notes": "All five declared logging cases are translated, including default silence, exact and wildcard DEBUG matching, explicit negation, and repeated Next-like compile summaries."
+    },
+    {
+      "typescript": "packages/builders/src/config-helpers.test.ts",
+      "status": "red",
+      "rustTests": ["rust/tdd/workflow-builders/tests/config_helpers.rs"],
+      "notes": "The workspace-root precedence case is translated with a real temporary filesystem tree containing both pnpm-workspace.yaml and an app-local package-lock.json."
+    },
+    {
+      "typescript": "packages/builders/src/esbuild-tsconfig.test.ts",
+      "status": "red",
+      "rustTests": ["rust/tdd/workflow-builders/tests/esbuild_tsconfig.rs"],
+      "notes": "Both regular and symlinked tsconfig behaviors are translated even though the inventory parser counts only the direct it() declaration. Final GREEN must also run the symlink fixture through real esbuild resolution."
+    },
+    {
+      "typescript": "packages/builders/src/step-source-registration.test.ts",
+      "status": "red",
+      "rustTests": ["rust/tdd/workflow-builders/tests/step_source_registration.rs"],
+      "notes": "All three serde-only import, identical pnpm peer-copy deduplication, and divergent-copy collision declarations are translated."
+    },
+    {
+      "typescript": "packages/builders/src/vercel-build-output-api.test.ts",
+      "status": "red",
+      "rustTests": ["rust/tdd/workflow-builders/tests/vercel_build_output_api.rs"],
+      "notes": "The CJS __dirname/__filename regression is translated with explicit counts for the combined workflow function and separate webhook function. Final GREEN requires building and importing real ESM bundles under Node."
+    },
+    {
       "typescript": "packages/errors/src/ansi.test.ts",
       "status": "red",
       "rustTests": ["rust/tdd/workflow-errors/tests/ansi.rs"],
