@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "sourceCount": 338,
-  "declaredTestCount": 5110,
+  "sourceCount": 339,
+  "declaredTestCount": 5114,
   "statusCounts": {
-    "unported": 223,
+    "unported": 224,
     "partial": 0,
     "red": 99,
     "green": 16,
@@ -2247,6 +2247,17 @@
       "kind": "unit",
       "lineCount": 308,
       "declaredTestCount": 14,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/utils/src/check-data-dir-security.test.ts",
+      "sourceSha256": "603e4d3b22865f21d0cd603802ac54d67278683d5ea3fc97a2b4531513bed900",
+      "surface": "packages/utils",
+      "kind": "unit",
+      "lineCount": 69,
+      "declaredTestCount": 4,
       "status": "unported",
       "rustTests": [],
       "notes": ""
