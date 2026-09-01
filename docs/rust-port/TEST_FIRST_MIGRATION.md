@@ -25,29 +25,29 @@ silently.
 
 ## Current progress
 
-At branch commit `3d342294e6d483a28a7036c41d7a5ee93c6a6e73` the checked-in manifest records:
+At branch commit `ae3baf5a778f00422cc31b6b4722ed9c77610674` the checked-in manifest records:
 
 - 334 TypeScript test files and 5,100 declared tests in the locked corpus;
-- 41 source files fully translated into expected-RED Rust suites;
+- 43 source files fully translated into expected-RED Rust suites;
 - 12 source files green against production Rust behavior;
-- 281 source files not yet translated;
+- 279 source files not yet translated;
 - no entries marked partial or blocked.
 
-The latest AI tranche translates all 89 declarations from:
+Every TypeScript test source in `packages/ai` is now represented by a Rust test
+target. The package contributes 12 source files and 207 declared tests covering:
 
-- `packages/ai/src/agent/do-stream-step.test.ts`;
-- `packages/ai/src/agent/tools-to-model-tools.test.ts`;
-- `packages/ai/src/agent/telemetry.test.ts`;
-- `packages/ai/src/agent/stream-text-iterator.test.ts`;
-- `packages/ai/src/workflow-chat-transport.test.ts`.
+- DurableAgent execution, compatibility callbacks, usage, and type inference;
+- local, provider-executed, and client-side tool boundaries;
+- invalid-input recovery, approval pauses, repair, and context propagation;
+- stream iteration, provider metadata, reasoning, and malformed tool input;
+- chat reconnect arithmetic, orphan-chunk filtering, and callbacks;
+- telemetry parity and the `recordInputs`/`recordOutputs` privacy controls;
+- module-scope state, error normalization, and stream adapters.
 
-The translated suites cover provider-stream normalization, malformed tool-call
-input retention, partial metadata merging, model-tool projection, telemetry
-parity, telemetry privacy controls, provider metadata retention, reasoning
-ordering, dynamic system-message replacement, abort propagation, negative-tail
-resume arithmetic, orphan-chunk filtering, reconnect errors, and transport
-callbacks. These tests remain intentionally RED. They do not count as
-production implementation or as closed security findings.
+All of those AI tests remain intentionally RED. Completing the test translation
+does not count as production implementation or as a closed security finding.
+The real Rust agent, iterator, transport, telemetry, and tool state machines
+must pass before these entries move to green.
 
 Large generated registries are split into reviewed fragments:
 
