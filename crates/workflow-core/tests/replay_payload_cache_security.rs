@@ -1,7 +1,7 @@
 #![forbid(unsafe_code)]
 
 use std::sync::{
-    Arc, Barrier,
+    Arc, Barrier, Mutex,
     atomic::{AtomicUsize, Ordering},
 };
 use std::thread;
@@ -90,4 +90,118 @@ fn in_flight_conflict_remains_terminal_after_original_preparation_finishes() {
         .unwrap_err();
     assert_eq!(repeated, conflict);
     assert_eq!(calls.load(Ordering::SeqCst), 1);
+}
+
+#[test]
+fn synchronous_same_key_reentry_is_rejected_without_evicting_outer_success() {
+    let calls = Arc::new(AtomicUsize::new(0));
+    let cache_slot = Arc::new(Mutex::new(None::<ReplayPayloadCache>));
+    let reentrant_error = Arc::new(Mutex::new(None));
+    let event_id = "evnt_reentrant_preparation";
+    let cache = ReplayPayloadCache::new({
+        let calls = Arc::clone(&calls);
+        let cache_slot = Arc::clone(&cache_slot);
+        let reentrant_error = Arc::clone(&reentrant_error);
+        move |input: &ReplayPayload| {
+            calls.fetch_add(1, Ordering::SeqCst);
+            let cache = {
+                let guard = cache_slot.lock().unwrap_or_else(|error| error.into_inner());
+                guard
+                    .as_ref()
+                    .expect("cache must be published before preparation")
+                    .clone()
+            };
+            let error = cache
+                .prepare_event_payload(event_id, ReplayPayloadField::Result, input)
+                .unwrap_err();
+            *reentrant_error
+                .lock()
+                .unwrap_or_else(|error| error.into_inner()) = Some(error);
+            Ok(PreparedReplayPayload::from_input(input))
+        }
+    });
+    *cache_slot.lock().unwrap_or_else(|error| error.into_inner()) = Some(cache.clone());
+
+    let payload = binary(3);
+    let outer = cache
+        .prepare_event_payload(event_id, ReplayPayloadField::Result, &payload)
+        .unwrap();
+    let error = reentrant_error
+        .lock()
+        .unwrap_or_else(|error| error.into_inner())
+        .take()
+        .expect("reentrant lookup must return an error");
+
+    assert_eq!(error.kind, ReplayCacheErrorKind::ReentrantPreparation);
+    assert_eq!(
+        error.message,
+        "replay payload preparation re-entered the same cache key"
+    );
+    assert!(!error.message.contains(event_id));
+    assert!(!error.message.contains('3'));
+    assert_eq!(calls.load(Ordering::SeqCst), 1);
+
+    let repeated = cache
+        .prepare_event_payload(event_id, ReplayPayloadField::Result, &payload)
+        .unwrap();
+    assert!(Arc::ptr_eq(&outer, &repeated));
+    assert_eq!(calls.load(Ordering::SeqCst), 1);
+    *cache_slot.lock().unwrap_or_else(|error| error.into_inner()) = None;
+}
+
+#[test]
+fn conflicting_synchronous_reentry_marks_the_original_waiter_terminal() {
+    let calls = Arc::new(AtomicUsize::new(0));
+    let cache_slot = Arc::new(Mutex::new(None::<ReplayPayloadCache>));
+    let reentrant_error = Arc::new(Mutex::new(None));
+    let event_id = "evnt_reentrant_conflict";
+    let cache = ReplayPayloadCache::new({
+        let calls = Arc::clone(&calls);
+        let cache_slot = Arc::clone(&cache_slot);
+        let reentrant_error = Arc::clone(&reentrant_error);
+        move |input: &ReplayPayload| {
+            calls.fetch_add(1, Ordering::SeqCst);
+            let cache = {
+                let guard = cache_slot.lock().unwrap_or_else(|error| error.into_inner());
+                guard
+                    .as_ref()
+                    .expect("cache must be published before preparation")
+                    .clone()
+            };
+            let conflicting = binary(5);
+            let error = cache
+                .prepare_event_payload(event_id, ReplayPayloadField::Result, &conflicting)
+                .unwrap_err();
+            *reentrant_error
+                .lock()
+                .unwrap_or_else(|error| error.into_inner()) = Some(error);
+            Ok(PreparedReplayPayload::from_input(input))
+        }
+    });
+    *cache_slot.lock().unwrap_or_else(|error| error.into_inner()) = Some(cache.clone());
+
+    let original = binary(4);
+    let outer_error = cache
+        .prepare_event_payload(event_id, ReplayPayloadField::Result, &original)
+        .unwrap_err();
+    let inner_error = reentrant_error
+        .lock()
+        .unwrap_or_else(|error| error.into_inner())
+        .take()
+        .expect("conflicting reentrant lookup must return an error");
+
+    assert_eq!(outer_error, inner_error);
+    assert_eq!(outer_error.kind, ReplayCacheErrorKind::PayloadConflict);
+    assert_eq!(outer_error.message, PAYLOAD_CONFLICT_MESSAGE);
+    assert!(!outer_error.message.contains(event_id));
+    assert!(!outer_error.message.contains('4'));
+    assert!(!outer_error.message.contains('5'));
+    assert_eq!(calls.load(Ordering::SeqCst), 1);
+
+    let repeated = cache
+        .prepare_event_payload(event_id, ReplayPayloadField::Result, &original)
+        .unwrap_err();
+    assert_eq!(repeated, outer_error);
+    assert_eq!(calls.load(Ordering::SeqCst), 1);
+    *cache_slot.lock().unwrap_or_else(|error| error.into_inner()) = None;
 }
