@@ -4,9 +4,9 @@
   "declaredTestCount": 5100,
   "statusCounts": {
     "unported": 291,
-    "partial": 12,
+    "partial": 0,
     "red": 31,
-    "green": 0,
+    "green": 12,
     "blocked": 0
   },
   "entries": [
@@ -2197,11 +2197,11 @@
       "kind": "unit",
       "lineCount": 56,
       "declaredTestCount": 9,
-      "status": "partial",
+      "status": "green",
       "rustTests": [
         "crates/workflow-world/tests/time_typescript_port.rs"
       ],
-      "notes": "All nine TypeScript assertions are mirrored against the existing Rust time implementation. Status remains partial until the new direct mirror test passes the branch workflow; differential coverage already exists separately."
+      "notes": "All nine TypeScript assertions pass in Rust, including differential behavior for relative and absolute durations, invalid dates, TimeClip truncation, and overflow rejection. Verified by Rust port workflow run 33455424866 at 3ab297fa184b92991d3ce616353e40050df11f9f."
     },
     {
       "typescript": "packages/utils/src/workflow-routes.test.ts",
@@ -3437,11 +3437,11 @@
       "kind": "unit",
       "lineCount": 31,
       "declaredTestCount": 2,
-      "status": "partial",
+      "status": "green",
       "rustTests": [
         "crates/workflow-world/tests/attributes_security_typescript_port.rs"
       ],
-      "notes": "Both prototype-key security declarations are mirrored. Rust maps treat __proto__ as data and typed deserialization rejects object-shaped values before materialization. Pending CI confirmation."
+      "notes": "Both prototype-key security declarations pass. Rust maps treat __proto__ as data, and typed deserialization rejects object-shaped values before materialization. Verified by Rust port workflow run 33455424866."
     },
     {
       "typescript": "packages/world/src/attributes.test.ts",
@@ -3450,11 +3450,11 @@
       "kind": "unit",
       "lineCount": 207,
       "declaredTestCount": 24,
-      "status": "partial",
+      "status": "green",
       "rustTests": [
         "crates/workflow-world/tests/attributes_typescript_port.rs"
       ],
-      "notes": "All 24 key, value, batch, contextual-reserved-key, post-merge, and immutable-materialization declarations are mirrored. Pending Rustfmt, test, and Clippy confirmation."
+      "notes": "All 24 TypeScript declarations pass in the direct Rust mirror, covering key/value limits, UTF-16 and UTF-8 length rules, reserved keys, duplicate batches, exact post-merge counts, and immutable application. Verified by Rust port workflow run 33455424866."
     },
     {
       "typescript": "packages/world/src/env-config.test.ts",
@@ -3463,11 +3463,11 @@
       "kind": "unit",
       "lineCount": 110,
       "declaredTestCount": 14,
-      "status": "partial",
+      "status": "green",
       "rustTests": [
         "crates/workflow-world/tests/env_config_typescript_port.rs"
       ],
-      "notes": "All numeric, flag, fallback, clamping, radix, warning-dedup behavior, event-limit, and process-environment declarations are mirrored. Process-global behavior is isolated in a child test process. Pending CI confirmation."
+      "notes": "All numeric, flag, fallback, clamping, radix, warning-deduplication, event-limit, and process-environment declarations pass. Process-global behavior is isolated in a child test process. Verified by Rust port workflow run 33455424866."
     },
     {
       "typescript": "packages/world/src/event-metadata.test.ts",
@@ -3476,11 +3476,11 @@
       "kind": "unit",
       "lineCount": 35,
       "declaredTestCount": 4,
-      "status": "partial",
+      "status": "green",
       "rustTests": [
         "crates/workflow-world/tests/event_metadata_typescript_port.rs"
       ],
-      "notes": "All four entity class, payload field, inherited-property, and sealed-noop declarations are mirrored. Pending CI confirmation."
+      "notes": "All four entity class, payload field, inherited-property, and sealed-noop declarations pass in Rust. Verified by Rust port workflow run 33455424866."
     },
     {
       "typescript": "packages/world/src/events.test.ts",
@@ -3502,12 +3502,12 @@
       "kind": "unit",
       "lineCount": 168,
       "declaredTestCount": 12,
-      "status": "partial",
+      "status": "green",
       "rustTests": [
         "crates/workflow-world/tests/hooks_contract.rs",
         "rust/conformance/hooks-parity.test.ts"
       ],
-      "notes": "All 12 protocol-constant, context, capability, unknown-field, persistence-stripping, and bounded-version declarations are covered by direct and differential Rust tests. Pending consolidated branch confirmation."
+      "notes": "All 12 protocol-constant, context, capability, unknown-field, persistence-stripping, and bounded-version declarations pass in direct and differential tests. Verified by Rust port workflow run 33455424866."
     },
     {
       "typescript": "packages/world/src/node-http-flag.test.ts",
@@ -3542,11 +3542,11 @@
       "kind": "unit",
       "lineCount": 254,
       "declaredTestCount": 32,
-      "status": "partial",
+      "status": "green",
       "rustTests": [
         "crates/workflow-world/tests/queue_typescript_port.rs"
       ],
-      "notes": "All 32 prefix, queue-name, payload-discriminator, binary step-input, unknown-field, and creator-environment declarations are translated against the current Rust protocol implementation. Pending Rustfmt, test, and Clippy confirmation."
+      "notes": "All 32 prefix, queue-name, payload-discriminator, binary step-input, unknown-field, and creator-environment declarations pass in the direct Rust mirror. Verified by Rust port workflow run 33455424866."
     },
     {
       "typescript": "packages/world/src/recovery.test.ts",
@@ -3568,11 +3568,11 @@
       "kind": "unit",
       "lineCount": 123,
       "declaredTestCount": 6,
-      "status": "partial",
+      "status": "green",
       "rustTests": [
         "crates/workflow-world/tests/runs_security_typescript_port.rs"
       ],
-      "notes": "All strict counter, exact summary, duplicate-ID, empty-result, and maximum-cardinality security cases are translated. The Rust test additionally proves diagnostics do not reflect a sensitive run ID. Pending CI confirmation."
+      "notes": "All strict counter, exact summary, duplicate-ID, empty-result, and maximum-cardinality security cases pass. Rust additionally proves diagnostics do not reflect a sensitive run ID. Verified by Rust port workflow run 33455424866."
     },
     {
       "typescript": "packages/world/src/runs.test.ts",
@@ -3581,11 +3581,11 @@
       "kind": "unit",
       "lineCount": 155,
       "declaredTestCount": 11,
-      "status": "partial",
+      "status": "green",
       "rustTests": [
         "crates/workflow-world/tests/runs_typescript_port.rs"
       ],
-      "notes": "All 11 request-boundary, outcome-variant, required-field, unknown-outcome, and aggregate declarations are translated. Pending Rustfmt, test, and Clippy confirmation."
+      "notes": "All 11 request-boundary, outcome-variant, required-field, unknown-outcome, and aggregate declarations pass in Rust. Verified by Rust port workflow run 33455424866."
     },
     {
       "typescript": "packages/world/src/shared.test.ts",
@@ -3607,11 +3607,11 @@
       "kind": "unit",
       "lineCount": 94,
       "declaredTestCount": 9,
-      "status": "partial",
+      "status": "green",
       "rustTests": [
         "crates/workflow-world/tests/slot_identity_typescript_port.rs"
       ],
-      "notes": "All nine fixed-width ordering, round-trip, safe-integer, legacy-prefix, ULID separation, and timestamp-validation declarations are translated. Pending CI confirmation."
+      "notes": "All nine fixed-width ordering, round-trip, safe-integer, legacy-prefix, ULID separation, and timestamp-validation declarations pass in Rust. Verified by Rust port workflow run 33455424866."
     },
     {
       "typescript": "packages/world/src/spec-version.test.ts",
@@ -3620,11 +3620,11 @@
       "kind": "unit",
       "lineCount": 108,
       "declaredTestCount": 11,
-      "status": "partial",
+      "status": "green",
       "rustTests": [
         "crates/workflow-world/tests/spec_version_typescript_port.rs"
       ],
-      "notes": "All 11 version constants, minting, kill-switch, readable-ceiling, newer-world, and legacy declarations are mirrored. Pending CI confirmation."
+      "notes": "All 11 version constants, minting, kill-switch, readable-ceiling, newer-world, and legacy declarations pass. The test-only constant assertion was replaced with an equivalent runtime-minted comparison so Clippy remains strict. Verified by Rust port workflow run 33455424866."
     },
     {
       "typescript": "packages/world/src/steps-security.test.ts",
@@ -3633,12 +3633,12 @@
       "kind": "unit",
       "lineCount": 107,
       "declaredTestCount": 3,
-      "status": "partial",
+      "status": "green",
       "rustTests": [
         "crates/workflow-world/tests/step_state_security.rs",
         "rust/conformance/step-state-security.test.ts"
       ],
-      "notes": "All contradictory-state, null-smuggling, unsafe-attempt, checked-next-attempt, and legacy compatibility fixtures are covered by direct and differential Rust tests. Pending consolidated branch confirmation."
+      "notes": "All contradictory-state, null-smuggling, unsafe-attempt, checked-next-attempt, and legacy compatibility fixtures pass in direct and differential Rust tests. Verified by Rust port workflow run 33455424866."
     },
     {
       "typescript": "rust/conformance/errors-parity.test.ts",
