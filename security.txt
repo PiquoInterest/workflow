@@ -282,3 +282,13 @@ Acknowledgments: https://github.com/PiquoInterest/workflow/blob/main/docs/rust-p
 # translated Rust compatibility tests plus dedicated TypeScript/Rust security
 # regressions are required to stay green. Full analysis is in
 # docs/rust-port/findings/WF-RUST-101.md.
+
+#
+# WF-RUST-102: TDD RED. The TypeScript debug gate enables workflow
+# diagnostics whenever the complete DEBUG string merely contains
+# "workflow:", including unrelated and explicitly negated selector
+# tokens. The TypeScript characterization proves diagnostic arguments
+# are forwarded under that condition. The translated Rust tests require
+# token-aware matching and a silent sink, but production Rust is not yet
+# implemented, so this entry is not a mitigation claim. Full analysis is
+# in docs/rust-port/findings/WF-RUST-102.md.
