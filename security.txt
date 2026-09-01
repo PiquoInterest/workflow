@@ -103,3 +103,13 @@ Acknowledgments: https://github.com/PiquoInterest/workflow/blob/main/docs/rust-p
 # 48 current TypeScript assertions are translated under
 # rust/tdd/workflow-ai/tests/durable_agent/. Closure requires the real Rust
 # agent loop, tool dispatcher, repair path, callbacks, and UI stream writer.
+#
+# WF-RUST-019 (TDD RED): Abort-reason hydration is part of the cancellation
+# boundary. Before the TypeScript fix, scheduleWhenIdle could serialize a later
+# step's signal as aborted=false while asynchronous reason hydration was still
+# in flight, allowing work to continue after cancellation. The Rust test at
+# rust/tdd/workflow-core/tests/abort_replay_ordering.rs requires the abort
+# delivery to hold the idle gate, preserve the reason, and release its pending
+# counter on every exit. Full analysis is in
+# docs/rust-port/findings/WF-RUST-019.md; the finding remains open for Rust until
+# the real event consumer and hydration path pass it.
