@@ -135,10 +135,9 @@ fn discovers_workflow_files_reached_through_an_imported_package_reexport() {
         observation.discovered_workflows,
         BTreeSet::from([normalize(&package_workflow)])
     );
-    assert!(observation.parent_has_child(
-        &normalize(&package_index),
-        &normalize(&package_workflow)
-    ));
+    assert!(
+        observation.parent_has_child(&normalize(&package_index), &normalize(&package_workflow))
+    );
 }
 
 #[test]
@@ -180,8 +179,16 @@ fn does_not_descend_into_node_modules_when_disabled() {
         observation.discovered_workflows,
         BTreeSet::from([normalize(&local_workflow)])
     );
-    assert!(!observation.discovered_workflows.contains(&normalize(&package_workflow)));
-    assert!(!observation.discovered_steps.contains(&normalize(&package_step)));
+    assert!(
+        !observation
+            .discovered_workflows
+            .contains(&normalize(&package_workflow))
+    );
+    assert!(
+        !observation
+            .discovered_steps
+            .contains(&normalize(&package_step))
+    );
     for file in [&package_index, &package_workflow, &package_step] {
         assert!(!observation.discovered_files.contains(&normalize(file)));
     }
@@ -212,10 +219,9 @@ fn seeded_node_modules_entries_still_resolve_their_own_subtree() {
             .discovered_workflows
             .contains(&normalize(&package_workflow))
     );
-    assert!(observation.parent_has_child(
-        &normalize(&package_index),
-        &normalize(&package_workflow)
-    ));
+    assert!(
+        observation.parent_has_child(&normalize(&package_index), &normalize(&package_workflow))
+    );
 }
 
 #[test]
@@ -262,10 +268,7 @@ fn discovers_dotted_files_reached_through_tsconfig_path_aliases() {
         &entry,
         "import { helloWorkflow } from '@/workflows/hello.index';\n",
     );
-    write_file(
-        &registry,
-        "export { helloWorkflow } from './hello';\n",
-    );
+    write_file(&registry, "export { helloWorkflow } from './hello';\n");
     write_file(
         &workflow,
         "export async function helloWorkflow() {\n  'use workflow';\n  return 'ok';\n}\n",
@@ -311,10 +314,7 @@ fn discovers_path_aliases_inherited_through_tsconfig_extends() {
         r#"{"compilerOptions":{"baseUrl":".","paths":{"@base/*":["./src/*"]}}}"#,
     );
     write_file(&tsconfig, r#"{"extends":"./tsconfig.base.json"}"#);
-    write_file(
-        &entry,
-        "import { run } from '@base/workflows/workflow';\n",
-    );
+    write_file(&entry, "import { run } from '@base/workflows/workflow';\n");
     write_file(
         &workflow,
         "export async function run() {\n  'use workflow';\n  return 'ok';\n}\n",
