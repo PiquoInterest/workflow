@@ -194,18 +194,19 @@ impl Display for HarnessValidationError {
         match self {
             Self::HarnessError(message) => write!(formatter, "isolated harness failed: {message}"),
             Self::MissingBody => formatter.write_str("isolated route returned no response body"),
-            Self::DynamicRequireFallback => formatter.write_str(
-                "isolated route used the Turbopack dynamic-require fallback",
-            ),
-            Self::WorldRuntimeNotInitialized => formatter.write_str(
-                "isolated route bundle did not initialize the workflow world runtime",
-            ),
+            Self::DynamicRequireFallback => {
+                formatter.write_str("isolated route used the Turbopack dynamic-require fallback")
+            }
+            Self::WorldRuntimeNotInitialized => formatter
+                .write_str("isolated route bundle did not initialize the workflow world runtime"),
             Self::UnexpectedStatus(status) => {
-                write!(formatter, "isolated route returned unexpected status {status:?}")
+                write!(
+                    formatter,
+                    "isolated route returned unexpected status {status:?}"
+                )
             }
-            Self::MissingHookNotFound => {
-                formatter.write_str("isolated route did not return the expected Hook not found body")
-            }
+            Self::MissingHookNotFound => formatter
+                .write_str("isolated route did not return the expected Hook not found body"),
         }
     }
 }

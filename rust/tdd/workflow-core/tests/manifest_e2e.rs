@@ -1,10 +1,10 @@
 use workflow_core_tdd::manifest_e2e::{
-    ALL_MANIFEST_PROJECTS, DOT_DIRECTORY_PROJECTS, ConditionalBranch, Manifest,
-    ManifestEdge, ManifestGraph, ManifestNode, ManifestProject, ManifestReadFailure,
-    ManifestScenario, ManifestStep, ManifestStepFile, ManifestWorkflow, ManifestWorkflowFile,
-    gate_manifest_read, probe_manifest, validate_dot_directory_step,
-    validate_dot_directory_workflow, validate_manifest, validate_single_statement_for,
-    validate_single_statement_if, validate_single_statement_while,
+    ALL_MANIFEST_PROJECTS, ConditionalBranch, DOT_DIRECTORY_PROJECTS, Manifest, ManifestEdge,
+    ManifestGraph, ManifestNode, ManifestProject, ManifestReadFailure, ManifestScenario,
+    ManifestStep, ManifestStepFile, ManifestWorkflow, ManifestWorkflowFile, gate_manifest_read,
+    probe_manifest, validate_dot_directory_step, validate_dot_directory_workflow,
+    validate_manifest, validate_single_statement_for, validate_single_statement_if,
+    validate_single_statement_while,
 };
 
 fn node(id: &str, node_type: &str, step_id: Option<&str>) -> ManifestNode {
@@ -63,7 +63,8 @@ fn valid_manifest() -> Manifest {
 }
 
 fn validate_probe(project: ManifestProject, scenario: ManifestScenario) {
-    let Some(manifest) = probe_manifest(project, scenario).expect("manifest read must not be hidden")
+    let Some(manifest) =
+        probe_manifest(project, scenario).expect("manifest read must not be hidden")
     else {
         return;
     };
@@ -74,26 +75,23 @@ fn validate_probe(project: ManifestProject, scenario: ManifestScenario) {
             validate_dot_directory_workflow(&manifest).unwrap()
         }
         ManifestScenario::SingleStatementIf => {
-            if let Some(workflow) = workflow_core_tdd::manifest_e2e::find_workflow(
-                &manifest,
-                "single_statement_if",
-            ) {
+            if let Some(workflow) =
+                workflow_core_tdd::manifest_e2e::find_workflow(&manifest, "single_statement_if")
+            {
                 validate_single_statement_if(workflow).unwrap();
             }
         }
         ManifestScenario::SingleStatementWhile => {
-            if let Some(workflow) = workflow_core_tdd::manifest_e2e::find_workflow(
-                &manifest,
-                "single_statement_while",
-            ) {
+            if let Some(workflow) =
+                workflow_core_tdd::manifest_e2e::find_workflow(&manifest, "single_statement_while")
+            {
                 validate_single_statement_while(workflow).unwrap();
             }
         }
         ManifestScenario::SingleStatementFor => {
-            if let Some(workflow) = workflow_core_tdd::manifest_e2e::find_workflow(
-                &manifest,
-                "single_statement_for",
-            ) {
+            if let Some(workflow) =
+                workflow_core_tdd::manifest_e2e::find_workflow(&manifest, "single_statement_for")
+            {
                 validate_single_statement_for(workflow).unwrap();
             }
         }
@@ -109,7 +107,10 @@ fn maps_every_project_to_the_exact_manifest_path() {
     assert_eq!(
         paths,
         vec![
-            ("nextjs-webpack", "app/.well-known/workflow/v1/manifest.json"),
+            (
+                "nextjs-webpack",
+                "app/.well-known/workflow/v1/manifest.json"
+            ),
             (
                 "nextjs-turbopack",
                 "app/.well-known/workflow/v1/manifest.json",
@@ -190,20 +191,16 @@ fn validates_dot_directory_and_single_statement_metadata_contracts() {
         workflow_id: "workflow//fixture//single_statement_if".to_owned(),
         graph: graph_with_steps(&["singleStmtStepA", "singleStmtStepB"]),
     };
-    if_workflow.graph.nodes[2].metadata = Some(
-        workflow_core_tdd::manifest_e2e::NodeMetadata {
-            conditional_id: Some("condition-1".to_owned()),
-            conditional_branch: Some(ConditionalBranch::Then),
-            ..Default::default()
-        },
-    );
-    if_workflow.graph.nodes[3].metadata = Some(
-        workflow_core_tdd::manifest_e2e::NodeMetadata {
-            conditional_id: Some("condition-1".to_owned()),
-            conditional_branch: Some(ConditionalBranch::Else),
-            ..Default::default()
-        },
-    );
+    if_workflow.graph.nodes[2].metadata = Some(workflow_core_tdd::manifest_e2e::NodeMetadata {
+        conditional_id: Some("condition-1".to_owned()),
+        conditional_branch: Some(ConditionalBranch::Then),
+        ..Default::default()
+    });
+    if_workflow.graph.nodes[3].metadata = Some(workflow_core_tdd::manifest_e2e::NodeMetadata {
+        conditional_id: Some("condition-1".to_owned()),
+        conditional_branch: Some(ConditionalBranch::Else),
+        ..Default::default()
+    });
     assert!(validate_single_statement_if(&if_workflow).is_ok());
 
     let mut while_workflow = ManifestWorkflow {
@@ -211,12 +208,10 @@ fn validates_dot_directory_and_single_statement_metadata_contracts() {
         workflow_id: "workflow//fixture//single_statement_while".to_owned(),
         graph: graph_with_steps(&["singleStmtStepA"]),
     };
-    while_workflow.graph.nodes[2].metadata = Some(
-        workflow_core_tdd::manifest_e2e::NodeMetadata {
-            loop_id: Some("loop-1".to_owned()),
-            ..Default::default()
-        },
-    );
+    while_workflow.graph.nodes[2].metadata = Some(workflow_core_tdd::manifest_e2e::NodeMetadata {
+        loop_id: Some("loop-1".to_owned()),
+        ..Default::default()
+    });
     while_workflow.graph.edges.push(ManifestEdge {
         id: "loop-edge".to_owned(),
         source: "step-0".to_owned(),
@@ -254,43 +249,187 @@ macro_rules! project_case {
     };
 }
 
-project_case!(next_webpack_manifest_structure, ManifestProject::NextWebpack, ManifestScenario::Structure);
-project_case!(next_turbopack_manifest_structure, ManifestProject::NextTurbopack, ManifestScenario::Structure);
-project_case!(nitro_manifest_structure, ManifestProject::Nitro, ManifestScenario::Structure);
-project_case!(vite_manifest_structure, ManifestProject::Vite, ManifestScenario::Structure);
-project_case!(sveltekit_manifest_structure, ManifestProject::SvelteKit, ManifestScenario::Structure);
-project_case!(nuxt_manifest_structure, ManifestProject::Nuxt, ManifestScenario::Structure);
-project_case!(hono_manifest_structure, ManifestProject::Hono, ManifestScenario::Structure);
-project_case!(express_manifest_structure, ManifestProject::Express, ManifestScenario::Structure);
+project_case!(
+    next_webpack_manifest_structure,
+    ManifestProject::NextWebpack,
+    ManifestScenario::Structure
+);
+project_case!(
+    next_turbopack_manifest_structure,
+    ManifestProject::NextTurbopack,
+    ManifestScenario::Structure
+);
+project_case!(
+    nitro_manifest_structure,
+    ManifestProject::Nitro,
+    ManifestScenario::Structure
+);
+project_case!(
+    vite_manifest_structure,
+    ManifestProject::Vite,
+    ManifestScenario::Structure
+);
+project_case!(
+    sveltekit_manifest_structure,
+    ManifestProject::SvelteKit,
+    ManifestScenario::Structure
+);
+project_case!(
+    nuxt_manifest_structure,
+    ManifestProject::Nuxt,
+    ManifestScenario::Structure
+);
+project_case!(
+    hono_manifest_structure,
+    ManifestProject::Hono,
+    ManifestScenario::Structure
+);
+project_case!(
+    express_manifest_structure,
+    ManifestProject::Express,
+    ManifestScenario::Structure
+);
 
-project_case!(next_webpack_dot_directory_step, DOT_DIRECTORY_PROJECTS[0], ManifestScenario::DotDirectoryStep);
-project_case!(next_turbopack_dot_directory_step, DOT_DIRECTORY_PROJECTS[1], ManifestScenario::DotDirectoryStep);
-project_case!(next_webpack_dot_directory_workflow, DOT_DIRECTORY_PROJECTS[0], ManifestScenario::DotDirectoryWorkflow);
-project_case!(next_turbopack_dot_directory_workflow, DOT_DIRECTORY_PROJECTS[1], ManifestScenario::DotDirectoryWorkflow);
+project_case!(
+    next_webpack_dot_directory_step,
+    DOT_DIRECTORY_PROJECTS[0],
+    ManifestScenario::DotDirectoryStep
+);
+project_case!(
+    next_turbopack_dot_directory_step,
+    DOT_DIRECTORY_PROJECTS[1],
+    ManifestScenario::DotDirectoryStep
+);
+project_case!(
+    next_webpack_dot_directory_workflow,
+    DOT_DIRECTORY_PROJECTS[0],
+    ManifestScenario::DotDirectoryWorkflow
+);
+project_case!(
+    next_turbopack_dot_directory_workflow,
+    DOT_DIRECTORY_PROJECTS[1],
+    ManifestScenario::DotDirectoryWorkflow
+);
 
-project_case!(next_webpack_single_if, ManifestProject::NextWebpack, ManifestScenario::SingleStatementIf);
-project_case!(next_turbopack_single_if, ManifestProject::NextTurbopack, ManifestScenario::SingleStatementIf);
-project_case!(nitro_single_if, ManifestProject::Nitro, ManifestScenario::SingleStatementIf);
-project_case!(vite_single_if, ManifestProject::Vite, ManifestScenario::SingleStatementIf);
-project_case!(sveltekit_single_if, ManifestProject::SvelteKit, ManifestScenario::SingleStatementIf);
-project_case!(nuxt_single_if, ManifestProject::Nuxt, ManifestScenario::SingleStatementIf);
-project_case!(hono_single_if, ManifestProject::Hono, ManifestScenario::SingleStatementIf);
-project_case!(express_single_if, ManifestProject::Express, ManifestScenario::SingleStatementIf);
+project_case!(
+    next_webpack_single_if,
+    ManifestProject::NextWebpack,
+    ManifestScenario::SingleStatementIf
+);
+project_case!(
+    next_turbopack_single_if,
+    ManifestProject::NextTurbopack,
+    ManifestScenario::SingleStatementIf
+);
+project_case!(
+    nitro_single_if,
+    ManifestProject::Nitro,
+    ManifestScenario::SingleStatementIf
+);
+project_case!(
+    vite_single_if,
+    ManifestProject::Vite,
+    ManifestScenario::SingleStatementIf
+);
+project_case!(
+    sveltekit_single_if,
+    ManifestProject::SvelteKit,
+    ManifestScenario::SingleStatementIf
+);
+project_case!(
+    nuxt_single_if,
+    ManifestProject::Nuxt,
+    ManifestScenario::SingleStatementIf
+);
+project_case!(
+    hono_single_if,
+    ManifestProject::Hono,
+    ManifestScenario::SingleStatementIf
+);
+project_case!(
+    express_single_if,
+    ManifestProject::Express,
+    ManifestScenario::SingleStatementIf
+);
 
-project_case!(next_webpack_single_while, ManifestProject::NextWebpack, ManifestScenario::SingleStatementWhile);
-project_case!(next_turbopack_single_while, ManifestProject::NextTurbopack, ManifestScenario::SingleStatementWhile);
-project_case!(nitro_single_while, ManifestProject::Nitro, ManifestScenario::SingleStatementWhile);
-project_case!(vite_single_while, ManifestProject::Vite, ManifestScenario::SingleStatementWhile);
-project_case!(sveltekit_single_while, ManifestProject::SvelteKit, ManifestScenario::SingleStatementWhile);
-project_case!(nuxt_single_while, ManifestProject::Nuxt, ManifestScenario::SingleStatementWhile);
-project_case!(hono_single_while, ManifestProject::Hono, ManifestScenario::SingleStatementWhile);
-project_case!(express_single_while, ManifestProject::Express, ManifestScenario::SingleStatementWhile);
+project_case!(
+    next_webpack_single_while,
+    ManifestProject::NextWebpack,
+    ManifestScenario::SingleStatementWhile
+);
+project_case!(
+    next_turbopack_single_while,
+    ManifestProject::NextTurbopack,
+    ManifestScenario::SingleStatementWhile
+);
+project_case!(
+    nitro_single_while,
+    ManifestProject::Nitro,
+    ManifestScenario::SingleStatementWhile
+);
+project_case!(
+    vite_single_while,
+    ManifestProject::Vite,
+    ManifestScenario::SingleStatementWhile
+);
+project_case!(
+    sveltekit_single_while,
+    ManifestProject::SvelteKit,
+    ManifestScenario::SingleStatementWhile
+);
+project_case!(
+    nuxt_single_while,
+    ManifestProject::Nuxt,
+    ManifestScenario::SingleStatementWhile
+);
+project_case!(
+    hono_single_while,
+    ManifestProject::Hono,
+    ManifestScenario::SingleStatementWhile
+);
+project_case!(
+    express_single_while,
+    ManifestProject::Express,
+    ManifestScenario::SingleStatementWhile
+);
 
-project_case!(next_webpack_single_for, ManifestProject::NextWebpack, ManifestScenario::SingleStatementFor);
-project_case!(next_turbopack_single_for, ManifestProject::NextTurbopack, ManifestScenario::SingleStatementFor);
-project_case!(nitro_single_for, ManifestProject::Nitro, ManifestScenario::SingleStatementFor);
-project_case!(vite_single_for, ManifestProject::Vite, ManifestScenario::SingleStatementFor);
-project_case!(sveltekit_single_for, ManifestProject::SvelteKit, ManifestScenario::SingleStatementFor);
-project_case!(nuxt_single_for, ManifestProject::Nuxt, ManifestScenario::SingleStatementFor);
-project_case!(hono_single_for, ManifestProject::Hono, ManifestScenario::SingleStatementFor);
-project_case!(express_single_for, ManifestProject::Express, ManifestScenario::SingleStatementFor);
+project_case!(
+    next_webpack_single_for,
+    ManifestProject::NextWebpack,
+    ManifestScenario::SingleStatementFor
+);
+project_case!(
+    next_turbopack_single_for,
+    ManifestProject::NextTurbopack,
+    ManifestScenario::SingleStatementFor
+);
+project_case!(
+    nitro_single_for,
+    ManifestProject::Nitro,
+    ManifestScenario::SingleStatementFor
+);
+project_case!(
+    vite_single_for,
+    ManifestProject::Vite,
+    ManifestScenario::SingleStatementFor
+);
+project_case!(
+    sveltekit_single_for,
+    ManifestProject::SvelteKit,
+    ManifestScenario::SingleStatementFor
+);
+project_case!(
+    nuxt_single_for,
+    ManifestProject::Nuxt,
+    ManifestScenario::SingleStatementFor
+);
+project_case!(
+    hono_single_for,
+    ManifestProject::Hono,
+    ManifestScenario::SingleStatementFor
+);
+project_case!(
+    express_single_for,
+    ManifestProject::Express,
+    ManifestScenario::SingleStatementFor
+);

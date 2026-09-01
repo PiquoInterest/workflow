@@ -1,8 +1,8 @@
 use workflow_core_tdd::e2e_utils::{
-    PICKUP_INITIAL_INTERVAL_MS, PickupScript, RunStatus, ScheduledTrackedRun,
-    SourceMapEnvironment, StatusRead, WARMUP_CANCEL_REASON, WarmProbeScript, WarmupOptions,
-    has_step_source_maps, is_local_deployment, next_pickup_budget_ms, remaining_budget_ms,
-    run_interleaved_test_states, wait_for_run_pickup, warm_deployment,
+    PICKUP_INITIAL_INTERVAL_MS, PickupScript, RunStatus, ScheduledTrackedRun, SourceMapEnvironment,
+    StatusRead, WARMUP_CANCEL_REASON, WarmProbeScript, WarmupOptions, has_step_source_maps,
+    is_local_deployment, next_pickup_budget_ms, remaining_budget_ms, run_interleaved_test_states,
+    wait_for_run_pickup, warm_deployment,
 };
 
 fn source_maps(app_name: &str, deployment_url: &str, dev_test_config: bool) -> bool {
@@ -20,11 +20,7 @@ fn enables_step_source_maps_for_local_vite_dev_mode() {
 
 #[test]
 fn disables_step_source_maps_for_vercel_even_with_dev_config() {
-    assert!(!source_maps(
-        "vite",
-        "https://example.vercel.app",
-        true
-    ));
+    assert!(!source_maps("vite", "https://example.vercel.app", true));
 }
 
 #[test]
@@ -48,11 +44,7 @@ fn disables_step_source_maps_for_local_turbopack_dev_mode() {
 
 #[test]
 fn enables_step_source_maps_for_local_next_webpack_dev_mode() {
-    assert!(source_maps(
-        "nextjs-webpack",
-        "http://localhost:3000",
-        true
-    ));
+    assert!(source_maps("nextjs-webpack", "http://localhost:3000", true));
 }
 
 #[test]
@@ -89,10 +81,7 @@ fn returns_true_when_run_leaves_pending_before_the_budget() {
 #[test]
 fn any_non_pending_status_counts_as_pickup() {
     let observation = wait_for_run_pickup(
-        &PickupScript::new(
-            "run-1",
-            vec![StatusRead::Status(RunStatus::Completed)],
-        ),
+        &PickupScript::new("run-1", vec![StatusRead::Status(RunStatus::Completed)]),
         1_000,
     );
     assert!(observation.picked_up);
@@ -139,10 +128,7 @@ fn transient_status_read_failures_are_retried_inside_the_same_budget() {
 #[test]
 fn short_budget_caps_the_first_sleep() {
     let observation = wait_for_run_pickup(
-        &PickupScript::new(
-            "run-1",
-            vec![StatusRead::Status(RunStatus::Pending)],
-        ),
+        &PickupScript::new("run-1", vec![StatusRead::Status(RunStatus::Pending)]),
         100,
     );
     assert!(!observation.picked_up);
@@ -162,18 +148,12 @@ fn abandons_a_stuck_probe_and_retries_until_one_is_picked_up() {
         WarmProbeScript {
             run_id: "probe-1".to_owned(),
             start_delay_ms: 0,
-            pickup: PickupScript::new(
-                "probe-1",
-                vec![StatusRead::Status(RunStatus::Pending)],
-            ),
+            pickup: PickupScript::new("probe-1", vec![StatusRead::Status(RunStatus::Pending)]),
         },
         WarmProbeScript {
             run_id: "probe-2".to_owned(),
             start_delay_ms: 0,
-            pickup: PickupScript::new(
-                "probe-2",
-                vec![StatusRead::Status(RunStatus::Running)],
-            ),
+            pickup: PickupScript::new("probe-2", vec![StatusRead::Status(RunStatus::Running)]),
         },
     ];
     let observation = warm_deployment(
@@ -206,18 +186,12 @@ fn returns_after_total_budget_when_all_probes_stay_pending() {
         WarmProbeScript {
             run_id: "probe-1".to_owned(),
             start_delay_ms: 0,
-            pickup: PickupScript::new(
-                "probe-1",
-                vec![StatusRead::Status(RunStatus::Pending)],
-            ),
+            pickup: PickupScript::new("probe-1", vec![StatusRead::Status(RunStatus::Pending)]),
         },
         WarmProbeScript {
             run_id: "probe-2".to_owned(),
             start_delay_ms: 0,
-            pickup: PickupScript::new(
-                "probe-2",
-                vec![StatusRead::Status(RunStatus::Pending)],
-            ),
+            pickup: PickupScript::new("probe-2", vec![StatusRead::Status(RunStatus::Pending)]),
         },
     ];
     let observation = warm_deployment(
@@ -251,10 +225,7 @@ fn fast_probe_returns_without_cancellation_or_infra_event() {
     let probes = [WarmProbeScript {
         run_id: "probe-1".to_owned(),
         start_delay_ms: 0,
-        pickup: PickupScript::new(
-            "probe-1",
-            vec![StatusRead::Status(RunStatus::Running)],
-        ),
+        pickup: PickupScript::new("probe-1", vec![StatusRead::Status(RunStatus::Running)]),
     }];
     let observation = warm_deployment(
         &probes,
@@ -288,10 +259,7 @@ fn probe_start_that_consumes_the_remaining_budget_must_not_receive_a_status_read
     let probes = [WarmProbeScript {
         run_id: "late-probe".to_owned(),
         start_delay_ms: 1_000,
-        pickup: PickupScript::new(
-            "late-probe",
-            vec![StatusRead::Status(RunStatus::Running)],
-        ),
+        pickup: PickupScript::new("late-probe", vec![StatusRead::Status(RunStatus::Running)]),
     }];
     let observation = warm_deployment(
         &probes,

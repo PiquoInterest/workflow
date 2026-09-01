@@ -2,8 +2,7 @@ use std::fmt::{self, Display, Formatter};
 
 pub const PREWARM_FETCH_TIMEOUT_MS: u64 = 5_000;
 pub const HMR_QUIESCENCE_QUIET_MS: u64 = 2_000;
-pub const TDD_RED_MARKER: &str =
-    "TDD RED: packages/core/e2e/dev.test.ts implementation pending";
+pub const TDD_RED_MARKER: &str = "TDD RED: packages/core/e2e/dev.test.ts implementation pending";
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Platform {
@@ -137,10 +136,7 @@ pub fn count_log_message(log: &str, message: &str) -> usize {
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum LogCountExpectation {
     Exact(usize),
-    Range {
-        min: usize,
-        max: Option<usize>,
-    },
+    Range { min: usize, max: Option<usize> },
 }
 
 impl LogCountExpectation {
@@ -214,9 +210,9 @@ pub fn recover_stranded_step_registrations(
 
 pub fn poll_timeout_error(description: &str, timeout_ms: u64, last_error: Option<&str>) -> String {
     match last_error {
-        Some(error) => format!(
-            "Timed out after {timeout_ms}ms waiting for {description}. Last error: {error}"
-        ),
+        Some(error) => {
+            format!("Timed out after {timeout_ms}ms waiting for {description}. Last error: {error}")
+        }
         None => format!("Timed out after {timeout_ms}ms waiting for {description}."),
     }
 }
@@ -382,8 +378,7 @@ pub fn expected_case(case: DevHmrCase) -> DevHmrExpectation {
         DevHmrCase::FuzzWorkflowHelper => {
             expectation.hot = exact(1);
             expectation.artifacts = ArtifactExpectation::WorkflowHotOnly;
-            expectation.execution.workflow_contains =
-                Some("workflow-helper-body-4".to_owned());
+            expectation.execution.workflow_contains = Some("workflow-helper-body-4".to_owned());
         }
         DevHmrCase::FuzzSharedHelper => {
             expectation.hot = exact(1);

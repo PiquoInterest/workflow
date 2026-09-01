@@ -10,11 +10,13 @@ fn assert_project_contract(project: LocalBuildProject) {
     assert_eq!(observation.plan.project, project);
     assert!(observation.build_succeeded);
     assert!(!observation.output.truncated);
-    assert!(observation
-        .plan
-        .forbidden_output_fragments
-        .iter()
-        .all(|fragment| !observation.output.combined_text().contains(fragment)));
+    assert!(
+        observation
+            .plan
+            .forbidden_output_fragments
+            .iter()
+            .all(|fragment| !observation.output.combined_text().contains(fragment))
+    );
     if observation.plan.diagnostics_manifest_path.is_some() {
         assert!(observation.diagnostics_manifest_found);
     }
@@ -39,18 +41,30 @@ macro_rules! project_case {
 }
 
 project_case!(example_builds_without_errors, LocalBuildProject::Example);
-project_case!(next_webpack_builds_without_errors, LocalBuildProject::NextWebpack);
-project_case!(next_turbopack_builds_without_errors, LocalBuildProject::NextTurbopack);
+project_case!(
+    next_webpack_builds_without_errors,
+    LocalBuildProject::NextWebpack
+);
+project_case!(
+    next_turbopack_builds_without_errors,
+    LocalBuildProject::NextTurbopack
+);
 project_case!(nitro_builds_without_errors, LocalBuildProject::Nitro);
 project_case!(vite_builds_without_errors, LocalBuildProject::Vite);
-project_case!(sveltekit_builds_without_errors, LocalBuildProject::SvelteKit);
+project_case!(
+    sveltekit_builds_without_errors,
+    LocalBuildProject::SvelteKit
+);
 project_case!(nuxt_builds_without_errors, LocalBuildProject::Nuxt);
 project_case!(hono_builds_without_errors, LocalBuildProject::Hono);
 project_case!(express_builds_without_errors, LocalBuildProject::Express);
 project_case!(fastify_builds_without_errors, LocalBuildProject::Fastify);
 project_case!(nest_builds_without_errors, LocalBuildProject::Nest);
 project_case!(astro_builds_without_errors, LocalBuildProject::Astro);
-project_case!(tanstack_start_builds_without_errors, LocalBuildProject::TanstackStart);
+project_case!(
+    tanstack_start_builds_without_errors,
+    LocalBuildProject::TanstackStart
+);
 
 #[test]
 fn project_matrix_matches_the_source_parameterization() {
@@ -134,9 +148,7 @@ fn example_requires_native_esm_import_meta_and_removes_the_legacy_route() {
     let plan = local_build_plan(LocalBuildProject::Example, LocalBuildOptions::default());
     assert_eq!(
         plan.esm_step_registration_path,
-        Some(
-            ".vercel/output/functions/.well-known/workflow/v1/flow.func/__step_registrations.mjs"
-        )
+        Some(".vercel/output/functions/.well-known/workflow/v1/flow.func/__step_registrations.mjs")
     );
     assert_eq!(
         plan.forbidden_legacy_step_route_path,
@@ -246,7 +258,10 @@ fn signal_failure_is_not_misreported_as_an_exit_code() {
 
 #[test]
 fn optional_file_gate_skips_only_not_found_and_propagates_other_io_failures() {
-    assert_eq!(gate_optional_file::<String>(Err(FileReadError::NotFound)), Ok(None));
+    assert_eq!(
+        gate_optional_file::<String>(Err(FileReadError::NotFound)),
+        Ok(None)
+    );
     assert_eq!(
         gate_optional_file(Ok("bundle".to_owned())),
         Ok(Some("bundle".to_owned()))

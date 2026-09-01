@@ -1,7 +1,7 @@
 use workflow_core_tdd::benchmark::{
     BENCH_METHODOLOGY_VERSION, BenchArgument, BenchmarkConfig, BenchmarkObservation,
-    BenchmarkScenario, MetricKind, REPLAY_CADENCE_EVE, REPLAY_CADENCE_GATEWAY,
-    RTT_INDEX_BUCKETS, ReturnIntegrity, run_benchmark_scenario,
+    BenchmarkScenario, MetricKind, REPLAY_CADENCE_EVE, REPLAY_CADENCE_GATEWAY, RTT_INDEX_BUCKETS,
+    ReturnIntegrity, run_benchmark_scenario,
 };
 
 fn observe(scenario: BenchmarkScenario) -> (BenchmarkConfig, BenchmarkObservation) {
@@ -13,8 +13,14 @@ fn observe(scenario: BenchmarkScenario) -> (BenchmarkConfig, BenchmarkObservatio
 
 fn assert_common_contract(observation: &BenchmarkObservation) {
     assert_eq!(observation.methodology_version, BENCH_METHODOLOGY_VERSION);
-    assert_eq!(observation.preflight.workflow_fn, "benchSequentialStepsWorkflow");
-    assert_eq!(observation.preflight.arguments, vec![BenchArgument::Integer(1)]);
+    assert_eq!(
+        observation.preflight.workflow_fn,
+        "benchSequentialStepsWorkflow"
+    );
+    assert_eq!(
+        observation.preflight.arguments,
+        vec![BenchArgument::Integer(1)]
+    );
     assert!(observation.deployment_clock_anchor);
     assert!(observation.trigger_response_validated);
     assert!(observation.negative_clock_skew_clamped);
@@ -83,7 +89,7 @@ fn scenario_hook_and_step_non_turbo_records_ttfs() {
     assert_eq!(
         observation.plan.return_integrity,
         ReturnIntegrity::StepTimings { exact_count: 1 }
-   );
+    );
     assert_eq!(observation.plan.timeout_ms, config.run_timeout_ms);
     assert_metric_kinds(&observation, &[MetricKind::Ttfs]);
 }
@@ -155,10 +161,7 @@ fn scenario_size_sweep_records_size_profile_and_write_slip() {
         config.run_timeout_ms
             + config.crtt_chunk_count() as u64 * config.crtt_interval_ms().ceil() as u64
     );
-    assert_metric_kinds(
-        &observation,
-        &[MetricKind::Stream, MetricKind::WriteSlip],
-    );
+    assert_metric_kinds(&observation, &[MetricKind::Stream, MetricKind::WriteSlip]);
     assert_eq!(observation.plan.metrics[0].group.as_deref(), Some("sweep"));
 }
 
@@ -173,7 +176,10 @@ fn scenario_replay_gateway_reality_preserves_cadence_identity() {
             BenchArgument::Integer(1),
         ]
     );
-    assert_eq!(observation.plan.iterations, config.replay_gateway_iterations);
+    assert_eq!(
+        observation.plan.iterations,
+        config.replay_gateway_iterations
+    );
     assert_eq!(observation.plan.warmup_iterations, 1);
     assert_eq!(
         observation.plan.return_integrity,
@@ -186,10 +192,7 @@ fn scenario_replay_gateway_reality_preserves_cadence_identity() {
         observation.plan.timeout_ms,
         config.replay_timeout_ms(config.replay_gateway_span_ms, 1)
     );
-    assert_metric_kinds(
-        &observation,
-        &[MetricKind::Stream, MetricKind::WriteSlip],
-    );
+    assert_metric_kinds(&observation, &[MetricKind::Stream, MetricKind::WriteSlip]);
 }
 
 #[test]
@@ -203,7 +206,10 @@ fn scenario_replay_eve_reality_preserves_cadence_identity() {
             BenchArgument::Integer(1),
         ]
     );
-    assert_eq!(observation.plan.iterations, config.replay_reality_iterations);
+    assert_eq!(
+        observation.plan.iterations,
+        config.replay_reality_iterations
+    );
     assert_eq!(observation.plan.warmup_iterations, 0);
     assert_eq!(
         observation.plan.return_integrity,

@@ -5,8 +5,7 @@ pub const PICKUP_MAX_INTERVAL_MS: u64 = 5_000;
 pub const DEFAULT_PICKUP_BUDGET_MS: u64 = 20_000;
 pub const DEFAULT_WARMUP_BUDGET_MS: u64 = 60_000;
 pub const WARMUP_CANCEL_REASON: &str = "e2e: warmup probe stuck pending, abandoned";
-pub const TDD_RED_MARKER: &str =
-    "TDD RED: packages/core/e2e/utils.test.ts implementation pending";
+pub const TDD_RED_MARKER: &str = "TDD RED: packages/core/e2e/utils.test.ts implementation pending";
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct SourceMapEnvironment {
@@ -26,11 +25,15 @@ fn authority_from_url(value: &str) -> &str {
 }
 
 fn host_from_authority(authority: &str) -> &str {
-    let host_port = authority.rsplit_once('@').map_or(authority, |(_, host)| host);
+    let host_port = authority
+        .rsplit_once('@')
+        .map_or(authority, |(_, host)| host);
     if let Some(rest) = host_port.strip_prefix('[') {
         return rest.split_once(']').map_or(rest, |(host, _)| host);
     }
-    host_port.split_once(':').map_or(host_port, |(host, _)| host)
+    host_port
+        .split_once(':')
+        .map_or(host_port, |(host, _)| host)
 }
 
 pub fn is_local_deployment(deployment_url: Option<&str>) -> bool {
@@ -94,10 +97,7 @@ pub struct PickupObservation {
 
 /// Polls the future Rust run handle until it leaves pending or the checked
 /// budget expires. Transient read failures consume the same bounded schedule.
-pub fn wait_for_run_pickup(
-    script: &PickupScript,
-    budget_ms: u64,
-) -> PickupObservation {
+pub fn wait_for_run_pickup(script: &PickupScript, budget_ms: u64) -> PickupObservation {
     let _ = (script, budget_ms);
     panic!("{TDD_RED_MARKER}")
 }
@@ -192,9 +192,7 @@ pub struct TestStateIsolationObservation {
 
 /// Exercises the future Rust task-local test state with deliberately
 /// interleaved asynchronous completions.
-pub fn run_interleaved_test_states(
-    runs: &[ScheduledTrackedRun],
-) -> TestStateIsolationObservation {
+pub fn run_interleaved_test_states(runs: &[ScheduledTrackedRun]) -> TestStateIsolationObservation {
     let _ = runs;
     panic!("{TDD_RED_MARKER}")
 }

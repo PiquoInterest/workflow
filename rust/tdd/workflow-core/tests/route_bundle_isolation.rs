@@ -63,7 +63,10 @@ fn environment_strips_vercel_and_node_preload_state_but_preserves_unrelated_valu
         "NODE_OPTIONS",
         "NODE_PATH",
     ] {
-        assert!(!sanitized.contains_key(key), "{key} leaked into isolation process");
+        assert!(
+            !sanitized.contains_key(key),
+            "{key} leaked into isolation process"
+        );
     }
     assert_eq!(sanitized.get("FORCE_COLOR").map(String::as_str), Some("0"));
     assert_eq!(sanitized.get("PATH").map(String::as_str), Some("/usr/bin"));
@@ -113,9 +116,7 @@ fn missing_result_diagnostic_uses_a_bounded_stdout_preview() {
 
 #[test]
 fn duplicate_exact_result_records_are_rejected_instead_of_taking_the_last_one() {
-    let stdout = format!(
-        "{RESULT_MARKER}{{\"status\":500}}\n{RESULT_MARKER}{{\"status\":200}}\n"
-    );
+    let stdout = format!("{RESULT_MARKER}{{\"status\":500}}\n{RESULT_MARKER}{{\"status\":200}}\n");
     assert_eq!(
         extract_harness_payload(&stdout),
         Err(HarnessParseError::DuplicateResults)

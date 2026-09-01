@@ -120,10 +120,7 @@ fn command(program: &'static str, args: &[&str]) -> CommandSpec {
     }
 }
 
-pub fn local_build_plan(
-    project: LocalBuildProject,
-    options: LocalBuildOptions,
-) -> LocalBuildPlan {
+pub fn local_build_plan(project: LocalBuildProject, options: LocalBuildOptions) -> LocalBuildPlan {
     let preflight = (project == LocalBuildProject::SvelteKit).then(|| {
         command(
             "current-node",
@@ -280,9 +277,7 @@ pub enum FileReadError {
     Io(String),
 }
 
-pub fn gate_optional_file<T>(
-    result: Result<T, FileReadError>,
-) -> Result<Option<T>, FileReadError> {
+pub fn gate_optional_file<T>(result: Result<T, FileReadError>) -> Result<Option<T>, FileReadError> {
     match result {
         Ok(value) => Ok(Some(value)),
         Err(FileReadError::NotFound) => Ok(None),

@@ -1,9 +1,9 @@
 use workflow_core_tdd::dev_hmr::{
-    AppKind, ArtifactExpectation, DeletedFile, DevHmrCase, DevTestConfig,
-    HMR_QUIESCENCE_QUIET_MS, HmrLogCounts, LogCountExpectation, PREWARM_FETCH_TIMEOUT_MS,
-    Platform, case_is_enabled, count_log_message, decode_dev_server_log, dev_timeouts,
-    expected_case, hmr_pipeline_is_quiescent, join_generated_workflow_outputs,
-    poll_timeout_error, recover_stranded_step_registrations, resolve_config, run_dev_hmr_case,
+    AppKind, ArtifactExpectation, DeletedFile, DevHmrCase, DevTestConfig, HMR_QUIESCENCE_QUIET_MS,
+    HmrLogCounts, LogCountExpectation, PREWARM_FETCH_TIMEOUT_MS, Platform, case_is_enabled,
+    count_log_message, decode_dev_server_log, dev_timeouts, expected_case,
+    hmr_pipeline_is_quiescent, join_generated_workflow_outputs, poll_timeout_error,
+    recover_stranded_step_registrations, resolve_config, run_dev_hmr_case,
 };
 
 fn config(platform: Platform, app: AppKind, canary: bool, flow_route: bool) -> DevTestConfig {
@@ -80,24 +80,14 @@ fn derives_stable_windows_timeouts() {
 
 #[test]
 fn derives_canary_flow_route_timeout_variants() {
-    let webpack = dev_timeouts(&config(
-        Platform::Unix,
-        AppKind::NextWebpack,
-        true,
-        true,
-    ));
+    let webpack = dev_timeouts(&config(Platform::Unix, AppKind::NextWebpack, true, true));
     assert_eq!(webpack.hmr_rediscovery_ms, 180_000);
     assert_eq!(webpack.hmr_test_ms, 210_000);
     assert_eq!(webpack.multi_phase_hmr_test_ms, 390_000);
     assert_eq!(webpack.flow_route_hmr_rediscovery_ms, 300_000);
     assert_eq!(webpack.flow_route_hmr_fuzz_ms, 480_000);
 
-    let turbopack = dev_timeouts(&config(
-        Platform::Unix,
-        AppKind::NextTurbopack,
-        true,
-        true,
-    ));
+    let turbopack = dev_timeouts(&config(Platform::Unix, AppKind::NextTurbopack, true, true));
     assert_eq!(turbopack.flow_route_hmr_rediscovery_ms, 240_000);
 }
 
@@ -108,8 +98,7 @@ fn detects_flow_routes_portably_and_disables_them_on_windows() {
     assert!(unix.should_run_next_flow_route_hmr_tests());
 
     let windows_path = DevTestConfig {
-        generated_workflow_path:
-            r"app\.well-known\workflow\v1\flow\route.js".to_owned(),
+        generated_workflow_path: r"app\.well-known\workflow\v1\flow\route.js".to_owned(),
         canary: false,
         platform: Platform::Windows,
         app: AppKind::NextTurbopack,
@@ -159,10 +148,7 @@ fn opens_exact_log_windows_only_after_quiescence() {
         counts,
         HMR_QUIESCENCE_QUIET_MS - 1
     ));
-    assert!(hmr_pipeline_is_quiescent(
-        counts,
-        HMR_QUIESCENCE_QUIET_MS
-    ));
+    assert!(hmr_pipeline_is_quiescent(counts, HMR_QUIESCENCE_QUIET_MS));
     assert!(!hmr_pipeline_is_quiescent(
         HmrLogCounts {
             complete: 2,
@@ -211,13 +197,10 @@ fn restores_only_stranded_deleted_steps_and_reports_the_poisoned_route() {
     assert!(recovery.error.contains(".workflow/steps.js"));
     assert!(recovery.error.contains("workflows/removed-step.ts"));
     assert!(recovery.error.contains("would 500 for every later request"));
-    assert!(recover_stranded_step_registrations(
-        ".workflow/steps.js",
-        "export {};",
-        &deleted,
-        20_000,
-    )
-    .is_none());
+    assert!(
+        recover_stranded_step_registrations(".workflow/steps.js", "export {};", &deleted, 20_000,)
+            .is_none()
+    );
 }
 
 #[test]
@@ -304,19 +287,58 @@ macro_rules! next_fuzz_case {
     };
 }
 
-next_fuzz_case!(step_body_change_is_classified_as_skip, DevHmrCase::FuzzStepBody);
-next_fuzz_case!(step_helper_change_is_classified_as_skip, DevHmrCase::FuzzStepHelper);
-next_fuzz_case!(workflow_body_change_is_hot_only, DevHmrCase::FuzzWorkflowBody);
-next_fuzz_case!(workflow_helper_change_is_hot_only, DevHmrCase::FuzzWorkflowHelper);
-next_fuzz_case!(shared_helper_change_is_hot_and_updates_both_paths, DevHmrCase::FuzzSharedHelper);
-next_fuzz_case!(serde_change_is_hot_and_can_refresh_step_output, DevHmrCase::FuzzSerde);
-next_fuzz_case!(workflow_import_graph_change_forces_full_rediscovery, DevHmrCase::FuzzWorkflowImportGraph);
-next_fuzz_case!(step_definition_addition_forces_full_rediscovery, DevHmrCase::FuzzStepDefinitionAdded);
-next_fuzz_case!(workflow_definition_addition_forces_full_rediscovery, DevHmrCase::FuzzWorkflowDefinitionAdded);
-next_fuzz_case!(api_imported_workflow_file_addition_forces_full_rediscovery, DevHmrCase::FuzzWorkflowFileAdded);
-next_fuzz_case!(api_imported_workflow_file_removal_forces_full_then_skip, DevHmrCase::FuzzWorkflowFileRemoved);
-next_fuzz_case!(unrelated_file_addition_is_skipped_without_artifact_changes, DevHmrCase::FuzzUnrelatedFileAdded);
-next_fuzz_case!(unrelated_file_removal_is_skipped_without_artifact_changes, DevHmrCase::FuzzUnrelatedFileRemoved);
+next_fuzz_case!(
+    step_body_change_is_classified_as_skip,
+    DevHmrCase::FuzzStepBody
+);
+next_fuzz_case!(
+    step_helper_change_is_classified_as_skip,
+    DevHmrCase::FuzzStepHelper
+);
+next_fuzz_case!(
+    workflow_body_change_is_hot_only,
+    DevHmrCase::FuzzWorkflowBody
+);
+next_fuzz_case!(
+    workflow_helper_change_is_hot_only,
+    DevHmrCase::FuzzWorkflowHelper
+);
+next_fuzz_case!(
+    shared_helper_change_is_hot_and_updates_both_paths,
+    DevHmrCase::FuzzSharedHelper
+);
+next_fuzz_case!(
+    serde_change_is_hot_and_can_refresh_step_output,
+    DevHmrCase::FuzzSerde
+);
+next_fuzz_case!(
+    workflow_import_graph_change_forces_full_rediscovery,
+    DevHmrCase::FuzzWorkflowImportGraph
+);
+next_fuzz_case!(
+    step_definition_addition_forces_full_rediscovery,
+    DevHmrCase::FuzzStepDefinitionAdded
+);
+next_fuzz_case!(
+    workflow_definition_addition_forces_full_rediscovery,
+    DevHmrCase::FuzzWorkflowDefinitionAdded
+);
+next_fuzz_case!(
+    api_imported_workflow_file_addition_forces_full_rediscovery,
+    DevHmrCase::FuzzWorkflowFileAdded
+);
+next_fuzz_case!(
+    api_imported_workflow_file_removal_forces_full_then_skip,
+    DevHmrCase::FuzzWorkflowFileRemoved
+);
+next_fuzz_case!(
+    unrelated_file_addition_is_skipped_without_artifact_changes,
+    DevHmrCase::FuzzUnrelatedFileAdded
+);
+next_fuzz_case!(
+    unrelated_file_removal_is_skipped_without_artifact_changes,
+    DevHmrCase::FuzzUnrelatedFileRemoved
+);
 
 #[test]
 fn representative_contracts_keep_the_exact_manifest_and_artifact_expectations() {

@@ -27,10 +27,8 @@ pub const ALL_MANIFEST_PROJECTS: [ManifestProject; 8] = [
     ManifestProject::Express,
 ];
 
-pub const DOT_DIRECTORY_PROJECTS: [ManifestProject; 2] = [
-    ManifestProject::NextWebpack,
-    ManifestProject::NextTurbopack,
-];
+pub const DOT_DIRECTORY_PROJECTS: [ManifestProject; 2] =
+    [ManifestProject::NextWebpack, ManifestProject::NextTurbopack];
 
 impl ManifestProject {
     pub const fn app_name(self) -> &'static str {
@@ -48,9 +46,7 @@ impl ManifestProject {
 
     pub const fn manifest_path(self) -> &'static str {
         match self {
-            Self::NextWebpack | Self::NextTurbopack => {
-                "app/.well-known/workflow/v1/manifest.json"
-            }
+            Self::NextWebpack | Self::NextTurbopack => "app/.well-known/workflow/v1/manifest.json",
             Self::SvelteKit => "src/routes/.well-known/workflow/v1/manifest.json",
             Self::Nitro | Self::Vite | Self::Nuxt | Self::Hono | Self::Express => {
                 "node_modules/.nitro/workflow/manifest.json"
@@ -204,10 +200,7 @@ pub fn validate_manifest(manifest: &Manifest) -> Result<(), ManifestValidationEr
         }
         for step in &file.steps {
             if !step.step_id.contains("step//") || !step.step_id.contains(&step.name) {
-                return Err(invalid(format!(
-                    "step {} has an invalid stepId",
-                    step.name
-                )));
+                return Err(invalid(format!("step {} has an invalid stepId", step.name)));
             }
         }
     }
@@ -250,7 +243,9 @@ pub fn validate_dot_directory_step(manifest: &Manifest) -> Result<(), ManifestVa
     let file = manifest
         .steps
         .iter()
-        .find(|file| file.path.contains(".well-known/agent") || file.path.contains("well-known/agent"))
+        .find(|file| {
+            file.path.contains(".well-known/agent") || file.path.contains("well-known/agent")
+        })
         .ok_or_else(|| invalid("manifest is missing a .well-known/agent step file"))?;
     let step = file
         .steps
@@ -263,13 +258,13 @@ pub fn validate_dot_directory_step(manifest: &Manifest) -> Result<(), ManifestVa
     Ok(())
 }
 
-pub fn validate_dot_directory_workflow(
-    manifest: &Manifest,
-) -> Result<(), ManifestValidationError> {
+pub fn validate_dot_directory_workflow(manifest: &Manifest) -> Result<(), ManifestValidationError> {
     let file = manifest
         .workflows
         .iter()
-        .find(|file| file.path.contains(".well-known/agent") || file.path.contains("well-known/agent"))
+        .find(|file| {
+            file.path.contains(".well-known/agent") || file.path.contains("well-known/agent")
+        })
         .ok_or_else(|| invalid("manifest is missing a .well-known/agent workflow file"))?;
     let workflow = file
         .workflows
@@ -277,9 +272,7 @@ pub fn validate_dot_directory_workflow(
         .find(|workflow| workflow.name == "wellKnownAgentWorkflow")
         .ok_or_else(|| invalid("manifest is missing wellKnownAgentWorkflow"))?;
     if !workflow.workflow_id.contains("wellKnownAgentWorkflow") {
-        return Err(invalid(
-            "wellKnownAgentWorkflow has an invalid workflowId",
-        ));
+        return Err(invalid("wellKnownAgentWorkflow has an invalid workflowId"));
     }
     Ok(())
 }
@@ -308,11 +301,15 @@ pub fn validate_single_statement_if(
             .is_some()
     });
     let has_then = nodes.iter().any(|node| {
-        node.metadata.as_ref().and_then(|metadata| metadata.conditional_branch)
+        node.metadata
+            .as_ref()
+            .and_then(|metadata| metadata.conditional_branch)
             == Some(ConditionalBranch::Then)
     });
     let has_else = nodes.iter().any(|node| {
-        node.metadata.as_ref().and_then(|metadata| metadata.conditional_branch)
+        node.metadata
+            .as_ref()
+            .and_then(|metadata| metadata.conditional_branch)
             == Some(ConditionalBranch::Else)
     });
     if !has_conditional || !has_then || !has_else {
@@ -328,7 +325,11 @@ fn validate_single_statement_loop(
     required_steps: &[&str],
 ) -> Result<(), ManifestValidationError> {
     let nodes = step_nodes(&workflow.graph);
-    if nodes.is_empty() || required_steps.iter().any(|name| !has_step_name(&nodes, name)) {
+    if nodes.is_empty()
+        || required_steps
+            .iter()
+            .any(|name| !has_step_name(&nodes, name))
+    {
         return Err(invalid("single-statement loop is missing expected steps"));
     }
     if !nodes.iter().any(|node| {
