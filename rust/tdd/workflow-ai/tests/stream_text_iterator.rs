@@ -108,8 +108,7 @@ fn preserves_metadata_for_parallel_tool_calls() {
 
 #[test]
 fn handles_mixed_tool_calls_with_and_without_metadata() {
-    let observation =
-        exercise_stream_text_iterator(StreamTextIteratorCase::MixedProviderMetadata);
+    let observation = exercise_stream_text_iterator(StreamTextIteratorCase::MixedProviderMetadata);
     let parts = assistant_parts(&observation, 0);
 
     assert!(matches!(
@@ -265,8 +264,7 @@ fn omits_reasoning_parts_when_the_step_has_none() {
 
 #[test]
 fn prepare_step_can_prepend_only_a_system_message() {
-    let observation =
-        exercise_stream_text_iterator(StreamTextIteratorCase::PrepareSystemOnly);
+    let observation = exercise_stream_text_iterator(StreamTextIteratorCase::PrepareSystemOnly);
 
     assert_eq!(
         observation.captured_prompts[0],
@@ -293,8 +291,7 @@ fn prepare_step_preserves_system_when_replacing_messages() {
 
 #[test]
 fn prepare_step_replaces_an_existing_system_message() {
-    let observation =
-        exercise_stream_text_iterator(StreamTextIteratorCase::ReplaceExistingSystem);
+    let observation = exercise_stream_text_iterator(StreamTextIteratorCase::ReplaceExistingSystem);
 
     assert_eq!(
         observation.captured_prompts[0],
@@ -323,8 +320,7 @@ fn prepare_step_updates_the_system_message_on_subsequent_steps() {
 
 #[test]
 fn preserves_malformed_tool_call_input_instead_of_throwing() {
-    let observation =
-        exercise_stream_text_iterator(StreamTextIteratorCase::MalformedToolCallInput);
+    let observation = exercise_stream_text_iterator(StreamTextIteratorCase::MalformedToolCallInput);
 
     assert!(!observation.first_done);
     assert_eq!(observation.first_tool_call_count, 1);
