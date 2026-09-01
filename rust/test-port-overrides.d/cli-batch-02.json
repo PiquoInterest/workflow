@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "entries": [
+    {
+      "typescript": "packages/cli/src/lib/inspect/output.test.ts",
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-cli/tests/inspect_output.rs",
+        "rust/tdd/workflow-cli/tests/inspect_output/support.rs",
+        "rust/tdd/workflow-cli/tests/inspect_output/formatting.rs",
+        "rust/tdd/workflow-cli/tests/inspect_output/runs.rs",
+        "rust/tdd/workflow-cli/tests/inspect_output/resources.rs"
+      ],
+      "notes": "All 24 TypeScript declarations are translated. Inputs use a distinct DateValue type and emitted rows use ISO strings, so final GREEN must perform the same JSON date projection rather than comparing preformatted fixtures. Coverage preserves run pageInfo, cursor/limit arguments, analytics-first reads with first-page storage fallback, wait upgrade guidance, optional sync/async describeRun fields, null extension values, and one stdout write for JSON output. Security-relevant cases require expired input/output to be replaced before display, 402-only upgrade classification, hostile describeRun fields to never overwrite canonical run identity or status, and throwing or rejecting extension hooks to contribute no fields instead of crashing inspection. Final GREEN must call the real Rust World read traits and retain the same fail-closed extension boundary."
+    }
+  ]
+}
