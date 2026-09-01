@@ -28,7 +28,9 @@ describe('machine-name log formatting security', () => {
   });
 
   it('escapes controls when formatting falls back to a legacy name', () => {
-    const formatted = formatWorkflowName('legacy\nforged\u001b]8;;target\u0007');
+    const formatted = formatWorkflowName(
+      'legacy\nforged\u001b]8;;target\u0007'
+    );
 
     expect(formatted).toBe('legacy\\nforged\\u001b]8;;target\\u0007');
     expect(containsLogBreakingCharacter(formatted)).toBe(false);
