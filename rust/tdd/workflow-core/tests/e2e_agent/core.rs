@@ -6,7 +6,10 @@ fn returns_a_basic_text_response() {
         prompt: "hello world".to_owned(),
     });
     assert_eq!(observation.step_count, 1);
-    assert_eq!(observation.last_step_text.as_deref(), Some("Echo: hello world"));
+    assert_eq!(
+        observation.last_step_text.as_deref(),
+        Some("Echo: hello world")
+    );
 }
 
 #[test]

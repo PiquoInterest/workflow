@@ -58,7 +58,10 @@ fn rejects_arrays_and_names_the_type() {
 
 #[test]
 fn rejects_strings_and_names_the_type() {
-    assert_plain_object_error(AttributeInput::String("phase=init".to_owned()), "got string");
+    assert_plain_object_error(
+        AttributeInput::String("phase=init".to_owned()),
+        "got string",
+    );
 }
 
 #[test]
@@ -125,7 +128,10 @@ fn accepts_a_batch_exactly_at_the_per_run_cap() {
     let entries = (0..ATTRIBUTE_MAX_PER_RUN)
         .map(|index| AttributeField::new(format!("key_{index}"), Some("v")))
         .collect();
-    assert_eq!(normalize(record(entries)).unwrap().len(), ATTRIBUTE_MAX_PER_RUN);
+    assert_eq!(
+        normalize(record(entries)).unwrap().len(),
+        ATTRIBUTE_MAX_PER_RUN
+    );
 }
 
 #[test]
