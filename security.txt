@@ -140,3 +140,12 @@ Acknowledgments: https://github.com/PiquoInterest/workflow/blob/main/docs/rust-p
 # stack capture. Full analysis is in
 # docs/rust-port/findings/WF-RUST-022.md. Closure requires production error,
 # serialization, rendering, and fatal-classification paths.
+#
+# WF-RUST-023 (TDD RED): Concurrent replays of different dense event-log
+# prefixes must never bind one correlation ID to different entities. The
+# original arrival-order control rebinds a finalize step to a wait and can turn
+# successful work into durable CORRUPTED_EVENT_LOG failure. The Rust suite at
+# rust/tdd/workflow-core/tests/log_order_draws.rs requires monotonic shared
+# bindings across extension, every dense prefix, and repeated evaluation. Full
+# analysis is in docs/rust-port/findings/WF-RUST-023.md. Closure requires the
+# production scheduler, allocator, and event consumer.

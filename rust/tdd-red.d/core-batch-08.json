@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "cases": [
+    {
+      "typescript": "packages/core/src/duplicate-events.test.ts",
+      "command": ["cargo", "test", "--locked", "--manifest-path", "rust/tdd/workflow-core/Cargo.toml", "--test", "duplicate_events"],
+      "failureMarker": "TDD RED: packages/core/src/duplicate-events.test.ts implementation pending"
+    },
+    {
+      "typescript": "packages/core/src/log-order-draws.test.ts",
+      "command": ["cargo", "test", "--locked", "--manifest-path", "rust/tdd/workflow-core/Cargo.toml", "--test", "log_order_draws"],
+      "failureMarker": "TDD RED: packages/core/src/log-order-draws.test.ts implementation pending"
+    },
+    {
+      "typescript": "packages/core/src/logger.test.ts",
+      "command": ["cargo", "test", "--locked", "--manifest-path", "rust/tdd/workflow-core/Cargo.toml", "--test", "logger"],
+      "failureMarker": "TDD RED: packages/core/src/logger.test.ts implementation pending"
+    }
+  ]
+}
