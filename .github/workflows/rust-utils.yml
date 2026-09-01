@@ -10,15 +10,20 @@ on:
       - 'packages/utils/src/check-data-dir.ts'
       - 'packages/utils/src/check-data-dir.test.ts'
       - 'packages/utils/src/check-data-dir-security.test.ts'
+      - 'packages/utils/src/debug-log.ts'
+      - 'packages/utils/src/debug-log.test.ts'
+      - 'packages/utils/src/debug-log-security.test.ts'
       - 'packages/utils/src/parse-name.ts'
       - 'packages/utils/src/parse-name.test.ts'
       - 'packages/utils/src/parse-name-security.test.ts'
       - 'packages/utils/src/pluralize.ts'
       - 'packages/utils/src/pluralize.test.ts'
       - 'rust/tdd-red.json'
+      - 'rust/tdd-red.d/utils-debug-log-security.json'
       - 'rust/test-port-manifest.json'
       - 'rust/test-port-overrides.json'
       - 'rust/test-port-overrides.d/utils-check-data-dir-security.json'
+      - 'rust/test-port-overrides.d/utils-debug-log-security.json'
       - 'rust/test-port-overrides.d/utils-parse-name-security.json'
       - 'docs/rust-port/**'
       - 'security.txt'
@@ -30,15 +35,20 @@ on:
       - 'packages/utils/src/check-data-dir.ts'
       - 'packages/utils/src/check-data-dir.test.ts'
       - 'packages/utils/src/check-data-dir-security.test.ts'
+      - 'packages/utils/src/debug-log.ts'
+      - 'packages/utils/src/debug-log.test.ts'
+      - 'packages/utils/src/debug-log-security.test.ts'
       - 'packages/utils/src/parse-name.ts'
       - 'packages/utils/src/parse-name.test.ts'
       - 'packages/utils/src/parse-name-security.test.ts'
       - 'packages/utils/src/pluralize.ts'
       - 'packages/utils/src/pluralize.test.ts'
       - 'rust/tdd-red.json'
+      - 'rust/tdd-red.d/utils-debug-log-security.json'
       - 'rust/test-port-manifest.json'
       - 'rust/test-port-overrides.json'
       - 'rust/test-port-overrides.d/utils-check-data-dir-security.json'
+      - 'rust/test-port-overrides.d/utils-debug-log-security.json'
       - 'rust/test-port-overrides.d/utils-parse-name-security.json'
       - 'docs/rust-port/**'
       - 'security.txt'
@@ -82,6 +92,9 @@ jobs:
       - name: Check focused TypeScript formatting and lint
         run: |
           pnpm exec biome ci \
+            packages/utils/src/debug-log.ts \
+            packages/utils/src/debug-log.test.ts \
+            packages/utils/src/debug-log-security.test.ts \
             packages/utils/src/parse-name.ts \
             packages/utils/src/parse-name-security.test.ts
 
@@ -96,6 +109,8 @@ jobs:
       - name: Run complete translated TypeScript suites in Rust
         run: |
           cargo test --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test check_data_dir
+          cargo test --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test debug_log
+          cargo test --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test debug_log_security
           cargo test --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test parse_name
           cargo test --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test pluralize
 
@@ -105,6 +120,8 @@ jobs:
       - name: Lint translated Rust suites
         run: |
           cargo clippy --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test check_data_dir -- -D warnings
+          cargo clippy --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test debug_log -- -D warnings
+          cargo clippy --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test debug_log_security -- -D warnings
           cargo clippy --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test parse_name -- -D warnings
           cargo clippy --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test pluralize -- -D warnings
 
@@ -113,6 +130,8 @@ jobs:
           pnpm exec vitest run \
             packages/utils/src/check-data-dir.test.ts \
             packages/utils/src/check-data-dir-security.test.ts \
+            packages/utils/src/debug-log.test.ts \
+            packages/utils/src/debug-log-security.test.ts \
             packages/utils/src/parse-name.test.ts \
             packages/utils/src/parse-name-security.test.ts \
             packages/utils/src/pluralize.test.ts
