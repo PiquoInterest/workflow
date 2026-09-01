@@ -197,3 +197,41 @@ Acknowledgments: https://github.com/PiquoInterest/workflow/blob/main/docs/rust-p
 # docs/rust-port/findings/WF-RUST-028.md. Closure requires the production abort
 # state machine, transports, event consumer, replay scheduler, and suspension
 # collector.
+#
+# WF-RUST-090 (TDD RED): Benchmark trigger responses and replay metadata are
+# remote measurement inputs. Rust must reject malformed clocks and incomplete
+# step/chunk sets, retain cadence semantic hashes, run scenarios sequentially,
+# and bound retries so a remote target cannot forge a baseline or exhaust CI.
+# Full analysis is in docs/rust-port/findings/WF-RUST-090.md.
+#
+# WF-RUST-091 (TDD RED): A missed unlink can leave generated step registrations
+# importing a deleted file, poisoning a shared dev route with persistent 500s.
+# Rust must bound watcher and prewarm work, wait for rediscovery convergence,
+# and restore only still-referenced files on cleanup failure. Full analysis is
+# in docs/rust-port/findings/WF-RUST-091.md.
+#
+# WF-RUST-092 (TDD RED): Missing manifests may be optional, but malformed JSON,
+# permission errors, and other read failures are not absence. Rust preserves the
+# ENOENT skip while failing closed on corrupt or unreadable generated artifacts.
+# Full analysis is in docs/rust-port/findings/WF-RUST-092.md.
+#
+# WF-RUST-093 (TDD RED): Workbench builds need direct argv execution, hard
+# process-tree deadlines, a shared bounded stdout/stderr budget, signal-aware
+# diagnostics, and cleanup on every exit. This prevents descendants and output
+# amplification from outliving or exhausting CI. Full analysis is in
+# docs/rust-port/findings/WF-RUST-093.md.
+#
+# WF-RUST-094 (TDD RED): Route isolation is invalid if result markers can be
+# spoofed or NODE_OPTIONS/NODE_PATH can preload global world state. Rust accepts
+# exactly one marker-prefix record in a sanitized bounded subprocess. Full
+# analysis is in docs/rust-port/findings/WF-RUST-094.md.
+#
+# WF-RUST-095 (TDD RED): Warmup total deadlines must include probe creation,
+# pickup polling, and cancellation. Rust performs no status read once the
+# checked deadline is exhausted and bounds cancellation of stalled probes.
+# Full analysis is in docs/rust-port/findings/WF-RUST-095.md.
+#
+# WF-RUST-096: Local deployment classification must parse the URL authority
+# and compare the hostname exactly. Whole-URL substring matching lets remote
+# lookalikes, paths, or query text select local-only behavior. Full analysis is
+# in docs/rust-port/findings/WF-RUST-096.md.
