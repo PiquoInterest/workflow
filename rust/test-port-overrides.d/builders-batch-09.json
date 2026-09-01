@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "entries": [
+    {
+      "typescript": "packages/builders/src/fast-discovery.test.ts",
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-builders/tests/fast_discovery.rs"
+      ],
+      "notes": "All 17 fast-discovery declarations are translated with real temporary project, package, tsconfig, jsconfig, source, asset, and nested node_modules trees. Coverage preserves transitive relative imports, dotted JavaScript resolution, package re-exports, disabled node_modules descent with directly seeded package traversal, inherited and multi-wildcard aliases, non-source exclusion, comment-versus-regex parsing, nearest nested config selection, static serde registration, independent step/workflow/serde categorization, comment-only serde suppression, and direct-versus-nested package route specifiers. The comment, regex, alias, and package-boundary cases are security-relevant because raw text scans or unchecked path/specifier substitution could execute documentation, escape the intended project graph, or bind a durable function to the wrong package. Final GREEN must resolve canonical bounded paths and parse JavaScript import context rather than hard-code fixture names."
+    }
+  ]
+}

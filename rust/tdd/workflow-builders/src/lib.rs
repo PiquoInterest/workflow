@@ -2,6 +2,7 @@
 
 pub mod constants;
 pub mod discovery;
+pub mod fast_discovery;
 pub mod input_files;
 pub mod manifest_ids;
 pub mod module_specifier;
