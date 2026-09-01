@@ -1,0 +1,44 @@
+name: Rust core format once
+
+on:
+  push:
+    branches:
+      - pro/rust-repository-port
+    paths:
+      - '.github/workflows/rust-core-format-once.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  format:
+    name: Apply canonical Rust 1.87 formatting
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout migration branch
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: pro/rust-repository-port
+          fetch-depth: 0
+
+      - name: Install Rust 1.87
+        uses: actions-rust-lang/setup-rust-toolchain@46268bd060767258de96ed93c1251119784f2ab6
+        with:
+          toolchain: 1.87.0
+          components: rustfmt
+
+      - name: Format and commit workflow-core
+        shell: bash
+        run: |
+          set -euo pipefail
+          cargo fmt --manifest-path crates/workflow-core/Cargo.toml
+          if [[ -z "$(git status --porcelain -- crates/workflow-core)" ]]; then
+            echo 'workflow-core is already formatted.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add crates/workflow-core
+          git commit --signoff -m 'style(rust-core): apply canonical Rust 1.87 formatting'
+          git push origin HEAD:pro/rust-repository-port
