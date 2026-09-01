@@ -54,3 +54,13 @@ Acknowledgments: https://github.com/PiquoInterest/workflow/blob/main/docs/rust-p
 # TypeScript telemetry assertions are translated at
 # rust/tdd/workflow-ai/tests/telemetry.rs. This remains an implementation gate,
 # not a closed security finding, until the actual Rust span path passes it.
+#
+# WF-RUST-015 (TDD RED): Provider metadata carried by tool calls and reasoning
+# is execution-relevant state. Gemini thought signatures, OpenAI item IDs, and
+# other provider fields must survive the assistant-message reconstruction used
+# for the next model turn. Dropping or cross-assigning this metadata can break
+# provider validation or associate opaque authorization/state tokens with the
+# wrong parallel call. All 15 current iterator assertions, including malformed
+# input retention and per-call metadata separation, are translated at
+# rust/tdd/workflow-ai/tests/stream_text_iterator.rs. Closure requires the real
+# Rust iterator and prompt builder to pass; the expected panic is not a fix.
