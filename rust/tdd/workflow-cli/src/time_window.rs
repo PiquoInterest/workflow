@@ -18,11 +18,7 @@ pub struct InspectPageResponse {
     pub page_info: Option<AnalyticsPageInfo>,
 }
 
-pub fn parse_time_input(
-    value: &str,
-    flag_name: &str,
-    now_epoch_ms: i64,
-) -> Result<String, String> {
+pub fn parse_time_input(value: &str, flag_name: &str, now_epoch_ms: i64) -> Result<String, String> {
     let _ = (value, flag_name, now_epoch_ms);
     panic!("TDD RED: packages/cli/src/lib/inspect/time-window.test.ts implementation pending")
 }
