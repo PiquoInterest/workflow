@@ -1,4 +1,4 @@
-use workflow_utils_tdd::pluralize;
+use workflow_utils::pluralize;
 
 #[test]
 fn returns_singular_form_when_count_is_one() {
