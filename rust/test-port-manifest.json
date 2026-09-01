@@ -5,8 +5,8 @@
   "statusCounts": {
     "unported": 222,
     "partial": 0,
-    "red": 101,
-    "green": 14,
+    "red": 100,
+    "green": 15,
     "blocked": 0
   },
   "entries": [
@@ -1053,11 +1053,11 @@
       "kind": "unit",
       "lineCount": 241,
       "declaredTestCount": 9,
-      "status": "red",
+      "status": "green",
       "rustTests": [
-        "rust/tdd/workflow-core/tests/replay_payload_cache.rs"
+        "crates/workflow-core/tests/replay_payload_cache.rs"
       ],
-      "notes": "All nine TypeScript declarations are translated. Coverage preserves exact in-flight preparation sharing; synchronous preparer normalization; speculative rejection retention until the ordered consumer observes it; retry only after observation; concurrent workflow/result/error/hook prewarming; cached decrypt/decompress work with fresh VM object revival; stale-snapshot resetScan behavior for events inserted below the scanned prefix; event-ID keyed reuse across rescans; legacy flattened-value bypass; missing event-data tolerance; memoization of share-safe primitives including undefined; the 4096-character cap; fresh hydration for mutable and oversized values; and retry after failed hydration. Security-relevant cases prevent mutable object graphs from crossing VM boundaries, prevent stale-snapshot insertions from escaping preparation, and prevent speculative prewarming from hiding the original decryption failure. Final GREEN must exercise the production Rust payload preparer, authenticated decryption/decompression, event scanner, VM reviver, and failure-eviction ordering; scenario-specific observations are insufficient."
+      "notes": "All nine TypeScript declarations are covered by the production workflow-core replay payload cache. Coverage preserves exact in-flight preparation sharing; synchronous preparer normalization; speculative rejection retention until the ordered consumer observes it; retry only after observation; concurrent workflow/result/error/hook prewarming; cached decrypt/decompress work with fresh VM object revival; stale-snapshot resetScan behavior for events inserted below the scanned prefix; event-ID keyed reuse across rescans; legacy flattened-value bypass; missing event-data tolerance; memoization of share-safe primitives including undefined; the 4096-character cap; fresh hydration for mutable and oversized values; and retry after failed hydration. The permanent Rust core workflow builds and runs the TypeScript oracle first, then exercises the production Rust cache, all Rust targets, Rustfmt, Clippy with warnings denied, and differential conformance runners."
     },
     {
       "typescript": "packages/core/src/retained-vm-loop.test.ts",
