@@ -145,10 +145,7 @@ fn static_abort_preserves_a_custom_reason() {
 fn any_aborts_when_a_later_input_aborts() {
     let observation = observe(AbortControllerScenario::AnyLaterAbort);
     assert!(observation.signal_aborted);
-    assert_eq!(
-        observation.signal_reason,
-        AbortReason::error("c2 aborted")
-    );
+    assert_eq!(observation.signal_reason, AbortReason::error("c2 aborted"));
     assert_eq!(observation.listener_calls, 1);
 }
 
@@ -184,9 +181,7 @@ fn any_removes_listeners_from_every_input_after_aborting() {
 fn timeout_is_rejected_inside_workflow_functions() {
     let observation = observe(AbortControllerScenario::TimeoutUnsupported);
     let error = observation.timeout_error.as_deref().unwrap();
-    assert!(error.contains(
-        "AbortSignal.timeout() is not supported in workflow functions"
-    ));
+    assert!(error.contains("AbortSignal.timeout() is not supported in workflow functions"));
 }
 
 #[test]

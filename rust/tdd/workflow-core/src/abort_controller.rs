@@ -7,7 +7,10 @@ pub enum AbortReason {
     Undefined,
     Text(String),
     Error(String),
-    DomException { name: String, message: String },
+    DomException {
+        name: String,
+        message: String,
+    },
 }
 
 impl AbortReason {
@@ -104,9 +107,7 @@ pub enum AbortControllerScenario {
 
 /// Runs one future Rust durable AbortController scenario through the workflow
 /// VM, event consumer, invocation queue, and replay boundary.
-pub fn observe_abort_controller(
-    scenario: AbortControllerScenario,
-) -> AbortControllerObservation {
+pub fn observe_abort_controller(scenario: AbortControllerScenario) -> AbortControllerObservation {
     let _ = scenario;
     panic!("{TDD_RED_MARKER}")
 }

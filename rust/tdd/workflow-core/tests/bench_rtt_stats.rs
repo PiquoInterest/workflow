@@ -74,15 +74,9 @@ fn summary() -> BenchRttSummary {
 fn index_bucket_boundaries_match_stream_open_warmup_and_steady_state() {
     assert_eq!(rtt_index_bucket(0), RttIndexBucket::SeqZero);
     assert_eq!(rtt_index_bucket(1), RttIndexBucket::SeqOneThroughTwenty);
-    assert_eq!(
-        rtt_index_bucket(20),
-        RttIndexBucket::SeqOneThroughTwenty
-    );
+    assert_eq!(rtt_index_bucket(20), RttIndexBucket::SeqOneThroughTwenty);
     assert_eq!(rtt_index_bucket(21), RttIndexBucket::SeqTwentyOnePlus);
-    assert_eq!(
-        rtt_index_bucket(299),
-        RttIndexBucket::SeqTwentyOnePlus
-    );
+    assert_eq!(rtt_index_bucket(299), RttIndexBucket::SeqTwentyOnePlus);
 }
 
 #[test]
@@ -329,10 +323,7 @@ fn cdv_matches_the_telescoping_ctt_identity() {
         .map(|pair| pair[1] - pair[0])
         .collect::<Vec<_>>();
     assert_eq!(cdv.cdv_ms, expected);
-    assert_eq!(
-        cdv.cdv_ms.iter().sum::<f64>(),
-        ctt[ctt.len() - 1] - ctt[0]
-    );
+    assert_eq!(cdv.cdv_ms.iter().sum::<f64>(), ctt[ctt.len() - 1] - ctt[0]);
 }
 
 #[test]
@@ -341,10 +332,7 @@ fn cdv_is_immune_to_a_constant_reader_clock_offset() {
     for arrival in &mut skewed {
         arrival.read_at -= 5_000.0;
     }
-    assert_eq!(
-        compute_cdv(&skewed).cdv_ms,
-        compute_cdv(&clumped()).cdv_ms
-    );
+    assert_eq!(compute_cdv(&skewed).cdv_ms, compute_cdv(&clumped()).cdv_ms);
 }
 
 #[test]

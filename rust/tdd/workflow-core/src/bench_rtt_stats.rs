@@ -2,8 +2,7 @@ pub const TDD_RED_MARKER: &str =
     "TDD RED: packages/core/src/bench-chunk-rtt-stats.test.ts implementation pending";
 
 pub const RTT_HIST_EDGES_MS: [f64; 12] = [
-    1.0, 2.0, 5.0, 10.0, 20.0, 50.0, 100.0, 200.0, 500.0, 1_000.0, 2_000.0,
-    5_000.0,
+    1.0, 2.0, 5.0, 10.0, 20.0, 50.0, 100.0, 200.0, 500.0, 1_000.0, 2_000.0, 5_000.0,
 ];
 pub const RTT_PROGRESS_BINS: usize = 10;
 pub const RTT_SIZE_BIN_EDGES_BYTES: [usize; 6] = [256, 512, 1_024, 2_048, 4_096, 8_192];
@@ -133,10 +132,7 @@ pub fn steady_rate(points: &[RatePoint]) -> Option<BenchSteadyRate> {
     steady_rate_with_trim(points, 0.1)
 }
 
-pub fn steady_rate_with_trim(
-    points: &[RatePoint],
-    trim_fraction: f64,
-) -> Option<BenchSteadyRate> {
+pub fn steady_rate_with_trim(points: &[RatePoint], trim_fraction: f64) -> Option<BenchSteadyRate> {
     let _ = (points, trim_fraction);
     pending()
 }
@@ -146,9 +142,7 @@ pub fn compute_cdv(arrivals: &[CdvArrival]) -> BenchCdvComputation {
     pending()
 }
 
-pub fn merge_rtt_summaries(
-    summaries: &[Option<BenchRttSummary>],
-) -> Option<BenchRttSummary> {
+pub fn merge_rtt_summaries(summaries: &[Option<BenchRttSummary>]) -> Option<BenchRttSummary> {
     let _ = summaries;
     pending()
 }
