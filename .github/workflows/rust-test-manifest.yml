@@ -55,12 +55,12 @@ jobs:
           node-version: 22.x
 
       - name: Canonically format translated Rust tests
+        shell: bash
         run: |
-          cargo fmt --manifest-path rust/tdd/workflow-utils/Cargo.toml
-          cargo fmt --manifest-path rust/tdd/workflow-world/Cargo.toml
-          cargo fmt --manifest-path rust/tdd/workflow-errors/Cargo.toml
-          cargo fmt --manifest-path rust/tdd/workflow-builders/Cargo.toml
-          cargo fmt --manifest-path rust/tdd/workflow-ai/Cargo.toml
+          set -euo pipefail
+          for manifest in rust/tdd/*/Cargo.toml; do
+            cargo fmt --manifest-path "$manifest"
+          done
           cargo fmt --package workflow-world
 
       - name: Generate, apply reviewed statuses, and validate manifest
@@ -78,12 +78,12 @@ jobs:
 
       - name: Commit only canonical generated changes
         run: |
-          if [[ -z "$(git status --porcelain -- rust/tdd/workflow-utils rust/tdd/workflow-world rust/tdd/workflow-errors rust/tdd/workflow-builders rust/tdd/workflow-ai crates/workflow-world rust/test-port-manifest.json)" ]]; then
+          if [[ -z "$(git status --porcelain -- rust/tdd crates/workflow-world rust/test-port-manifest.json)" ]]; then
             echo 'Translated tests and manifest are already current.'
             exit 0
           fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add rust/tdd/workflow-utils rust/tdd/workflow-world rust/tdd/workflow-errors rust/tdd/workflow-builders rust/tdd/workflow-ai crates/workflow-world rust/test-port-manifest.json
+          git add rust/tdd crates/workflow-world rust/test-port-manifest.json
           git commit --signoff -m 'test(rust-port): format tests and refresh manifest'
           git push origin HEAD:pro/rust-repository-port
