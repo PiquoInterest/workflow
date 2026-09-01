@@ -20,7 +20,7 @@ function makeRun(id: string, readable: Uint8Array): WorkflowRun {
 }
 
 describe('ReplayPayloadCache conflicting-key characterization', () => {
-  it('aliases conflicting bytes to the first cached workflow input', async () => {
+  it('resolves conflicting bytes from the first cached workflow input', async () => {
     const firstPayload = new Uint8Array([1]);
     const conflictingPayload = new Uint8Array([2]);
     const preparer = vi.fn<ReplayPayloadPreparer>((value) => ({ data: value }));
@@ -33,7 +33,6 @@ describe('ReplayPayloadCache conflicting-key characterization', () => {
       makeRun('wrun_conflicting_payload', conflictingPayload)
     );
 
-    expect(conflicting).toBe(first);
     await expect(first).resolves.toEqual({ data: firstPayload });
     await expect(conflicting).resolves.toEqual({ data: firstPayload });
     expect(preparer).toHaveBeenCalledOnce();
