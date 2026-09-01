@@ -3,9 +3,9 @@
   "sourceCount": 334,
   "declaredTestCount": 5100,
   "statusCounts": {
-    "unported": 279,
+    "unported": 278,
     "partial": 0,
-    "red": 43,
+    "red": 44,
     "green": 12,
     "blocked": 0
   },
@@ -201,9 +201,11 @@
       "kind": "unit",
       "lineCount": 122,
       "declaredTestCount": 12,
-      "status": "unported",
-      "rustTests": [],
-      "notes": ""
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-builders/tests/constants.rs"
+      ],
+      "notes": "All 12 current declarations are translated: default and namespaced workflow topics, exact WORKFLOW_SEQUENTIAL_REPLAYS=1 behavior, explicit namespace precedence, call-time environment resolution, and generated workflowEntrypoint option code including basePath and route-module timing. Final GREEN must use the real Rust route/config generator and preserve build-time versus call-time resolution semantics."
     },
     {
       "typescript": "packages/builders/src/discover-entries-esbuild-plugin.test.ts",
