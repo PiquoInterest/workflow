@@ -74,6 +74,12 @@
       "notes": "All nine TypeScript assertions are mirrored against the existing Rust time implementation. Status remains partial until the new direct mirror test passes the branch workflow; differential coverage already exists separately."
     },
     {
+      "typescript": "packages/world/src/analytics.test.ts",
+      "status": "red",
+      "rustTests": ["rust/tdd/workflow-world/tests/analytics.rs"],
+      "notes": "All five provenance-field and UTC date-coercion declarations are translated. The expected-RED API keeps timezone-naive, timezone-aware, timestamp-object, and nullable behavior explicit before implementation."
+    },
+    {
       "typescript": "packages/world/src/attributes.test.ts",
       "status": "partial",
       "rustTests": ["crates/workflow-world/tests/attributes_typescript_port.rs"],
@@ -98,6 +104,12 @@
       "notes": "All four entity class, payload field, inherited-property, and sealed-noop declarations are mirrored. Pending CI confirmation."
     },
     {
+      "typescript": "packages/world/src/events.test.ts",
+      "status": "red",
+      "rustTests": ["rust/tdd/workflow-world/tests/events.rs"],
+      "notes": "All 11 token-retention, owner-message, cancellation-reason, stored-event, and backend-only noop declarations are translated before the event schema implementation is added."
+    },
+    {
       "typescript": "packages/world/src/spec-version.test.ts",
       "status": "partial",
       "rustTests": ["crates/workflow-world/tests/spec_version_typescript_port.rs"],
@@ -113,6 +125,24 @@
       "notes": "All 12 protocol-constant, context, capability, unknown-field, persistence-stripping, and bounded-version declarations are covered by direct and differential Rust tests. Pending consolidated branch confirmation."
     },
     {
+      "typescript": "packages/world/src/node-http-flag.test.ts",
+      "status": "red",
+      "rustTests": ["rust/tdd/workflow-world/tests/node_http_flag.rs"],
+      "notes": "All three default, explicit override, and implicit process-environment declarations are translated. Final GREEN additionally requires an isolated JavaScript binding test for live process.env mutation."
+    },
+    {
+      "typescript": "packages/world/src/queue.test.ts",
+      "status": "partial",
+      "rustTests": ["crates/workflow-world/tests/queue_typescript_port.rs"],
+      "notes": "All 32 prefix, queue-name, payload-discriminator, binary step-input, unknown-field, and creator-environment declarations are translated against the current Rust protocol implementation. Pending Rustfmt, test, and Clippy confirmation."
+    },
+    {
+      "typescript": "packages/world/src/recovery.test.ts",
+      "status": "red",
+      "rustTests": ["rust/tdd/workflow-world/tests/recovery.rs"],
+      "notes": "All five namespace precedence, silent-success, debug-reporting, and always-visible enqueue-failure declarations are translated before recovery implementation."
+    },
+    {
       "typescript": "packages/world/src/runs.test.ts",
       "status": "partial",
       "rustTests": ["crates/workflow-world/tests/runs_typescript_port.rs"],
@@ -123,6 +153,12 @@
       "status": "partial",
       "rustTests": ["crates/workflow-world/tests/runs_security_typescript_port.rs"],
       "notes": "All strict counter, exact summary, duplicate-ID, empty-result, and maximum-cardinality security cases are translated. The Rust test additionally proves diagnostics do not reflect a sensitive run ID. Pending CI confirmation."
+    },
+    {
+      "typescript": "packages/world/src/shared.test.ts",
+      "status": "red",
+      "rustTests": ["rust/tdd/workflow-world/tests/shared.rs"],
+      "notes": "The optional analytics page-metadata declaration is translated, including UTC coercion of both lookback-window timestamps."
     },
     {
       "typescript": "packages/world/src/slot-identity.test.ts",
