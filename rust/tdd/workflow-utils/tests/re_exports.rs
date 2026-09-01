@@ -1,4 +1,4 @@
-use workflow_utils_tdd::{parse_class_name, parse_step_name, parse_workflow_name};
+use workflow_utils::{parse_class_name, parse_step_name, parse_workflow_name};
 
 #[test]
 fn parse_step_name_is_re_exported_from_the_crate_root() {
