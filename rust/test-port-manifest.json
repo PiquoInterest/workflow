@@ -3,9 +3,9 @@
   "sourceCount": 334,
   "declaredTestCount": 5100,
   "statusCounts": {
-    "unported": 255,
+    "unported": 252,
     "partial": 0,
-    "red": 67,
+    "red": 70,
     "green": 12,
     "blocked": 0
   },
@@ -691,9 +691,11 @@
       "kind": "unit",
       "lineCount": 172,
       "declaredTestCount": 2,
-      "status": "unported",
-      "rustTests": [],
-      "notes": ""
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-core/tests/abort_replay_ordering.rs"
+      ],
+      "notes": "Both deterministic TypeScript regression tests are translated with a delayed abort-reason hydration boundary. Coverage requires the in-flight abort to increment pendingDeliveries, keeps scheduleWhenIdle blocked until the reason is hydrated and _setAborted lands, preserves the reason, and releases the counter to zero. WF-RUST-019 records the security consequence: serializing a downstream signal as aborted=false can let work continue after cancellation. Final GREEN must exercise the real Rust event consumer, async payload hydration, idle gate, signal state, and decrement-on-error path; returning a precomputed observation is insufficient."
     },
     {
       "typescript": "packages/core/src/async-deserialization-ordering.test.ts",
@@ -713,9 +715,11 @@
       "kind": "unit",
       "lineCount": 135,
       "declaredTestCount": 10,
-      "status": "unported",
-      "rustTests": [],
-      "notes": ""
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-core/tests/attribute_changes.rs"
+      ],
+      "notes": "All 10 TypeScript declarations are translated as 13 executable Rust cases after expanding non-object inputs. Coverage preserves insertion order, undefined-to-null deletion, empty records, plain-object rejection with actionable type names, UTF-16 key limits, UTF-8 value byte limits, reserved-prefix opt-in, and exact 64-attribute batch boundaries. Security-relevant cases require malformed runtime values to fail before event creation and byte-based validation to prevent multibyte values from bypassing storage limits. Final GREEN must share the real Rust World validator and wrap validation failures in the Rust FatalError boundary rather than duplicating constants or messages."
     },
     {
       "typescript": "packages/core/src/bench-chunk-rtt-stats.test.ts",
@@ -746,9 +750,11 @@
       "kind": "unit",
       "lineCount": 107,
       "declaredTestCount": 11,
-      "status": "unported",
-      "rustTests": [],
-      "notes": ""
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-core/tests/capabilities.rs"
+      ],
+      "notes": "All 11 parameterized TypeScript declarations are translated as 27 executable Rust version cases. Coverage preserves baseline devalue support, invalid-version fallback without throwing, v-prefixed semver, the inclusive encryption cutoff at 4.2.0-beta.64, and the independent framed-byte-stream cutoff at 5.0.0-beta.15. Security-relevant cases require malformed or pre-cutoff producers to fail closed to raw/devalue-only transport so the writer never emits encrypted or framed data to a consumer that cannot decode it. Final GREEN must use a real semver parser with prerelease ordering; string-prefix or fixture-table implementations are insufficient."
     },
     {
       "typescript": "packages/core/src/classify-error.test.ts",
