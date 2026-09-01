@@ -64,9 +64,7 @@ fn parse_name(tag: &str, name: &str) -> Option<ParsedName> {
         .to_owned();
     let module_short_name = module_short_name(module_specifier);
 
-    if matches!(short_name.as_str(), "default" | "__default")
-        && !module_short_name.is_empty()
-    {
+    if matches!(short_name.as_str(), "default" | "__default") && !module_short_name.is_empty() {
         short_name = module_short_name;
     }
 
@@ -110,7 +108,10 @@ fn short_name_from_sanitized(tag: &str, name: &str) -> Option<String> {
         return None;
     }
 
-    let segments: Vec<_> = name.split("--").filter(|segment| !segment.is_empty()).collect();
+    let segments: Vec<_> = name
+        .split("--")
+        .filter(|segment| !segment.is_empty())
+        .collect();
     let function_part = segments.last().copied()?;
     let mut short_name = function_part
         .split('-')
@@ -121,7 +122,9 @@ fn short_name_from_sanitized(tag: &str, name: &str) -> Option<String> {
 
     if matches!(short_name.as_str(), "default" | "__default") {
         let module_short_name = segments
-            .get(segments.len().saturating_sub(2))
+            .len()
+            .checked_sub(2)
+            .and_then(|index| segments.get(index))
             .and_then(|segment| {
                 segment
                     .split('-')
