@@ -47,8 +47,8 @@
 
 import semver from 'semver';
 import {
+  type FormatPrefix,
   SerializationFormat,
-  type SerializationFormatType,
 } from './serialization/types.js';
 
 /**
@@ -60,7 +60,7 @@ export interface RunCapabilities {
    * Use `supportedFormats.has(SerializationFormat.ENCRYPTED)` to check
    * if encryption is supported, etc.
    */
-  supportedFormats: ReadonlySet<SerializationFormatType>;
+  supportedFormats: ReadonlySet<FormatPrefix>;
 
   /**
    * Whether the target run can decode wire-framed byte streams. When true,
@@ -79,7 +79,7 @@ export interface RunCapabilities {
  * assumed to be supported by all specVersion 2 runs (e.g., `devl`).
  */
 const FORMAT_VERSION_TABLE: ReadonlyArray<{
-  format: SerializationFormatType;
+  format: FormatPrefix;
   minVersion: string;
 }> = [
   { format: SerializationFormat.ENCRYPTED, minVersion: '4.2.0-beta.64' },
@@ -129,7 +129,7 @@ const CAPABILITY_VERSION_TABLE: ReadonlyArray<{
  * `@workflow/core` version. These are the baseline formats that were present
  * from the start of the specVersion 2 protocol.
  */
-const BASELINE_FORMATS: ReadonlySet<SerializationFormatType> = new Set([
+const BASELINE_FORMATS: ReadonlySet<FormatPrefix> = new Set([
   SerializationFormat.DEVALUE_V1,
 ]);
 
@@ -152,7 +152,7 @@ export function getRunCapabilities(
     };
   }
 
-  const formats = new Set<SerializationFormatType>(BASELINE_FORMATS);
+  const formats = new Set<FormatPrefix>(BASELINE_FORMATS);
 
   for (const { format, minVersion } of FORMAT_VERSION_TABLE) {
     if (semver.gte(workflowCoreVersion, minVersion)) {
