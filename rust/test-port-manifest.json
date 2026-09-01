@@ -3,9 +3,9 @@
   "sourceCount": 334,
   "declaredTestCount": 5100,
   "statusCounts": {
-    "unported": 284,
+    "unported": 283,
     "partial": 0,
-    "red": 38,
+    "red": 39,
     "green": 12,
     "blocked": 0
   },
@@ -76,9 +76,11 @@
       "kind": "unit",
       "lineCount": 664,
       "declaredTestCount": 9,
-      "status": "unported",
-      "rustTests": [],
-      "notes": ""
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-ai/tests/telemetry.rs"
+      ],
+      "notes": "All nine current telemetry assertions are translated: response attributes, tool-call attributes, recordInputs and recordOutputs privacy controls, reasoning/cache accounting, tool result capture, tool output suppression, span-context propagation, and iterator option forwarding. Final GREEN must exercise the actual Rust span implementation and binding, not a fabricated observation."
     },
     {
       "typescript": "packages/ai/src/agent/tools-to-model-tools.test.ts",
