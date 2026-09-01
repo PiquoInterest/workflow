@@ -10,7 +10,8 @@
  * ## Adding a new format
  *
  * When a new serialization format is introduced:
- * 1. Add the format constant to `SerializationFormat` in `serialization.ts`
+ * 1. Add the format constant to `SerializationFormat` in
+ *    `serialization/types.ts`
  * 2. Add an entry to `FORMAT_VERSION_TABLE` below with the minimum
  *    `@workflow/core` version that supports it
  * 3. The `getRunCapabilities()` function will automatically include it
@@ -48,7 +49,7 @@ import semver from 'semver';
 import {
   SerializationFormat,
   type SerializationFormatType,
-} from './serialization.js';
+} from './serialization/types.js';
 
 /**
  * Capabilities of a workflow run based on its `@workflow/core` version.

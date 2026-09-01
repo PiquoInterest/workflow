@@ -50,7 +50,7 @@ jobs:
   core-contracts:
     name: Capability and retry-accounting differential parity
     runs-on: ubuntu-24.04
-    timeout-minutes: 30
+    timeout-minutes: 20
     steps:
       - name: Checkout repository
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
@@ -72,9 +72,6 @@ jobs:
 
       - name: Install JavaScript dependencies
         run: pnpm install --frozen-lockfile
-
-      - name: Build TypeScript oracle packages
-        run: pnpm turbo run build --filter='!./workbench/*'
 
       - name: Check Rust formatting
         run: cargo fmt --manifest-path crates/workflow-core/Cargo.toml -- --check
