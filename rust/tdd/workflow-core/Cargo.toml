@@ -1,0 +1,16 @@
+[package]
+name = "workflow-core-tdd"
+version = "0.1.0"
+edition = "2024"
+publish = false
+license = "Apache-2.0"
+rust-version = "1.87"
+description = "Expected-RED Rust tests translated from @workflow/core before implementation"
+
+[lib]
+path = "src/lib.rs"
+
+[workspace]
+
+[lints.rust]
+unsafe_code = "forbid"
