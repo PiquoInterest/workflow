@@ -272,3 +272,13 @@ Acknowledgments: https://github.com/PiquoInterest/workflow/blob/main/docs/rust-p
 # cwd/home context. Both TypeScript suites, the 23-case translated Rust suite,
 # and five Rust security regressions are required to stay green. Full analysis
 # is in docs/rust-port/findings/WF-RUST-100.md.
+
+#
+# WF-RUST-101: Machine-name formatters previously emitted parsed and legacy
+# names verbatim into log-oriented strings. CR/LF, ANSI and other C0/C1
+# controls, and Unicode line separators could forge log lines or alter terminal
+# rendering. TypeScript and Rust now escape these characters while preserving
+# ordinary output. The vulnerable TypeScript source is proved RED, and 35
+# translated Rust compatibility tests plus dedicated TypeScript/Rust security
+# regressions are required to stay green. Full analysis is in
+# docs/rust-port/findings/WF-RUST-101.md.

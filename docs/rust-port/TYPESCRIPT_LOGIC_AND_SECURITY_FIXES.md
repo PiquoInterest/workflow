@@ -385,3 +385,11 @@ discovering local workflow data. The security regression was committed first;
 TypeScript and Rust now require a directory at exact path-component boundaries.
 The full evidence, impact, tests, and retirement condition are recorded in
 `docs/rust-port/findings/WF-RUST-100.md`.
+
+## WF-RUST-101: Machine-name control-character log injection
+
+The pre-fix TypeScript formatter emitted parsed and legacy machine names
+verbatim into log-oriented strings. The committed regression is observed RED
+against that source. TypeScript and Rust now escape log-breaking controls while
+preserving ordinary parser and display-name behavior. Full evidence and closure
+requirements are in `docs/rust-port/findings/WF-RUST-101.md`.

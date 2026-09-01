@@ -62,3 +62,10 @@ ends with a familiar suffix. Discovery code must validate the filesystem object
 type and compare complete path components. Security regressions must cover
 regular files, suffix lookalikes, normalization, and platform-root termination.
 WF-RUST-100 applies this rule to workflow-data discovery in TypeScript and Rust.
+
+## Log-oriented identifier rendering
+
+Identifiers read from workflow state, adapters, or legacy records remain
+untrusted when rendered for logs. Single-line formatters must escape C0, C1,
+DEL, CR, LF, tab, U+2028, and U+2029 rather than allowing terminal controls or
+line injection. WF-RUST-101 applies this rule to machine workflow and step names.

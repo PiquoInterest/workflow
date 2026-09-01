@@ -3,9 +3,9 @@
   "entries": [
     {
       "typescript": "packages/utils/src/pluralize.test.ts",
-      "status": "red",
+      "status": "green",
       "rustTests": ["rust/tdd/workflow-utils/tests/pluralize.rs"],
-      "notes": "All four TypeScript assertions are translated. The Rust API skeleton intentionally panics until the implementation phase begins."
+      "notes": "All four translated test functions and eleven concrete assertions execute against the production workflow-utils pluralize implementation, preserving the exact TypeScript count === 1 contract."
     },
     {
       "typescript": "packages/utils/src/workflow-routes.test.ts",
@@ -21,9 +21,12 @@
     },
     {
       "typescript": "packages/utils/src/parse-name.test.ts",
-      "status": "red",
-      "rustTests": ["rust/tdd/workflow-utils/tests/parse_name.rs"],
-      "notes": "All 35 parsing, formatting, default-export, nested-function, sanitized-name, and fallback assertions are translated."
+      "status": "green",
+      "rustTests": [
+        "rust/tdd/workflow-utils/tests/parse_name.rs",
+        "crates/workflow-utils/tests/parse_name_security.rs"
+      ],
+      "notes": "All 35 translated parser, formatter, and display-name tests execute against the production workflow-utils crate. Three TypeScript and three Rust security regressions require control characters and Unicode line separators to be escaped from log-oriented output while preserving ordinary names."
     },
     {
       "typescript": "packages/utils/src/global-singleton.test.ts",
