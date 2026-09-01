@@ -52,7 +52,10 @@ fn minted_spec_version_never_exceeds_the_readable_ceiling() {
 #[test]
 fn the_readable_ceiling_moves_with_the_default_version() {
     assert_eq!(SPEC_VERSION_MAX_SUPPORTED, SPEC_VERSION_SUPPORTS_SEALED_LOG);
-    assert!(SPEC_VERSION_MAX_SUPPORTED >= SPEC_VERSION_CURRENT);
+    assert_eq!(
+        SPEC_VERSION_MAX_SUPPORTED,
+        minted_spec_version(&BTreeMap::new())
+    );
 }
 
 #[test]
