@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "entries": [
+    {
+      "typescript": "packages/core/e2e/route-bundle-isolation.test.ts",
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-core/tests/route_bundle_isolation.rs"
+      ],
+      "notes": "The isolated Next Turbopack hook-resume regression is translated with its exact build target, route bundle path, nonexistent token, 60-second harness deadline, forbidden dynamic-require/world-init failures, and healthy 500 Hook not found result. WF-RUST-094 strengthens the oracle: direct argv execution, Vercel and Node preload environment stripping, output caps, exact line-prefix marker parsing, bounded missing-result diagnostics, and duplicate/empty record rejection. Final GREEN must build and invoke the real route in a fresh sanitized Rust-managed process; fixture-only results are insufficient."
+    }
+  ]
+}
