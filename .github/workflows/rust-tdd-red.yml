@@ -39,12 +39,16 @@ jobs:
           node-version: 22.x
 
       - name: Check translated-test formatting
-        run: cargo fmt --manifest-path rust/tdd/workflow-utils/Cargo.toml -- --check
+        run: |
+          cargo fmt --manifest-path rust/tdd/workflow-utils/Cargo.toml -- --check
+          cargo fmt --manifest-path rust/tdd/workflow-world/Cargo.toml -- --check
 
       - name: Compile and lint translated tests
         run: |
           cargo check --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --all-targets
           cargo clippy --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --all-targets -- -D warnings
+          cargo check --locked --manifest-path rust/tdd/workflow-world/Cargo.toml --all-targets
+          cargo clippy --locked --manifest-path rust/tdd/workflow-world/Cargo.toml --all-targets -- -D warnings
 
       - name: Prove every expected-RED port
         run: node scripts/run-rust-tdd-red.mjs rust/tdd-red.json rust/test-port-overrides.json
