@@ -167,7 +167,5 @@ pub fn exercise_durable_agent_compat(
     case: DurableAgentCompatCase,
 ) -> DurableAgentCompatObservation {
     let _ = case;
-    panic!(
-        "TDD RED: packages/ai/src/agent/durable-agent-compat.test.ts implementation pending"
-    )
+    panic!("TDD RED: packages/ai/src/agent/durable-agent-compat.test.ts implementation pending")
 }
