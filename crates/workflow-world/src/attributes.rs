@@ -1,4 +1,5 @@
 use std::collections::{BTreeMap, BTreeSet};
+use std::fmt::Write as _;
 
 use serde::de::Error as DeError;
 use serde::{Deserialize, Deserializer, Serialize};
@@ -71,6 +72,59 @@ pub fn javascript_string_length(value: &str) -> usize {
     value.encode_utf16().count()
 }
 
+fn push_json_unicode_escape(output: &mut String, unit: u16) {
+    write!(output, "\\u{unit:04x}").expect("writing to a String cannot fail");
+}
+
+/// Serializes a JavaScript UTF-16 prefix with `JSON.stringify` string semantics.
+///
+/// Rust strings cannot contain lone surrogates, but JavaScript `slice` can
+/// create one by cutting a supplementary code point in half. Iterating the
+/// UTF-16 units directly preserves that diagnostic behavior exactly.
+fn json_stringify_utf16_prefix(value: &str, max_units: Option<usize>) -> String {
+    let mut output = String::from('"');
+    let mut units = value
+        .encode_utf16()
+        .take(max_units.unwrap_or(usize::MAX))
+        .peekable();
+
+    while let Some(unit) = units.next() {
+        match unit {
+            b'"' as u16 => output.push_str("\\\""),
+            b'\\' as u16 => output.push_str("\\\\"),
+            0x0008 => output.push_str("\\b"),
+            0x0009 => output.push_str("\\t"),
+            0x000a => output.push_str("\\n"),
+            0x000c => output.push_str("\\f"),
+            0x000d => output.push_str("\\r"),
+            0x0000..=0x001f => push_json_unicode_escape(&mut output, unit),
+            0xd800..=0xdbff => {
+                let Some(low) = units.peek().copied().filter(|low| (0xdc00..=0xdfff).contains(low))
+                else {
+                    push_json_unicode_escape(&mut output, unit);
+                    continue;
+                };
+                units.next();
+                let code_point = 0x1_0000
+                    + ((u32::from(unit) - 0xd800) << 10)
+                    + (u32::from(low) - 0xdc00);
+                output.push(
+                    char::from_u32(code_point)
+                        .expect("paired UTF-16 surrogates always form a Unicode scalar value"),
+                );
+            }
+            0xdc00..=0xdfff => push_json_unicode_escape(&mut output, unit),
+            _ => output.push(
+                char::from_u32(u32::from(unit))
+                    .expect("non-surrogate UTF-16 units are Unicode scalar values"),
+            ),
+        }
+    }
+
+    output.push('"');
+    output
+}
+
 /// Validates an attribute key.
 pub fn validate_attribute_key(key: &str, allow_reserved_attributes: bool) -> ValidationResult<()> {
     let key_length = javascript_string_length(key);
@@ -81,16 +135,20 @@ pub fn validate_attribute_key(key: &str, allow_reserved_attributes: bool) -> Val
         ));
     }
     if key_length > ATTRIBUTE_KEY_MAX_LENGTH {
+        let preview = json_stringify_utf16_prefix(key, Some(32));
         return Err(ValidationError::new(
             "attribute_key_too_long",
-            format!("Attribute key length {key_length} exceeds limit {ATTRIBUTE_KEY_MAX_LENGTH}"),
+            format!(
+                "Attribute key length {key_length} exceeds limit {ATTRIBUTE_KEY_MAX_LENGTH}: {preview}…"
+            ),
         ));
     }
     if !allow_reserved_attributes && key.starts_with(RESERVED_ATTRIBUTE_KEY_PREFIX) {
+        let encoded_key = json_stringify_utf16_prefix(key, None);
         return Err(ValidationError::new(
             "attribute_key_reserved",
             format!(
-                "Attribute key {key:?} starts with reserved prefix \"{RESERVED_ATTRIBUTE_KEY_PREFIX}\" — that namespace is reserved for framework/library code. Set {{ allowReservedAttributes: true }} only if your caller is framework-level."
+                "Attribute key {encoded_key} starts with reserved prefix \"{RESERVED_ATTRIBUTE_KEY_PREFIX}\" — that namespace is reserved for framework/library code. Set {{ allowReservedAttributes: true }} only if your caller is framework-level."
             ),
         ));
     }
@@ -125,12 +183,10 @@ pub fn validate_attribute_batch_constraints(
 
     for change in changes {
         if !seen_keys.insert(change.key.clone()) {
+            let encoded_key = json_stringify_utf16_prefix(&change.key, None);
             return Err(ValidationError::new(
                 "attribute_key_duplicate",
-                format!(
-                    "Attribute key {:?} appears more than once in the same batch",
-                    change.key
-                ),
+                format!("Attribute key {encoded_key} appears more than once in the same batch"),
             ));
         }
 
@@ -219,6 +275,27 @@ mod tests {
         assert_eq!(javascript_string_length("💥"), 2);
         assert!(validate_attribute_key(&"💥".repeat(128), true).is_ok());
         assert!(validate_attribute_key(&"💥".repeat(129), true).is_err());
+    }
+
+    #[test]
+    fn matches_javascript_stringification_when_a_prefix_splits_a_surrogate_pair() {
+        let key = format!("a{}", "💥".repeat(128));
+        let error = validate_attribute_key(&key, true).unwrap_err();
+        assert_eq!(
+            error.message(),
+            format!(
+                "Attribute key length 257 exceeds limit 256: \"a{}\\ud83d\"…",
+                "💥".repeat(15)
+            )
+        );
+    }
+
+    #[test]
+    fn escapes_key_diagnostics_like_json_stringify() {
+        assert_eq!(
+            json_stringify_utf16_prefix("quote=\" slash=\\ newline=\n", None),
+            "\"quote=\\\" slash=\\\\ newline=\\n\""
+        );
     }
 
     #[test]
