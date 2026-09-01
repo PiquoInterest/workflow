@@ -177,3 +177,23 @@ Acknowledgments: https://github.com/PiquoInterest/workflow/blob/main/docs/rust-p
 # rust/tdd/workflow-core/tests/delivery_barrier_dispenser.rs. Full analysis is
 # in docs/rust-port/findings/WF-RUST-026.md. Closure requires the real event
 # consumer, barrier registry, scheduler, and correlation allocator.
+#
+# WF-RUST-027 (TDD RED): A step-initiated abort uses a stream for real-time
+# notification and a hook receipt for durable replay. The hook receipt must use
+# the durable resume entry point and must be drained as pre-completion work
+# before step_completed is written; merely publishing a lazy resume reopens the
+# stale-signal race and can execute later work after cancellation. All 19
+# executable TypeScript cases are translated at
+# rust/tdd/workflow-core/tests/abort_controller_step.rs. Full analysis is in
+# docs/rust-port/findings/WF-RUST-027.md. Closure requires the production
+# serializer, step context, stream bridge, durable hook writer, and executor.
+#
+# WF-RUST-028 (TDD RED): Abort state is dual-backed by a real-time stream and a
+# durable hook. Either channel may fail independently, so serialization, local
+# state, bound identities, replay facts, listener timing, idempotency, and
+# suspension output must follow an explicit convergence contract. All 22
+# executable TypeScript cases are translated at
+# rust/tdd/workflow-core/tests/abort_consistency.rs. Full analysis is in
+# docs/rust-port/findings/WF-RUST-028.md. Closure requires the production abort
+# state machine, transports, event consumer, replay scheduler, and suspension
+# collector.
