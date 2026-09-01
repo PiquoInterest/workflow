@@ -1,6 +1,4 @@
-use workflow_world_tdd::{
-    ActiveRun, Environment, RecoveryLogLevel, reenqueue_active_runs,
-};
+use workflow_world_tdd::{ActiveRun, Environment, RecoveryLogLevel, reenqueue_active_runs};
 
 fn active_runs() -> Vec<ActiveRun> {
     vec![ActiveRun {
@@ -11,10 +9,8 @@ fn active_runs() -> Vec<ActiveRun> {
 
 #[test]
 fn uses_the_environment_queue_namespace_for_recovered_runs() {
-    let environment = Environment::from([(
-        "WORKFLOW_QUEUE_NAMESPACE".to_owned(),
-        "custom".to_owned(),
-    )]);
+    let environment =
+        Environment::from([("WORKFLOW_QUEUE_NAMESPACE".to_owned(), "custom".to_owned())]);
     let mut calls = Vec::new();
 
     let report = reenqueue_active_runs(

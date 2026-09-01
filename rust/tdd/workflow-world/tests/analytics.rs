@@ -40,10 +40,7 @@ fn preserves_distinct_event_provenance_fields() {
     .unwrap();
 
     assert_eq!(event.vercel_id.as_deref(), Some("request-grain-id"));
-    assert_eq!(
-        event.request_id.as_deref(),
-        Some("sibling-request-column")
-    );
+    assert_eq!(event.request_id.as_deref(), Some("sibling-request-column"));
     assert_eq!(
         event.compute_instance_id.as_deref(),
         Some("compute-instance-id")
@@ -65,10 +62,8 @@ fn parses_timezone_naive_datetime_strings_as_utc() {
 
 #[test]
 fn accepts_naive_strings_without_fractional_seconds() {
-    let run = parse_analytics_run(base_run(DateInput::Text(
-        "2026-07-13 17:09:11".to_owned(),
-    )))
-    .unwrap();
+    let run =
+        parse_analytics_run(base_run(DateInput::Text("2026-07-13 17:09:11".to_owned()))).unwrap();
 
     assert_eq!(
         run.created_at,
@@ -96,9 +91,7 @@ fn preserves_timezone_aware_instants() {
 fn passes_through_timestamp_objects_and_nullable_fields() {
     let run = parse_analytics_run(AnalyticsRunInput {
         created_at: DateInput::UnixMillis(1_783_962_551_593),
-        started_at: NullableDateInput::Value(DateInput::Text(
-            "2026-07-13 17:09:12.000".to_owned(),
-        )),
+        started_at: NullableDateInput::Value(DateInput::Text("2026-07-13 17:09:12.000".to_owned())),
         completed_at: NullableDateInput::Null,
         ..base_run(DateInput::UnixMillis(1_783_962_551_593))
     })

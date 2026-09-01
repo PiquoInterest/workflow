@@ -32,9 +32,7 @@ fn hook_created_coerces_token_retention_until_to_a_timestamp() {
         spec_version: Some(5),
         event_data: Some(EventDataInput {
             token: Some("order:123".to_owned()),
-            token_retention_until: Some(DateInput::Text(
-                "2026-08-01T00:00:00.000Z".to_owned(),
-            )),
+            token_retention_until: Some(DateInput::Text("2026-08-01T00:00:00.000Z".to_owned())),
             ..EventDataInput::default()
         }),
     })

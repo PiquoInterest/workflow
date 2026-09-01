@@ -1,10 +1,11 @@
-use workflow_world_tdd::{
-    Environment, NODE_HTTP_DEFAULT, NODE_HTTP_ENV_VAR, is_node_http_enabled,
-};
+use workflow_world_tdd::{Environment, NODE_HTTP_DEFAULT, NODE_HTTP_ENV_VAR, is_node_http_enabled};
 
 #[test]
 fn follows_the_compiled_default_when_unset() {
-    assert_eq!(is_node_http_enabled(Some(&Environment::new())), NODE_HTTP_DEFAULT);
+    assert_eq!(
+        is_node_http_enabled(Some(&Environment::new())),
+        NODE_HTTP_DEFAULT
+    );
 }
 
 #[test]

@@ -187,7 +187,10 @@ fn round_trips_binary_step_dispatch_input() {
         panic!("expected workflow invoke payload");
     };
     assert_eq!(
-        payload.step_input.as_ref().map(|input| input.input.as_slice()),
+        payload
+            .step_input
+            .as_ref()
+            .map(|input| input.input.as_slice()),
         Some([1_u8, 2, 3].as_slice())
     );
     assert_eq!(
