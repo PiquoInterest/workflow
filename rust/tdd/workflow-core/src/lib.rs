@@ -14,6 +14,7 @@ pub mod context_errors;
 pub mod define_hook;
 pub mod delivery_barrier_dispenser;
 pub mod describe_error;
+pub mod dev_hmr;
 pub mod duplicate_event_fixtures;
 pub mod duplicate_events;
 pub mod encryption;
