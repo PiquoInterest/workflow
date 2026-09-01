@@ -64,10 +64,7 @@ fn create_trigger_uses_environment_namespace_when_explicit_is_absent() {
 
 #[test]
 fn entrypoint_options_omit_runtime_options_without_namespace() {
-    let code = create_workflow_entrypoint_options_code(
-        &WorkflowEntrypointOptions::default(),
-        None,
-    );
+    let code = create_workflow_entrypoint_options_code(&WorkflowEntrypointOptions::default(), None);
 
     assert_eq!(code, "");
 }
@@ -101,9 +98,7 @@ fn entrypoint_options_inline_route_timing_with_namespace_and_base_path() {
         &WorkflowEntrypointOptions {
             namespace: Some("custom".to_owned()),
             base_path: Some("/v2".to_owned()),
-            route_module_body_started_at: Some(
-                "workflowRouteModuleBodyStartedAt".to_owned(),
-            ),
+            route_module_body_started_at: Some("workflowRouteModuleBodyStartedAt".to_owned()),
         },
         None,
     );
