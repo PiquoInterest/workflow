@@ -3,9 +3,9 @@
   "sourceCount": 334,
   "declaredTestCount": 5100,
   "statusCounts": {
-    "unported": 242,
+    "unported": 239,
     "partial": 0,
-    "red": 80,
+    "red": 83,
     "green": 12,
     "blocked": 0
   },
@@ -850,9 +850,11 @@
       "kind": "unit",
       "lineCount": 266,
       "declaredTestCount": 6,
-      "status": "unported",
-      "rustTests": [],
-      "notes": ""
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-core/tests/duplicate_events.rs"
+      ],
+      "notes": "All six TypeScript replay cases are translated. Coverage drives step, wait, hook, and attribute duplicates through a suspension/result observation, verifies the exact duplicate event and class, keeps the next legitimate step pending, leaves no stranded event after a duplicate workflow attribute write, and still reports an unrelated unconsumed event as divergence. Security-relevant behavior requires duplicate suppression to be scoped by entity and class so malformed events cannot hide unrelated log corruption. Final GREEN must use the real Rust event consumer and workflow primitives rather than returning scenario-specific observations."
     },
     {
       "typescript": "packages/core/src/encryption.test.ts",
@@ -931,9 +933,11 @@
       "kind": "unit",
       "lineCount": 320,
       "declaredTestCount": 4,
-      "status": "unported",
-      "rustTests": [],
-      "notes": ""
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-core/tests/log_order_draws.rs"
+      ],
+      "notes": "All four TypeScript regression cases are translated. The arrival-order control must still demonstrate a rebound, while default log-order draws preserve every shared correlation-id binding under prefix extension, remain stable across every dense prefix, and are deterministic for an identical prefix. WF-RUST-023 records the production corruption where one ordinal named a finalize step in a stale replay and a wait in a fresher replay. Final GREEN must mint identifiers inside the actual event-delivery cascade and replay the blocked-branch graph; precomputed binding tables are insufficient."
     },
     {
       "typescript": "packages/core/src/logger.test.ts",
@@ -942,9 +946,11 @@
       "kind": "unit",
       "lineCount": 188,
       "declaredTestCount": 13,
-      "status": "unported",
-      "rustTests": [],
-      "notes": ""
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-core/tests/logger.rs"
+      ],
+      "notes": "All 13 TypeScript logger cases are translated with exact console call arity and snapshot strings. Coverage preserves error/warn routing, quiet info/debug defaults, workflow:build DEBUG inclusion and exclusion, child metadata merging and call-site precedence, chained scopes, machine-name rendering, extra run metadata, no-metadata output, and exact step-failure/max-retry forms. Security-relevant behavior requires one preformatted string argument so log drains do not reinterpret multiline stacks or inspect attacker-controlled objects, and metadata conflict resolution must be deterministic. Final GREEN must use the production Rust logger and shared formatter."
     },
     {
       "typescript": "packages/core/src/module-scope-state.test.ts",
