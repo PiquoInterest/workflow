@@ -4,6 +4,7 @@ pub mod constants;
 pub mod discovery;
 pub mod input_files;
 pub mod manifest_ids;
+pub mod module_specifier;
 pub mod sourcemap;
 pub mod workflow_alias;
 pub mod workflow_bundle_boundary;

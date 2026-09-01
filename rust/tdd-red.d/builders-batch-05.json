@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "cases": [
     {
-      "typescript": "packages/builders/src/resolve-sourcemap.test.ts",
+      "typescript": "packages/builders/src/module-specifier.test.ts",
       "command": [
         "cargo",
         "test",
@@ -10,9 +10,9 @@
         "--manifest-path",
         "rust/tdd/workflow-builders/Cargo.toml",
         "--test",
-        "resolve_sourcemap"
+        "module_specifier"
       ],
-      "failureMarker": "TDD RED: packages/builders/src/resolve-sourcemap.test.ts implementation pending"
+      "failureMarker": "TDD RED: packages/builders/src/module-specifier.test.ts implementation pending"
     }
   ]
 }

@@ -2,12 +2,12 @@
   "schemaVersion": 1,
   "entries": [
     {
-      "typescript": "packages/builders/src/resolve-sourcemap.test.ts",
+      "typescript": "packages/builders/src/module-specifier.test.ts",
       "status": "red",
       "rustTests": [
-        "rust/tdd/workflow-builders/tests/resolve_sourcemap.rs"
+        "rust/tdd/workflow-builders/tests/module_specifier.rs"
       ],
-      "notes": "All 16 sourcemap declarations are translated across explicit config, defaults, WORKFLOW_SOURCEMAP parsing, 0/1 aliases, invalid-value fallback, watch-mode development detection, NODE_ENV development detection, and the derived enabled flag. Final GREEN must preserve precedence as explicit config over environment over the caller default, while treating every non-false mode as enabled."
+      "notes": "All 13 package and relative-import declarations are translated using real package.json and source files: root/subpath/conditional exports, module/main entrypoints, deep fallback paths, direct versus transitive node_modules dependencies, project-local package files, workspace package IDs, non-exported files, and source-backed dist exports. Final GREEN must resolve declared dependency and export ownership rather than infer package identity from path shape alone."
     }
   ]
 }
