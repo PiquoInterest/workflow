@@ -121,12 +121,12 @@ pub fn get_run_capabilities(version: Option<&str>) -> RunCapabilities {
 
     let mut capabilities = RunCapabilities::default();
 
-    if &version >= &*ENCRYPTED_MIN_VERSION {
+    if version >= *ENCRYPTED_MIN_VERSION {
         capabilities
             .supported_formats
             .insert(SerializationFormat::Encrypted);
     }
-    if &version >= &*COMPRESSION_MIN_VERSION {
+    if version >= *COMPRESSION_MIN_VERSION {
         capabilities
             .supported_formats
             .insert(SerializationFormat::Gzip);
@@ -134,12 +134,12 @@ pub fn get_run_capabilities(version: Option<&str>) -> RunCapabilities {
             .supported_formats
             .insert(SerializationFormat::Zstd);
     }
-    if &version >= &*SEALED_MIN_VERSION {
+    if version >= *SEALED_MIN_VERSION {
         capabilities
             .supported_formats
             .insert(SerializationFormat::Sealed);
     }
-    if &version >= &*FRAMED_BYTE_STREAMS_MIN_VERSION {
+    if version >= *FRAMED_BYTE_STREAMS_MIN_VERSION {
         capabilities.framed_byte_streams = true;
     }
 
