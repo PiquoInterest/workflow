@@ -144,10 +144,7 @@ fn subsequent_tool_rounds_receive_the_updated_conversation() {
         vec!["firstRoundMessages", "secondRoundMessages"]
     );
     assert_eq!(observation.message_lengths_per_round, vec![2, 4]);
-    assert!(
-        observation.message_lengths_per_round[1]
-            > observation.message_lengths_per_round[0]
-    );
+    assert!(observation.message_lengths_per_round[1] > observation.message_lengths_per_round[0]);
 }
 
 #[test]

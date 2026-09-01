@@ -254,9 +254,10 @@ fn mixed_client_and_server_tools_execute_only_the_server_tool() {
         .public_tool_calls
         .iter()
         .filter(|tool_call| {
-            !observation.public_tool_results.iter().any(|tool_result| {
-                tool_result.tool_call_id == tool_call.tool_call_id
-            })
+            !observation
+                .public_tool_results
+                .iter()
+                .any(|tool_result| tool_result.tool_call_id == tool_call.tool_call_id)
         })
         .collect();
     assert_eq!(unresolved.len(), 1);
@@ -272,8 +273,7 @@ fn client_side_tool_pause_still_calls_on_finish() {
 
 #[test]
 fn normal_completion_exposes_no_last_step_tool_calls_or_results() {
-    let observation =
-        exercise_durable_agent(DurableAgentCase::NormalCompletionEmptyToolCalls);
+    let observation = exercise_durable_agent(DurableAgentCase::NormalCompletionEmptyToolCalls);
 
     assert!(observation.public_tool_calls.is_empty());
     assert!(observation.public_tool_results.is_empty());
