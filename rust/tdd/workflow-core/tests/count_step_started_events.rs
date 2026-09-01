@@ -42,8 +42,14 @@ macro_rules! reject_case {
 
 reject_case!(rejects_negative_prior_counts, -1.0);
 reject_case!(rejects_fractional_prior_counts, 1.5);
-reject_case!(rejects_max_safe_integer_as_a_prior_count, MAX_STEP_ATTEMPT as f64);
-reject_case!(rejects_values_above_max_safe_integer, (MAX_STEP_ATTEMPT + 1) as f64);
+reject_case!(
+    rejects_max_safe_integer_as_a_prior_count,
+    MAX_STEP_ATTEMPT as f64
+);
+reject_case!(
+    rejects_values_above_max_safe_integer,
+    (MAX_STEP_ATTEMPT + 1) as f64
+);
 reject_case!(rejects_nan_prior_counts, f64::NAN);
 reject_case!(rejects_positive_infinity_prior_counts, f64::INFINITY);
 
