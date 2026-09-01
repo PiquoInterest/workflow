@@ -7,9 +7,9 @@ fn raw_interleaved_text_is_fatal_to_the_consumer() {
         observation
             .consumer_error
             .as_deref()
-            .is_some_and(|message| message.contains(
-                "Received text-delta for missing text part with ID \"0\""
-            ))
+            .is_some_and(|message| {
+                message.contains("Received text-delta for missing text part with ID \"0\"")
+            })
     );
 }
 
@@ -41,9 +41,10 @@ fn raw_interleaved_reasoning_is_fatal_to_the_consumer() {
         observation
             .consumer_error
             .as_deref()
-            .is_some_and(|message| message.contains(
-                "Received reasoning-delta for missing reasoning part with ID \"0\""
-            ))
+            .is_some_and(|message| {
+                message
+                    .contains("Received reasoning-delta for missing reasoning part with ID \"0\"")
+            })
     );
 }
 
