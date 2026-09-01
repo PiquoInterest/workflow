@@ -104,6 +104,36 @@
       "notes": "The CJS __dirname/__filename regression is translated with explicit counts for the combined workflow function and separate webhook function. Final GREEN requires building and importing real ESM bundles under Node."
     },
     {
+      "typescript": "packages/ai/src/agent/durable-agent-types.test.ts",
+      "status": "red",
+      "rustTests": ["rust/tdd/workflow-ai/tests/durable_agent_types.rs"],
+      "notes": "All three type-inference declarations are translated as Rust generic assignments. They are compile-time checked even while the runtime implementation marker remains RED."
+    },
+    {
+      "typescript": "packages/ai/src/get-error-message.test.ts",
+      "status": "red",
+      "rustTests": ["rust/tdd/workflow-ai/tests/get_error_message.rs"],
+      "notes": "All 11 Error, string, object, nested object, nullish, number, boolean, array, empty-string, and subclass normalization declarations are translated."
+    },
+    {
+      "typescript": "packages/ai/src/module-scope-state.test.ts",
+      "status": "red",
+      "rustTests": ["rust/tdd/workflow-ai/tests/module_scope_state.rs"],
+      "notes": "The package-local module-scope-state sweep is translated so the safety signal remains present when only the AI crate tests run."
+    },
+    {
+      "typescript": "packages/ai/src/stream-iterator.test.ts",
+      "status": "red",
+      "rustTests": ["rust/tdd/workflow-ai/tests/stream_iterator.rs"],
+      "notes": "All seven generator-to-stream, browser macrotask yield, Node no-yield, abort, already-aborted, generator-error, and stream-to-iterator declarations are translated. Final GREEN needs an actual async stream runtime rather than only observations."
+    },
+    {
+      "typescript": "packages/ai/src/workflow-chat-transport.stream-repair.test.ts",
+      "status": "red",
+      "rustTests": ["rust/tdd/workflow-ai/tests/workflow_chat_transport_stream_repair.rs"],
+      "notes": "All six raw-failure, text repair, duplicate-tail suppression, well-formed pass-through, raw reasoning failure, and reasoning repair declarations are translated. Final GREEN must drive the actual AI SDK consumer or a byte-for-byte compatible Rust state machine."
+    },
+    {
       "typescript": "packages/errors/src/ansi.test.ts",
       "status": "red",
       "rustTests": ["rust/tdd/workflow-errors/tests/ansi.rs"],
