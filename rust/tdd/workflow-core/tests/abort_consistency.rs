@@ -21,9 +21,8 @@ fn abort_after_serialization_persists_one_stream_packet() {
 
 #[test]
 fn reducer_captures_pre_aborted_state_without_a_listener_race() {
-    let observation = run_abort_consistency_scenario(
-        AbortConsistencyScenario::ListenerInstalledBeforeStateCheck,
-    );
+    let observation =
+        run_abort_consistency_scenario(AbortConsistencyScenario::ListenerInstalledBeforeStateCheck);
     assert!(observation.serialized_contains_aborted);
     assert_eq!(observation.queued_stream_ops_after_abort, 0);
 }
@@ -104,8 +103,7 @@ fn abort_after_step_completion_is_idempotent() {
 
 #[test]
 fn orphan_abort_packet_is_safe_and_preserves_local_reason() {
-    let observation =
-        run_abort_consistency_scenario(AbortConsistencyScenario::OrphanAbortPacket);
+    let observation = run_abort_consistency_scenario(AbortConsistencyScenario::OrphanAbortPacket);
     assert_eq!(observation.queued_stream_ops_before_abort, 0);
     assert_eq!(observation.queued_stream_ops_after_abort, 1);
     assert!(observation.aborted);
@@ -133,8 +131,7 @@ fn first_run_abort_listener_fires_synchronously_at_the_call_site() {
 
 #[test]
 fn replay_abort_sets_state_fires_listeners_and_keeps_its_reason() {
-    let observation =
-        run_abort_consistency_scenario(AbortConsistencyScenario::ReplayAbortDelivery);
+    let observation = run_abort_consistency_scenario(AbortConsistencyScenario::ReplayAbortDelivery);
     assert!(observation.aborted);
     assert_eq!(observation.listener_calls, 1);
     assert_eq!(observation.reason.as_deref(), Some("replay-reason"));
@@ -150,26 +147,23 @@ fn cross_execution_abort_is_a_durable_replay_fact() {
 
 #[test]
 fn listener_registered_after_replay_abort_fires_immediately() {
-    let observation = run_abort_consistency_scenario(
-        AbortConsistencyScenario::LateListenerObservesReplayAbort,
-    );
+    let observation =
+        run_abort_consistency_scenario(AbortConsistencyScenario::LateListenerObservesReplayAbort);
     assert!(observation.aborted);
     assert_eq!(observation.listener_calls, 1);
 }
 
 #[test]
 fn abort_after_last_suspension_point_does_not_block_completion() {
-    let observation = run_abort_consistency_scenario(
-        AbortConsistencyScenario::AbortAfterLastSuspensionPoint,
-    );
+    let observation =
+        run_abort_consistency_scenario(AbortConsistencyScenario::AbortAfterLastSuspensionPoint);
     assert!(observation.workflow_completed);
     assert_eq!(observation.return_value.as_deref(), Some("done"));
 }
 
 #[test]
 fn fire_and_forget_sleep_does_not_block_workflow_completion() {
-    let observation =
-        run_abort_consistency_scenario(AbortConsistencyScenario::FireAndForgetSleep);
+    let observation = run_abort_consistency_scenario(AbortConsistencyScenario::FireAndForgetSleep);
     assert!(observation.workflow_completed);
     assert_eq!(observation.return_value.as_deref(), Some("done"));
 }

@@ -55,7 +55,10 @@ fn step_abort_queues_the_stream_write_in_background_operations() {
 fn step_abort_queues_the_durable_hook_resume() {
     let observation = run_abort_step_scenario(AbortStepScenario::StepAbortQueuesDurableHookResume);
     assert_eq!(observation.durable_hook_resumes, 1);
-    assert_eq!(observation.durable_hook_token.as_deref(), Some("abrt_test9"));
+    assert_eq!(
+        observation.durable_hook_token.as_deref(),
+        Some("abrt_test9")
+    );
     assert_eq!(
         observation.durable_hook_reason.as_deref(),
         Some("hook-resume-test")
@@ -121,7 +124,10 @@ fn fatal_abort_skips_retry_policy() {
 fn unrelated_step_error_is_not_reclassified_as_fatal() {
     let observation = run_abort_step_scenario(AbortStepScenario::RegularErrorRemainsNonFatal);
     assert!(!observation.fatal);
-    assert_eq!(observation.error_message.as_deref(), Some("network timeout"));
+    assert_eq!(
+        observation.error_message.as_deref(),
+        Some("network timeout")
+    );
 }
 
 #[test]
