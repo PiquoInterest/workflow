@@ -3,11 +3,12 @@
   "entries": [
     {
       "typescript": "packages/core/src/capabilities.test.ts",
-      "status": "red",
+      "status": "green",
       "rustTests": [
-        "rust/tdd/workflow-core/tests/capabilities.rs"
+        "crates/workflow-core/tests/capabilities.rs",
+        "rust/conformance/capabilities-parity.test.ts"
       ],
-      "notes": "All 11 parameterized TypeScript declarations are translated as 27 executable Rust version cases. Coverage preserves baseline devalue support, invalid-version fallback without throwing, v-prefixed semver, the inclusive encryption cutoff at 4.2.0-beta.64, and the independent framed-byte-stream cutoff at 5.0.0-beta.15. Security-relevant cases require malformed or pre-cutoff producers to fail closed to raw/devalue-only transport so the writer never emits encrypted or framed data to a consumer that cannot decode it. Final GREEN must use a real semver parser with prerelease ordering; string-prefix or fixture-table implementations are insufficient."
+      "notes": "All 11 parameterized TypeScript declarations remain covered as 27 direct Rust cutoff cases, with additional compression, sealed-format, normalization, overlength, leading-zero, and JavaScript-safe-integer boundaries. Production Rust uses semver 1.0.26 for prerelease ordering, preserves the exact devl/encr/gzip/zstd/encp cutoffs, and fails closed to baseline capabilities for absent or malformed producer metadata. The differential suite executes the TypeScript oracle and Rust binary with the same values. Runtime producer adoption remains tracked separately."
     },
     {
       "typescript": "packages/core/src/attribute-changes.test.ts",

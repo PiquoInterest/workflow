@@ -2,19 +2,6 @@
   "schemaVersion": 1,
   "cases": [
     {
-      "typescript": "packages/core/src/capabilities.test.ts",
-      "command": [
-        "cargo",
-        "test",
-        "--locked",
-        "--manifest-path",
-        "rust/tdd/workflow-core/Cargo.toml",
-        "--test",
-        "capabilities"
-      ],
-      "failureMarker": "TDD RED: packages/core/src/capabilities.test.ts implementation pending"
-    },
-    {
       "typescript": "packages/core/src/attribute-changes.test.ts",
       "command": [
         "cargo",
