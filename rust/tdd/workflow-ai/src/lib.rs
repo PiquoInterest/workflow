@@ -2,6 +2,7 @@
 
 pub mod stream_text_iterator;
 pub mod telemetry;
+pub mod workflow_chat_transport;
 
 use std::marker::PhantomData;
 
