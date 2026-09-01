@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "sourceCount": 338,
-  "declaredTestCount": 5108,
+  "declaredTestCount": 5110,
   "statusCounts": {
     "unported": 223,
     "partial": 0,
@@ -1035,11 +1035,11 @@
     },
     {
       "typescript": "packages/core/src/replay-payload-cache-security.test.ts",
-      "sourceSha256": "f1518f0207263e0acfe58297e78821bf4c8a39367ff1dcce88c047681e4d444e",
+      "sourceSha256": "357f036c2cd0ac096b7805bab64b07b2aae5234059bbb906e1097a8d1519c519",
       "surface": "packages/core",
       "kind": "unit",
-      "lineCount": 67,
-      "declaredTestCount": 2,
+      "lineCount": 223,
+      "declaredTestCount": 4,
       "status": "green",
       "rustTests": [
         "crates/workflow-core/tests/replay_payload_cache.rs",
