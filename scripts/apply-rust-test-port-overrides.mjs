@@ -88,4 +88,34 @@ execFileSync(
   ['component', 'add', 'clippy', '--toolchain', '1.87.0'],
   { stdio: 'inherit' }
 );
+
+const helperPath = path.join(
+  ROOT,
+  'scripts/promote-ai-error-normalization-once.mjs'
+);
+let helperSource = readFileSync(helperPath, 'utf8');
+const workflowRestoreBlock = `  restore('scripts/apply-rust-test-port-overrides.mjs');
+  restore('.github/workflows/rust-test-manifest.yml');
+
+  for (const relativePath of [
+    '.github/workflows/rust-ai-error-normalization-promote-once.yml',
+    '.github/workflows/rust-source-snapshot-once.yml',
+    'scripts/promote-ai-error-normalization-once.mjs',
+  ]) {`;
+const connectorCleanupBlock = `  restore('scripts/apply-rust-test-port-overrides.mjs');
+
+  // Workflow files are restored through the GitHub connector because the
+  // Actions token deliberately lacks workflows permission.
+  for (const relativePath of [
+    'scripts/promote-ai-error-normalization-once.mjs',
+  ]) {`;
+if (!helperSource.includes(workflowRestoreBlock)) {
+  throw new Error('promotion helper workflow-cleanup block changed unexpectedly');
+}
+helperSource = helperSource.replace(
+  workflowRestoreBlock,
+  connectorCleanupBlock
+);
+writeFileSync(helperPath, helperSource, 'utf8');
+
 await import('./promote-ai-error-normalization-once.mjs');
