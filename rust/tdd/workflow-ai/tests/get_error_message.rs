@@ -1,4 +1,4 @@
-use workflow_ai_tdd::{ErrorValue, get_error_message};
+use workflow_ai::{ErrorValue, get_error_message};
 
 #[test]
 fn returns_message_from_error_instances() {
@@ -92,4 +92,31 @@ fn handles_error_subclasses_by_their_message() {
         get_error_message(&ErrorValue::CustomError("custom msg".to_owned())),
         "custom msg"
     );
+}
+
+#[test]
+fn preserves_object_order_and_escapes_untrusted_strings() {
+    let value = ErrorValue::Object(vec![
+        (
+            "first".to_owned(),
+            ErrorValue::String("line\nquote\"".to_owned()),
+        ),
+        ("second".to_owned(), ErrorValue::Number(2)),
+    ]);
+    assert_eq!(
+        get_error_message(&value),
+        r#"{"first":"line\nquote\"","second":2}"#
+    );
+}
+
+#[test]
+fn follows_json_stringify_for_nested_undefined_values() {
+    let value = ErrorValue::Object(vec![
+        ("omitted".to_owned(), ErrorValue::Undefined),
+        (
+            "array".to_owned(),
+            ErrorValue::Array(vec![ErrorValue::Undefined]),
+        ),
+    ]);
+    assert_eq!(get_error_message(&value), r#"{"array":[null]}"#);
 }
