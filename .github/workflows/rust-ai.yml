@@ -9,9 +9,11 @@ on:
       - 'rust/tdd/workflow-ai/**'
       - 'packages/ai/src/get-error-message.ts'
       - 'packages/ai/src/get-error-message.test.ts'
+      - 'packages/ai/src/get-error-message-security.test.ts'
       - 'rust/tdd-red.json'
       - 'rust/test-port-manifest.json'
       - 'rust/test-port-overrides.json'
+      - 'rust/test-port-overrides.d/**'
       - 'docs/rust-port/**'
       - 'security.txt'
       - '.github/workflows/rust-ai.yml'
@@ -21,9 +23,11 @@ on:
       - 'rust/tdd/workflow-ai/**'
       - 'packages/ai/src/get-error-message.ts'
       - 'packages/ai/src/get-error-message.test.ts'
+      - 'packages/ai/src/get-error-message-security.test.ts'
       - 'rust/tdd-red.json'
       - 'rust/test-port-manifest.json'
       - 'rust/test-port-overrides.json'
+      - 'rust/test-port-overrides.d/**'
       - 'docs/rust-port/**'
       - 'security.txt'
       - '.github/workflows/rust-ai.yml'
@@ -67,7 +71,8 @@ jobs:
         run: |
           pnpm exec biome ci \
             packages/ai/src/get-error-message.ts \
-            packages/ai/src/get-error-message.test.ts
+            packages/ai/src/get-error-message.test.ts \
+            packages/ai/src/get-error-message-security.test.ts
 
       - name: Check Rust formatting
         run: |
@@ -86,5 +91,8 @@ jobs:
       - name: Lint translated Rust suite
         run: cargo clippy --locked --manifest-path rust/tdd/workflow-ai/Cargo.toml --test get_error_message -- -D warnings
 
-      - name: Run TypeScript compatibility oracle
-        run: pnpm exec vitest run packages/ai/src/get-error-message.test.ts
+      - name: Run TypeScript compatibility and security oracles
+        run: |
+          pnpm exec vitest run \
+            packages/ai/src/get-error-message.test.ts \
+            packages/ai/src/get-error-message-security.test.ts
