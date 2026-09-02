@@ -7,10 +7,7 @@ use workflow_ai::{CallableProbe, ErrorValue, SharedErrorObject, get_error_messag
 fn object_supplied_to_json_callable_is_never_invoked() {
     let callback = CallableProbe::new("toJSON");
     let value = ErrorValue::Object(vec![
-        (
-            "toJSON".to_owned(),
-            ErrorValue::Callable(callback.clone()),
-        ),
+        ("toJSON".to_owned(), ErrorValue::Callable(callback.clone())),
         ("rewritten".to_owned(), ErrorValue::Bool(false)),
     ]);
 
