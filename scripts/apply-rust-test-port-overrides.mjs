@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+import { execFileSync } from 'node:child_process';
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -82,4 +83,9 @@ manifest.declaredTestCount = manifest.entries.reduce(
 
 writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
 
+execFileSync(
+  'rustup',
+  ['component', 'add', 'clippy', '--toolchain', '1.87.0'],
+  { stdio: 'inherit' }
+);
 await import('./promote-ai-error-normalization-once.mjs');
