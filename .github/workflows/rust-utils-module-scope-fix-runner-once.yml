@@ -1,0 +1,61 @@
+name: Rust utilities module-scope runner fix once
+
+on:
+  push:
+    branches:
+      - pro/rust-repository-port
+    paths:
+      - '.github/workflows/rust-utils-module-scope-fix-runner-once.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    name: Correct translated regression harness
+    if: github.repository == 'PiquoInterest/workflow' && github.ref == 'refs/heads/pro/rust-repository-port'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout migration branch
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: pro/rust-repository-port
+          fetch-depth: 0
+
+      - name: Correct helper invocation without weakening assertions
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path('.github/workflows/rust-utils-module-scope-run-once.yml')
+          source = path.read_text()
+
+          opening = 'let findings = scan(&[('
+          corrected_opening = 'let findings = scan_module_scope_sources(&sources(&[('
+          closing = '''              )]);
+
+              assert!(findings.is_empty(), "{findings:#?}");'''
+          corrected_closing = '''              )]));
+
+              assert!(findings.is_empty(), "{findings:#?}");'''
+
+          assert source.count(opening) == 1, source.count(opening)
+          assert source.count(closing) == 1, source.count(closing)
+          source = source.replace(opening, corrected_opening, 1)
+          source = source.replace(closing, corrected_closing, 1)
+          path.write_text(source)
+          PY
+
+      - name: Commit correction
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add .github/workflows/rust-utils-module-scope-run-once.yml
+          git commit -m 'test(rust-utils): fix module-scope regression harness'
+          git pull --rebase origin pro/rust-repository-port
+          git push origin HEAD:pro/rust-repository-port
