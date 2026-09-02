@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "sourceCount": 342,
-  "declaredTestCount": 5122,
+  "sourceCount": 343,
+  "declaredTestCount": 5125,
   "statusCounts": {
     "unported": 223,
     "partial": 0,
-    "red": 80,
+    "red": 81,
     "green": 39,
     "blocked": 0
   },
@@ -2345,6 +2345,19 @@
         "rust/tdd/workflow-utils/tests/global_singleton.rs"
       ],
       "notes": "All nine TypeScript sharing, factory-once, mutation, process-registry, shape-version, name-isolation, and reset declarations execute against production workflow-utils. Rust additionally proves concurrent callers run one factory and that a name/version reused with another concrete type fails closed. Verified by read-only utility workflow run 33578496332."
+    },
+    {
+      "typescript": "packages/utils/src/module-scope-state-security.test.ts",
+      "sourceSha256": "a5343113db01942a5341c3acea8d764875c4530ddf20d98d23244f62b1c9e911",
+      "surface": "packages/utils",
+      "kind": "unit",
+      "lineCount": 80,
+      "declaredTestCount": 3,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-utils/tests/module_scope_state_security.rs"
+      ],
+      "notes": "Three differential security cases characterize legacy lint-gate bypasses: an unrelated property named globalSingleton, a local binary result that merely mentions globalThis, and a literal computed static field. Rust must reject all three while the TypeScript oracle preserves the pre-existing missed findings."
     },
     {
       "typescript": "packages/utils/src/module-scope-state.test.ts",
