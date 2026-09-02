@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "entries": [
+    {
+      "typescript": "packages/ai/src/get-error-message-security.test.ts",
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-ai/tests/get_error_message_security.rs",
+        "crates/workflow-ai/tests/get_error_message_security.rs"
+      ],
+      "notes": "All three legacy JSON-normalization hazards are translated as a differential security contract: object-supplied toJSON callbacks must remain inert, cyclic object graphs must not panic, and BigInt values must produce a stable diagnostic string. The TypeScript characterization intentionally preserves the unsafe behavior while the Rust implementation is still RED."
+    }
+  ]
+}
