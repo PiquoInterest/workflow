@@ -11,6 +11,7 @@ on:
       - 'packages/ai/src/get-error-message.test.ts'
       - 'packages/ai/src/get-error-message-security.test.ts'
       - 'rust/tdd-red.json'
+      - 'rust/tdd-red.d/**'
       - 'rust/test-port-manifest.json'
       - 'rust/test-port-overrides.json'
       - 'rust/test-port-overrides.d/**'
@@ -25,6 +26,7 @@ on:
       - 'packages/ai/src/get-error-message.test.ts'
       - 'packages/ai/src/get-error-message-security.test.ts'
       - 'rust/tdd-red.json'
+      - 'rust/tdd-red.d/**'
       - 'rust/test-port-manifest.json'
       - 'rust/test-port-overrides.json'
       - 'rust/test-port-overrides.d/**'
@@ -82,14 +84,18 @@ jobs:
       - name: Run production Rust AI tests
         run: cargo test --locked --manifest-path crates/workflow-ai/Cargo.toml --all-targets
 
-      - name: Run translated TypeScript suite in Rust
-        run: cargo test --locked --manifest-path rust/tdd/workflow-ai/Cargo.toml --test get_error_message
+      - name: Run translated TypeScript suites in Rust
+        run: |
+          cargo test --locked --manifest-path rust/tdd/workflow-ai/Cargo.toml --test get_error_message
+          cargo test --locked --manifest-path rust/tdd/workflow-ai/Cargo.toml --test get_error_message_security
 
       - name: Lint production Rust AI crate
         run: cargo clippy --locked --manifest-path crates/workflow-ai/Cargo.toml --all-targets -- -D warnings
 
-      - name: Lint translated Rust suite
-        run: cargo clippy --locked --manifest-path rust/tdd/workflow-ai/Cargo.toml --test get_error_message -- -D warnings
+      - name: Lint translated Rust suites
+        run: |
+          cargo clippy --locked --manifest-path rust/tdd/workflow-ai/Cargo.toml --test get_error_message -- -D warnings
+          cargo clippy --locked --manifest-path rust/tdd/workflow-ai/Cargo.toml --test get_error_message_security -- -D warnings
 
       - name: Run TypeScript compatibility and security oracles
         run: |
