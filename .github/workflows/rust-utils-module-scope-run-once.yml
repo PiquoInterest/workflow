@@ -33,9 +33,24 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          awk '/^H4s/{print; exit}' .github/workflows/rust-utils-module-scope-implement-once.yml > /tmp/module-scope-implementation.b64
-          test -s /tmp/module-scope-implementation.b64
-          base64 --decode /tmp/module-scope-implementation.b64 > /tmp/module-scope-implementation.tar.gz
+          cat .github/port-payloads/module-scope/00.b64 \
+              .github/port-payloads/module-scope/01.b64 \
+              .github/port-payloads/module-scope/02.b64 \
+              .github/port-payloads/module-scope/03.b64 \
+            | tr -d '\r\n' > /tmp/module-scope-implementation.b64
+
+          test "$(wc -c < /tmp/module-scope-implementation.b64)" -eq 14748
+          printf '%s  %s\n' \
+            '9f0661df8ebf4fd5d0ed28f6d8bed41fd1599c5ee8d3af1eaaa96ecc8f9a179b' \
+            '/tmp/module-scope-implementation.b64' \
+            | sha256sum --check -
+
+          base64 --decode /tmp/module-scope-implementation.b64 \
+            > /tmp/module-scope-implementation.tar.gz
+          printf '%s  %s\n' \
+            'f7d011209b25974cd84ec4ff4e40aeece72bc3b836ba437a202c8f1f02aa0889' \
+            '/tmp/module-scope-implementation.tar.gz' \
+            | sha256sum --check -
           tar -xzf /tmp/module-scope-implementation.tar.gz
 
       - name: Verify production implementation
@@ -66,4 +81,5 @@ jobs:
           git add crates/workflow-utils/tests/module_scope_state_security.rs
           git commit -m 'test(rust-utils): enforce module-scope bypass hardening'
 
+          git pull --rebase origin pro/rust-repository-port
           git push origin HEAD:pro/rust-repository-port
