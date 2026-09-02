@@ -9,9 +9,9 @@
     },
     {
       "typescript": "packages/utils/src/workflow-routes.test.ts",
-      "status": "red",
+      "status": "green",
       "rustTests": ["rust/tdd/workflow-utils/tests/workflow_routes.rs"],
-      "notes": "All three route assertions are translated, including configured base paths and rejection of the retired standalone step route."
+      "notes": "All three TypeScript flow, health, configured-base-path, and retired-step declarations execute against production workflow-utils. Rust additionally proves manifest construction, percent-encoded webhook tokens, query and fragment replacement, trailing-slash normalization, and rejection of relative or whitespace-confused base URLs. Verified by read-only utility workflow run 33579321645."
     },
     {
       "typescript": "packages/utils/src/world-target.test.ts",

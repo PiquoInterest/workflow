@@ -2,19 +2,6 @@
   "schemaVersion": 1,
   "cases": [
     {
-      "typescript": "packages/utils/src/workflow-routes.test.ts",
-      "command": [
-        "cargo",
-        "test",
-        "--locked",
-        "--manifest-path",
-        "rust/tdd/workflow-utils/Cargo.toml",
-        "--test",
-        "workflow_routes"
-      ],
-      "failureMarker": "TDD RED: packages/utils/src/workflow-routes.test.ts implementation pending"
-    },
-    {
       "typescript": "packages/utils/src/get-port.test.ts",
       "command": [
         "cargo",

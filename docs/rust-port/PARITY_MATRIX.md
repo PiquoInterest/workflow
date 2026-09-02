@@ -60,3 +60,9 @@ Status meanings:
 | --- | --- | --- |
 | Process-wide versioned singleton registry | PROVEN | 9 translated TypeScript tests plus concurrent initialization and type-confusion regressions; read-only workflow run `33578496332` |
 | Deferred resolver and lazy once value | PROVEN | 5 translated TypeScript tests plus settlement-race, cross-thread, and panic-retry regressions; read-only workflow run `33578496332` |
+
+## Utility workflow route promotion
+
+| Contract | Status | Evidence |
+| --- | --- | --- |
+| Workflow URL, health, manifest, and webhook construction | PROVEN | 3 translated TypeScript declarations plus route-normalization and token-encoding regressions; read-only workflow run `33579321645` |
