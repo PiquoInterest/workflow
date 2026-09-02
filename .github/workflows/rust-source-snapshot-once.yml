@@ -1,0 +1,32 @@
+name: Rust source snapshot once
+
+on:
+  push:
+    branches:
+      - pro/rust-repository-port
+    paths:
+      - '.github/workflows/rust-source-snapshot-once.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  snapshot:
+    name: Package current Rust port branch
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Create source archive
+        run: tar --exclude=.git --exclude=node_modules --exclude=target -czf /tmp/workflow-source.tar.gz .
+
+      - name: Upload source archive
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: workflow-rust-port-source
+          path: /tmp/workflow-source.tar.gz
+          if-no-files-found: error
+          retention-days: 1
+          compression-level: 0
