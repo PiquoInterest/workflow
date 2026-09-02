@@ -23,7 +23,10 @@ pub fn scan_package(package_dir: &Path, repo_root: &Path) -> Vec<ModuleScopeFind
 #[must_use]
 pub fn scan_module_scope_sources(files: &BTreeMap<String, String>) -> Vec<ModuleScopeFinding> {
     let _ = files;
-    panic!("TDD RED: packages/utils/src/module-scope-state.test.ts implementation pending")
+    panic!(
+        "TDD RED: packages/utils/src/module-scope-state.test.ts implementation pending; \
+TDD RED: packages/utils/src/module-scope-state-security.test.ts implementation pending"
+    )
 }
 
 #[must_use]
