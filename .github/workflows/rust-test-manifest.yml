@@ -11,8 +11,13 @@ on:
       - 'scripts/apply-rust-test-port-overrides.mjs'
       - 'rust/test-port-manifest.json'
       - 'rust/test-port-overrides.json'
+      - 'rust/test-port-overrides.d/**'
+      - 'rust/tdd-red.json'
+      - 'rust/tdd-red.d/**'
       - 'rust/tdd/**'
-      - 'crates/workflow-world/**'
+      - 'crates/workflow-ai/**'
+      - 'security.txt'
+      - 'docs/rust-port/**'
       - '**/*.test.ts'
       - '**/*.test.tsx'
       - '**/*.test.mts'
@@ -28,14 +33,16 @@ concurrency:
 
 jobs:
   refresh:
-    name: Refresh checked-in test manifest
+    name: Promote verified AI normalization and refresh manifest
     if: >-
       github.event.pull_request.head.repo.full_name == github.repository &&
       github.event.pull_request.head.ref == 'pro/rust-repository-port'
     runs-on: ubuntu-24.04
-    timeout-minutes: 10
+    timeout-minutes: 20
     permissions:
       contents: write
+    env:
+      EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
     steps:
       - name: Checkout exact migration branch
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
@@ -47,43 +54,233 @@ jobs:
         uses: actions-rust-lang/setup-rust-toolchain@46268bd060767258de96ed93c1251119784f2ab6 # v1.16.1
         with:
           toolchain: 1.87.0
-          components: rustfmt
+          components: clippy,rustfmt
 
       - name: Setup Node.js 22
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: 22.x
 
-      - name: Canonically format translated Rust tests
-        shell: bash
+      - name: Promote reviewed sources and close WF-RUST-103
+        shell: python
         run: |
-          set -euo pipefail
-          for manifest in rust/tdd/*/Cargo.toml; do
-            cargo fmt --manifest-path "$manifest"
-          done
-          cargo fmt --package workflow-world
+          import json
+          from pathlib import Path
 
-      - name: Generate, apply reviewed statuses, and validate manifest
+          compatibility = "packages/ai/src/get-error-message.test.ts"
+          security = "packages/ai/src/get-error-message-security.test.ts"
+          evidence = (
+              " GREEN verified by the permanent read-only AI lane in workflow run "
+              "33584024158 at 31426849bbd4e67771a7bc3fa6c2e915ae963f06. "
+              "That run passed the TypeScript oracles, production and translated Rust "
+              "tests, Rustfmt, and Clippy with warnings denied."
+          )
+
+          primary_path = Path("rust/test-port-overrides.json")
+          primary = json.loads(primary_path.read_text(encoding="utf-8"))
+          matches = [
+              entry for entry in primary["entries"]
+              if entry["typescript"] == compatibility
+          ]
+          if len(matches) != 1 or matches[0]["status"] != "red":
+              raise SystemExit("compatibility override is not exactly one RED entry")
+          matches[0]["status"] = "green"
+          if not matches[0]["notes"].endswith("."):
+              matches[0]["notes"] += "."
+          matches[0]["notes"] += evidence
+          primary_path.write_text(
+              json.dumps(primary, indent=2, ensure_ascii=False) + "\n",
+              encoding="utf-8",
+          )
+
+          fragment_path = Path(
+              "rust/test-port-overrides.d/ai-get-error-message-security.json"
+          )
+          fragment = json.loads(fragment_path.read_text(encoding="utf-8"))
+          matches = [
+              entry for entry in fragment["entries"]
+              if entry["typescript"] == security
+          ]
+          if len(matches) != 1 or matches[0]["status"] != "red":
+              raise SystemExit("security override is not exactly one RED entry")
+          matches[0]["status"] = "green"
+          if not matches[0]["notes"].endswith("."):
+              matches[0]["notes"] += "."
+          matches[0]["notes"] += evidence
+          fragment_path.write_text(
+              json.dumps(fragment, indent=2, ensure_ascii=False) + "\n",
+              encoding="utf-8",
+          )
+
+          red_path = Path("rust/tdd-red.json")
+          red = json.loads(red_path.read_text(encoding="utf-8"))
+          selected = [
+              case for case in red["cases"]
+              if case["typescript"] == compatibility
+          ]
+          if len(selected) != 1:
+              raise SystemExit("compatibility expected-RED case is missing or duplicated")
+          red["cases"] = [
+              case for case in red["cases"]
+              if case["typescript"] != compatibility
+          ]
+          red_path.write_text(
+              json.dumps(red, indent=2, ensure_ascii=False) + "\n",
+              encoding="utf-8",
+          )
+
+          security_red_path = Path(
+              "rust/tdd-red.d/ai-get-error-message-security.json"
+          )
+          security_red = json.loads(
+              security_red_path.read_text(encoding="utf-8")
+          )
+          if [case["typescript"] for case in security_red["cases"]] != [security]:
+              raise SystemExit("security expected-RED fragment does not match")
+          security_red_path.unlink()
+
+          shim_path = Path("rust/tdd/workflow-ai/src/lib.rs")
+          shim = shim_path.read_text(encoding="utf-8")
+          imports = (
+              "use std::marker::PhantomData;\n"
+              "use std::sync::atomic::{AtomicUsize, Ordering};\n"
+              "use std::sync::{Arc, Weak};\n"
+          )
+          if imports not in shim:
+              raise SystemExit("AI RED-shim imports changed unexpectedly")
+          shim = shim.replace(imports, "use std::marker::PhantomData;\n", 1)
+          start_marker = "#[derive(Debug, Clone)]\npub struct CallableProbe"
+          end_marker = "#[derive(Debug, Clone, Copy, PartialEq, Eq)]\npub enum IteratorCase"
+          start = shim.find(start_marker)
+          end = shim.find(end_marker)
+          if start < 0 or end <= start:
+              raise SystemExit("AI RED-shim hostile-value block changed unexpectedly")
+          shim = (
+              shim[:start]
+              + "pub use workflow_ai::{\n"
+              + "    CallableProbe, ErrorValue, SharedErrorObject, get_error_message,\n"
+              + "};\n\n"
+              + shim[end:]
+          )
+          shim_path.write_text(shim, encoding="utf-8")
+
+          security_path = Path("security.txt")
+          security_text = security_path.read_text(encoding="utf-8")
+          if "WF-RUST-103" in security_text:
+              raise SystemExit("WF-RUST-103 is already present in security.txt")
+          security_text = security_text.rstrip() + "\n\n#\n" + """# WF-RUST-103: TypeScript AI error normalization delegates arbitrary
+# non-nullish values to JSON.stringify. That executes an object-controlled
+# toJSON hook and throws for cyclic objects and BigInts while another failure is
+# already being handled. The TypeScript characterization keeps all three legacy
+# behaviors reproducible. Rust preserves ordinary JSON compatibility but treats
+# callable fields as inert data, tracks shared-object identity, bounds recursive
+# traversal, canonicalizes BigInts, and returns fixed placeholders for cycles,
+# released references, excessive depth, and invalid BigInt text. Expected-RED
+# run 33583543050 and permanent GREEN run 33584024158 cover the TypeScript
+# oracles, translated Rust suites, direct production regressions, Rustfmt, and
+# Clippy. Full analysis is in docs/rust-port/findings/WF-RUST-103.md.
+"""
+          security_path.write_text(security_text, encoding="utf-8")
+
+          ledger_path = Path("docs/rust-port/TYPESCRIPT_LOGIC_AND_SECURITY_FIXES.md")
+          ledger = ledger_path.read_text(encoding="utf-8")
+          if "## WF-RUST-103:" in ledger:
+              raise SystemExit("WF-RUST-103 is already present in the findings ledger")
+          ledger = ledger.rstrip() + "\n\n" + """## WF-RUST-103: Error normalization executed hooks and could mask failures
+
+**Status:** Closed at the production Rust AI boundary; TypeScript remains the
+legacy compatibility and security oracle.
+
+**Affected code:** `packages/ai/src/get-error-message.ts` and the Rust
+`workflow-ai` error-normalization contract.
+
+**Old behavior:** Every non-nullish, non-string, non-Error value was passed to
+`JSON.stringify`. An object-supplied `toJSON` callback executed during failure
+handling, while cyclic values and BigInts threw a second `TypeError`.
+
+**Impact:** Diagnostic normalization could perform re-entrant side effects,
+replace the original diagnostic, or mask it with a secondary availability
+failure. This does not claim code injection: the callback is already executable
+inside the process, but normalization invoked it implicitly.
+
+**Fix:** Rust uses an inert typed value model, cycle detection, a depth bound,
+canonical BigInt diagnostics, and fixed non-reflective placeholders. Ordinary
+objects, arrays, primitives, escaping, and nested `undefined` retain the
+TypeScript compatibility contract.
+
+**Regression evidence:**
+
+- `packages/ai/src/get-error-message.test.ts`
+- `packages/ai/src/get-error-message-security.test.ts`
+- `rust/tdd/workflow-ai/tests/get_error_message.rs`
+- `rust/tdd/workflow-ai/tests/get_error_message_security.rs`
+- `crates/workflow-ai/tests/get_error_message_security.rs`
+- expected-RED workflow run `33583543050`
+- permanent GREEN workflow run `33584024158`
+- `docs/rust-port/findings/WF-RUST-103.md`
+"""
+          ledger_path.write_text(ledger, encoding="utf-8")
+
+      - name: Format promoted Rust and regenerate manifest
         run: |
+          cargo fmt --manifest-path rust/tdd/workflow-ai/Cargo.toml
           node scripts/rust-port-test-inventory.mjs \
             --write-json /tmp/rust-port-test-inventory.json
           node scripts/bootstrap-rust-test-port-manifest.mjs \
             /tmp/rust-port-test-inventory.json \
             rust/test-port-manifest.json
-          node scripts/apply-rust-test-port-overrides.mjs \
-            rust/test-port-manifest.json \
-            rust/test-port-overrides.json
           node scripts/rust-port-test-inventory.mjs \
             --check rust/test-port-manifest.json
+          node - <<'NODE'
+          const fs = require('node:fs');
+          const manifest = JSON.parse(
+            fs.readFileSync('rust/test-port-manifest.json', 'utf8')
+          );
+          const expected = {
+            unported: 223,
+            partial: 0,
+            red: 80,
+            green: 39,
+            blocked: 0,
+          };
+          if (JSON.stringify(manifest.statusCounts) !== JSON.stringify(expected)) {
+            throw new Error(
+              `unexpected promoted counts: ${JSON.stringify(manifest.statusCounts)}`
+            );
+          }
+          NODE
 
-      - name: Commit only canonical generated changes
+      - name: Re-run the promoted Rust tests
         run: |
-          if [[ -z "$(git status --porcelain -- rust/tdd crates/workflow-world rust/test-port-manifest.json)" ]]; then
-            echo 'Translated tests and manifest are already current.'
-            exit 0
-          fi
+          cargo test --locked --manifest-path crates/workflow-ai/Cargo.toml --all-targets
+          cargo test --locked --manifest-path rust/tdd/workflow-ai/Cargo.toml --test get_error_message
+          cargo test --locked --manifest-path rust/tdd/workflow-ai/Cargo.toml --test get_error_message_security
+          cargo clippy --locked --manifest-path crates/workflow-ai/Cargo.toml --all-targets -- -D warnings
+
+      - name: Restore permanent workflow files and commit atomically
+        run: |
+          git diff --check
+          git fetch origin pro/rust-repository-port
+          test "$(git rev-parse origin/pro/rust-repository-port)" = "$EXPECTED_HEAD"
+          git show HEAD^:.github/workflows/rust-test-manifest.yml > .github/workflows/rust-test-manifest.yml
+          rm -f \
+            .github/workflows/rust-ai-error-normalization-promote-once.yml \
+            .github/workflows/rust-source-snapshot-once.yml
+          git diff --check
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add rust/tdd crates/workflow-world rust/test-port-manifest.json
-          git commit --signoff -m 'test(rust-port): format tests and refresh manifest'
+          git add -A \
+            .github/workflows/rust-test-manifest.yml \
+            .github/workflows/rust-ai-error-normalization-promote-once.yml \
+            .github/workflows/rust-source-snapshot-once.yml \
+            rust/test-port-overrides.json \
+            rust/test-port-overrides.d/ai-get-error-message-security.json \
+            rust/test-port-manifest.json \
+            rust/tdd-red.json \
+            rust/tdd-red.d/ai-get-error-message-security.json \
+            rust/tdd/workflow-ai/src/lib.rs \
+            security.txt \
+            docs/rust-port/TYPESCRIPT_LOGIC_AND_SECURITY_FIXES.md
+          git diff --cached --quiet && { echo 'promotion produced no changes' >&2; exit 1; }
+          git commit --signoff -m 'test(rust-ai): promote error normalization to GREEN'
           git push origin HEAD:pro/rust-repository-port
