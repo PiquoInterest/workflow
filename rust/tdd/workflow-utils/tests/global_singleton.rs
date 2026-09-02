@@ -54,10 +54,8 @@ fn runs_the_factory_exactly_once() {
 fn mutations_are_visible_to_every_holder() {
     let name = case_name("shared-mutations");
     let registry = GlobalSingletonRegistry::new();
-    let copy_a =
-        registry.global_singleton(&name, 1, || Mutex::new(TransportState::default()));
-    let copy_b =
-        registry.global_singleton(&name, 1, || Mutex::new(TransportState::default()));
+    let copy_a = registry.global_singleton(&name, 1, || Mutex::new(TransportState::default()));
+    let copy_b = registry.global_singleton(&name, 1, || Mutex::new(TransportState::default()));
 
     copy_a
         .lock()
