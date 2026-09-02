@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "entries": [
+    {
+      "typescript": "packages/builders/src/swc-esbuild-plugin.test.ts",
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-builders/tests/swc_esbuild_plugin.rs",
+        "rust/tdd/workflow-builders/tests/swc_esbuild_plugin/support.rs",
+        "rust/tdd/workflow-builders/tests/swc_esbuild_plugin/observer_and_manifest.rs",
+        "rust/tdd/workflow-builders/tests/swc_esbuild_plugin/bundling.rs",
+        "rust/tdd/workflow-builders/tests/swc_esbuild_plugin/side_effects_and_roots.rs"
+      ],
+      "notes": "All 27 TypeScript declarations are translated as 33 executable Rust cases after expanding the two parameterized extension matrices. Coverage preserves authoritative and awaited transform observers, observer failures, duplicate step/workflow ID rejection, byte-identical pnpm peer-copy deduplication, TypeScript extension rewriting and default preservation, path-alias inlining including transitive self-references, Node builtin and optional-native externalization, local-versus-package dependency bundling, exact sideEffectEntries behavior under sideEffects:false metadata, and independent projectRoot/moduleSpecifierRoot propagation. Security-critical cases require divergent duplicate IDs to fail closed, aliases to resolve inside a bounded project graph instead of leaking runtime-controlled specifiers, side-effect overrides to apply only to explicitly listed canonical files, and native/builtin modules never to be rewritten into attacker-selected relative paths. Final GREEN must drive a real Rust bundle graph and SWC transform boundary rather than fixture-specific output strings."
+    }
+  ]
+}

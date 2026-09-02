@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "entries": [
+    {
+      "typescript": "packages/ai/src/agent/stream-text-iterator.test.ts",
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-ai/tests/stream_text_iterator.rs"
+      ],
+      "notes": "All 15 current declarations are translated: provider metadata to provider-options mapping, parallel and mixed providers, Gemini thought signatures, OpenAI item IDs, reasoning ordering and provider options, prepareStep system-message rules, multi-step system updates, and malformed tool-call input retention. Final GREEN must drive the real Rust iterator and provider prompt builder."
+    }
+  ]
+}

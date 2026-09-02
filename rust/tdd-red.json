@@ -1,0 +1,226 @@
+{
+  "schemaVersion": 1,
+  "cases": [
+    {
+      "typescript": "packages/utils/src/module-scope-state.test.ts",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--manifest-path",
+        "rust/tdd/workflow-utils/Cargo.toml",
+        "--test",
+        "module_scope_state"
+      ],
+      "failureMarker": "TDD RED: packages/utils/src/module-scope-state.test.ts implementation pending"
+    },
+    {
+      "typescript": "packages/builders/src/base-builder-logging.test.ts",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--manifest-path",
+        "rust/tdd/workflow-builders/Cargo.toml",
+        "--test",
+        "base_builder_logging"
+      ],
+      "failureMarker": "TDD RED: packages/builders/src/base-builder-logging.test.ts implementation pending"
+    },
+    {
+      "typescript": "packages/builders/src/config-helpers.test.ts",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--manifest-path",
+        "rust/tdd/workflow-builders/Cargo.toml",
+        "--test",
+        "config_helpers"
+      ],
+      "failureMarker": "TDD RED: packages/builders/src/config-helpers.test.ts implementation pending"
+    },
+    {
+      "typescript": "packages/builders/src/esbuild-tsconfig.test.ts",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--manifest-path",
+        "rust/tdd/workflow-builders/Cargo.toml",
+        "--test",
+        "esbuild_tsconfig"
+      ],
+      "failureMarker": "TDD RED: packages/builders/src/esbuild-tsconfig.test.ts implementation pending"
+    },
+    {
+      "typescript": "packages/builders/src/step-source-registration.test.ts",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--manifest-path",
+        "rust/tdd/workflow-builders/Cargo.toml",
+        "--test",
+        "step_source_registration"
+      ],
+      "failureMarker": "TDD RED: packages/builders/src/step-source-registration.test.ts implementation pending"
+    },
+    {
+      "typescript": "packages/builders/src/vercel-build-output-api.test.ts",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--manifest-path",
+        "rust/tdd/workflow-builders/Cargo.toml",
+        "--test",
+        "vercel_build_output_api"
+      ],
+      "failureMarker": "TDD RED: packages/builders/src/vercel-build-output-api.test.ts implementation pending"
+    },
+    {
+      "typescript": "packages/ai/src/agent/durable-agent-types.test.ts",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--manifest-path",
+        "rust/tdd/workflow-ai/Cargo.toml",
+        "--test",
+        "durable_agent_types"
+      ],
+      "failureMarker": "TDD RED: packages/ai/src/agent/durable-agent-types.test.ts implementation pending"
+    },
+    {
+      "typescript": "packages/ai/src/module-scope-state.test.ts",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--manifest-path",
+        "rust/tdd/workflow-ai/Cargo.toml",
+        "--test",
+        "module_scope_state"
+      ],
+      "failureMarker": "TDD RED: packages/ai/src/module-scope-state.test.ts implementation pending"
+    },
+    {
+      "typescript": "packages/ai/src/stream-iterator.test.ts",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--manifest-path",
+        "rust/tdd/workflow-ai/Cargo.toml",
+        "--test",
+        "stream_iterator"
+      ],
+      "failureMarker": "TDD RED: packages/ai/src/stream-iterator.test.ts implementation pending"
+    },
+    {
+      "typescript": "packages/ai/src/workflow-chat-transport.stream-repair.test.ts",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--manifest-path",
+        "rust/tdd/workflow-ai/Cargo.toml",
+        "--test",
+        "workflow_chat_transport_stream_repair"
+      ],
+      "failureMarker": "TDD RED: packages/ai/src/workflow-chat-transport.stream-repair.test.ts implementation pending"
+    },
+    {
+      "typescript": "packages/errors/src/module-scope-state.test.ts",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--manifest-path",
+        "rust/tdd/workflow-errors/Cargo.toml",
+        "--test",
+        "module_scope_state"
+      ],
+      "failureMarker": "TDD RED: packages/errors/src/module-scope-state.test.ts implementation pending"
+    },
+    {
+      "typescript": "packages/world/src/analytics.test.ts",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--manifest-path",
+        "rust/tdd/workflow-world/Cargo.toml",
+        "--test",
+        "analytics"
+      ],
+      "failureMarker": "TDD RED: packages/world/src/analytics.test.ts implementation pending"
+    },
+    {
+      "typescript": "packages/world/src/events.test.ts",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--manifest-path",
+        "rust/tdd/workflow-world/Cargo.toml",
+        "--test",
+        "events"
+      ],
+      "failureMarker": "TDD RED: packages/world/src/events.test.ts implementation pending"
+    },
+    {
+      "typescript": "packages/world/src/node-http-flag.test.ts",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--manifest-path",
+        "rust/tdd/workflow-world/Cargo.toml",
+        "--test",
+        "node_http_flag"
+      ],
+      "failureMarker": "TDD RED: packages/world/src/node-http-flag.test.ts implementation pending"
+    },
+    {
+      "typescript": "packages/world/src/node-http.test.ts",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--manifest-path",
+        "rust/tdd/workflow-world/Cargo.toml",
+        "--test",
+        "node_http"
+      ],
+      "failureMarker": "TDD RED: packages/world/src/node-http.test.ts implementation pending"
+    },
+    {
+      "typescript": "packages/world/src/recovery.test.ts",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--manifest-path",
+        "rust/tdd/workflow-world/Cargo.toml",
+        "--test",
+        "recovery"
+      ],
+      "failureMarker": "TDD RED: packages/world/src/recovery.test.ts implementation pending"
+    },
+    {
+      "typescript": "packages/world/src/shared.test.ts",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--manifest-path",
+        "rust/tdd/workflow-world/Cargo.toml",
+        "--test",
+        "shared"
+      ],
+      "failureMarker": "TDD RED: packages/world/src/shared.test.ts implementation pending"
+    }
+  ]
+}

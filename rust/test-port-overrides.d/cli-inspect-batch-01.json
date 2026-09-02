@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "entries": [
+    {
+      "typescript": "packages/cli/src/lib/inspect/time-window.test.ts",
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-cli/tests/time_window.rs"
+      ],
+      "notes": "All nine current declarations are translated with an injected fixed clock: minute/hour/day/week relative durations, absolute timestamps, flag-specific invalid-input errors, absent/default/inverted windows, and plan-window metadata extraction. Final GREEN must parse general inputs and produce exact UTC ISO timestamps rather than special-case the fixtures."
+    },
+    {
+      "typescript": "packages/cli/src/lib/inspect/hydration.test.ts",
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-cli/tests/hydration.rs"
+      ],
+      "notes": "The encrypted step-error display contract is translated end to end: an error is dehydrated for run_1 under a 32-byte key, remains an encrypted display reference without a key, and hydrates to an Error carrying the original message with the key. Final GREEN must use the real Rust serialization and authenticated-encryption implementation and must select the key by run ID; opaque fixture shortcuts are not sufficient."
+    },
+    {
+      "typescript": "packages/cli/src/lib/inspect/vercel-api.test.ts",
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-cli/tests/vercel_api.rs"
+      ],
+      "notes": "All five dashboard URL declarations are translated: production default, preview selection, run deep links, overview links, non-run query parameters, and explicit rejection of the legacy /observability path. Final GREEN must percent-encode untrusted path and query components while preserving these exact outputs for safe fixture values."
+    }
+  ]
+}

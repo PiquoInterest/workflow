@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "cases": [
+    {
+      "typescript": "packages/builders/src/get-input-files.test.ts",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--manifest-path",
+        "rust/tdd/workflow-builders/Cargo.toml",
+        "--test",
+        "get_input_files"
+      ],
+      "failureMarker": "TDD RED: packages/builders/src/get-input-files.test.ts implementation pending"
+    },
+    {
+      "typescript": "packages/builders/src/workflow-bundle-boundary.test.ts",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--manifest-path",
+        "rust/tdd/workflow-builders/Cargo.toml",
+        "--test",
+        "workflow_bundle_boundary"
+      ],
+      "failureMarker": "TDD RED: packages/builders/src/workflow-bundle-boundary.test.ts implementation pending"
+    },
+    {
+      "typescript": "packages/builders/src/write-if-changed.test.ts",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--manifest-path",
+        "rust/tdd/workflow-builders/Cargo.toml",
+        "--test",
+        "write_if_changed"
+      ],
+      "failureMarker": "TDD RED: packages/builders/src/write-if-changed.test.ts implementation pending"
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "entries": [
+    {
+      "typescript": "packages/utils/src/parse-name-security.test.ts",
+      "status": "green",
+      "rustTests": ["crates/workflow-utils/tests/parse_name_security.rs"],
+      "notes": "The pre-fix TypeScript implementation is observed RED. Fixed TypeScript and Rust format parsed and fallback names as one logical line by escaping C0, DEL/C1, CR, LF, tab, U+2028, and U+2029 without reflecting controls into logs."
+    }
+  ]
+}

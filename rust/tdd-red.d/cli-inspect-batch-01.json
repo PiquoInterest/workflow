@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "cases": [
+    {
+      "typescript": "packages/cli/src/lib/inspect/time-window.test.ts",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--manifest-path",
+        "rust/tdd/workflow-cli/Cargo.toml",
+        "--test",
+        "time_window"
+      ],
+      "failureMarker": "TDD RED: packages/cli/src/lib/inspect/time-window.test.ts implementation pending"
+    },
+    {
+      "typescript": "packages/cli/src/lib/inspect/hydration.test.ts",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--manifest-path",
+        "rust/tdd/workflow-cli/Cargo.toml",
+        "--test",
+        "hydration"
+      ],
+      "failureMarker": "TDD RED: packages/cli/src/lib/inspect/hydration.test.ts implementation pending"
+    },
+    {
+      "typescript": "packages/cli/src/lib/inspect/vercel-api.test.ts",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--manifest-path",
+        "rust/tdd/workflow-cli/Cargo.toml",
+        "--test",
+        "vercel_api"
+      ],
+      "failureMarker": "TDD RED: packages/cli/src/lib/inspect/vercel-api.test.ts implementation pending"
+    }
+  ]
+}

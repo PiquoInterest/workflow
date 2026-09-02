@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "entries": [
+    {
+      "typescript": "packages/core/src/readable-stream-telemetry.test.ts",
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-core/tests/readable_stream_telemetry.rs"
+      ],
+      "notes": "All three TypeScript declarations are translated. Coverage preserves CLIENT span identity; exact run, stream, and operation attributes; numeric time-to-first-non-empty-chunk and connect durations; connect not exceeding TTFC; drained-only completion totals; raw payload byte counts for WorkflowServerReadableStream; framed wire-byte counts including each four-byte header; and reconnect totals. Final GREEN must instrument the real Rust World read and framed reconnect paths, use monotonic elapsed timing, and keep telemetry fire-and-forget so a missing or failing exporter cannot alter stream delivery."
+    }
+  ]
+}

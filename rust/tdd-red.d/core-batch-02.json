@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "cases": [
+    {
+      "typescript": "packages/core/e2e/e2e-region.test.ts",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--manifest-path",
+        "rust/tdd/workflow-core/Cargo.toml",
+        "--test",
+        "e2e_region"
+      ],
+      "failureMarker": "TDD RED: packages/core/e2e/e2e-region.test.ts implementation pending"
+    }
+  ]
+}

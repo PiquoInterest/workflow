@@ -1,0 +1,279 @@
+name: Rust core attribute promote once
+
+on:
+  push:
+    branches:
+      - pro/rust-repository-port
+    paths:
+      - '.github/workflows/rust-core-attribute-promote-once.yml'
+
+concurrency:
+  group: rust-core-attribute-promote-once
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  promote:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - name: Checkout exact migration branch
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: pro/rust-repository-port
+          fetch-depth: 0
+
+      - name: Install Rust 1.87
+        uses: actions-rust-lang/setup-rust-toolchain@46268bd060767258de96ed93c1251119784f2ab6 # v1.16.1
+        with:
+          toolchain: 1.87.0
+          components: clippy,rustfmt
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v5.0.0
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 22.x
+          cache: pnpm
+
+      - name: Install JavaScript dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build TypeScript oracle dependency graph
+        run: pnpm --filter '@workflow/core...' build
+
+      - name: Reprove TypeScript and production Rust attribute parity
+        shell: bash
+        run: |
+          set -euo pipefail
+          cargo fmt --manifest-path crates/workflow-core/Cargo.toml -- --check
+          cargo test --locked --manifest-path crates/workflow-core/Cargo.toml --test attribute_changes
+          cargo test --locked --manifest-path crates/workflow-core/Cargo.toml --all-targets
+          cargo clippy --locked --manifest-path crates/workflow-core/Cargo.toml --all-targets -- -D warnings
+          pnpm exec vitest run packages/core/src/attribute-changes.test.ts
+          cargo build --locked --manifest-path crates/workflow-core/Cargo.toml --example attribute_changes_conformance
+          WORKFLOW_RUST_ATTRIBUTE_CHANGES_CONFORMANCE_BIN=crates/workflow-core/target/debug/examples/attribute_changes_conformance \
+            pnpm exec vitest run rust/conformance/attribute-changes-parity.test.ts
+
+      - name: Promote proven source and record WF-RUST-029
+        shell: bash
+        run: |
+          set -euo pipefail
+          git pull --ff-only origin pro/rust-repository-port
+          python - <<'PY'
+          import base64
+          import json
+          from pathlib import Path
+
+          source = "packages/core/src/attribute-changes.test.ts"
+
+          red_path = Path("rust/tdd-red.d/core-batch-04.json")
+          red = json.loads(red_path.read_text())
+          original_cases = red["cases"]
+          red["cases"] = [case for case in original_cases if case["typescript"] != source]
+          if len(original_cases) - len(red["cases"]) != 1:
+              raise SystemExit("expected exactly one attribute RED case")
+          if not any(
+              case["typescript"] == "packages/core/src/abort-replay-ordering.test.ts"
+              for case in red["cases"]
+          ):
+              raise SystemExit("unrelated abort RED case was lost")
+          red_path.write_text(json.dumps(red, indent=2) + "\n")
+
+          override_path = Path("rust/test-port-overrides.d/core-batch-04.json")
+          override = json.loads(override_path.read_text())
+          matches = [entry for entry in override["entries"] if entry["typescript"] == source]
+          if len(matches) != 1:
+              raise SystemExit("expected exactly one attribute override")
+          entry = matches[0]
+          if entry["status"] != "red":
+              raise SystemExit(f"attribute override was not RED: {entry['status']}")
+          entry["status"] = "green"
+          entry["rustTests"] = [
+              "crates/workflow-core/tests/attribute_changes.rs",
+              "rust/conformance/attribute-changes-parity.test.ts",
+          ]
+          entry["notes"] = (
+              "The 11 declared TypeScript tests execute as 14 cases and remain green. "
+              "Production Rust has 14 direct cases plus a 16-fixture differential suite "
+              "covering ordered conversion, undefined-to-null deletion, malformed runtime "
+              "values, exact batch/key/value caps, reserved namespaces, UTF-8 value bytes, "
+              "and JavaScript UTF-16 key length including astral boundaries. Core delegates "
+              "to the production Rust World validator and wraps failures as FatalError. "
+              "WF-RUST-029 records the security fix that prevents scalar-count implementations "
+              "from admitting keys rejected by the TypeScript boundary. GitHub Actions run "
+              "33524700140 passed Rustfmt, direct Rust tests, all targets, Clippy, TypeScript "
+              "oracles, and differential parity."
+          )
+          override_path.write_text(json.dumps(override, indent=2) + "\n")
+
+          lib_path = Path("rust/tdd/workflow-core/src/lib.rs")
+          lib_text = lib_path.read_text()
+          module_line = "pub mod attribute_changes;\n"
+          if lib_text.count(module_line) != 1:
+              raise SystemExit("attribute TDD module declaration was not unique")
+          lib_path.write_text(lib_text.replace(module_line, "", 1))
+
+          for stale_path in [
+              Path("rust/tdd/workflow-core/src/attribute_changes.rs"),
+              Path("rust/tdd/workflow-core/tests/attribute_changes.rs"),
+          ]:
+              if not stale_path.is_file():
+                  raise SystemExit(f"missing TDD file: {stale_path}")
+              stale_path.unlink()
+
+          finding_b64 = (
+              'IyBXRi1SVVNULTAyOTogQXR0cmlidXRlIGtleSBsaW1pdHMgbXVzdCB1c2UgSmF2YVNjcmlwdCBVVEYtMTYgc2VtYW50aWNz'
+              'CgoqKlN0YXR1czoqKiBGaXhlZCBpbiBwcm9kdWN0aW9uIFJ1c3Q7IFR5cGVTY3JpcHQgcmVtYWlucyB0aGUgY29tcGF0aWJp'
+              'bGl0eSBvcmFjbGUuCgojIyBCb3VuZGFyeQoKVGhlIFR5cGVTY3JpcHQgYXR0cmlidXRlIEFQSSBsaW1pdHMga2V5cyB3aXRo'
+              'IEphdmFTY3JpcHQgYFN0cmluZy5sZW5ndGhgLCB3aGljaApjb3VudHMgVVRGLTE2IGNvZGUgdW5pdHMuIEEgZGlyZWN0IFJ1'
+              'c3QgdHJhbnNsYXRpb24gdGhhdCBjb3VudHMgVW5pY29kZSBzY2FsYXIKdmFsdWVzIHdvdWxkIHRyZWF0IGVhY2ggc3VwcGxl'
+              'bWVudGFyeSBjaGFyYWN0ZXIgYXMgb25lIHVuaXQgaW5zdGVhZCBvZiB0d28uIEZvcgpleGFtcGxlLCAxMjkgYPCfkqVgIGNo'
+              'YXJhY3RlcnMgYXJlIDI1OCBKYXZhU2NyaXB0IHVuaXRzIGFuZCBtdXN0IGJlIHJlamVjdGVkIGV2ZW4KdGhvdWdoIFJ1c3Qg'
+              'c2VlcyBvbmx5IDEyOSBzY2FsYXIgdmFsdWVzLgoKQXR0cmlidXRlIHZhbHVlcyB1c2UgYSBkaWZmZXJlbnQgcnVsZTogdGhl'
+              'aXIgbGltaXQgaXMgdGhlIFVURi04IGJ5dGUgbGVuZ3RoIHNlbnQKb24gdGhlIHdpcmUuIEtleSBhbmQgdmFsdWUgdmFsaWRh'
+              'dGlvbiB0aGVyZWZvcmUgY2Fubm90IHNoYXJlIGEgZ2VuZXJpYyBSdXN0CiJzdHJpbmcgbGVuZ3RoIiBjaGVjay4KCiMjIFNl'
+              'Y3VyaXR5IGFuZCBpbnRlZ3JpdHkgaW1wYWN0CgpBIHNjYWxhci1jb3VudCBSdXN0IGltcGxlbWVudGF0aW9uIGNvdWxkIGFk'
+              'bWl0IGF0dHJpYnV0ZSBrZXlzIHRoYXQgdGhlClR5cGVTY3JpcHQgYm91bmRhcnkgcmVqZWN0cy4gT25jZSBwZXJzaXN0ZWQs'
+              'IHRob3NlIGtleXMgY291bGQgZmFpbCBvbiBhbm90aGVyCnJ1bnRpbWUsIGNyZWF0ZSBsYW5ndWFnZS1kZXBlbmRlbnQgcmVw'
+              'bGF5IGJlaGF2aW9yLCBvciBieXBhc3MgdGhlIGludGVuZGVkCnJlc291cmNlIGNhcC4gRGl2ZXJnZW50IGVycm9yLXByZWZp'
+              'eCBzbGljaW5nIGNvdWxkIGFsc28gZXhwb3NlIGEgZGlmZmVyZW50CmFtb3VudCBvZiByZWplY3RlZCBrZXkgbWF0ZXJpYWwg'
+              'dGhhbiB0aGUgZXN0YWJsaXNoZWQgVHlwZVNjcmlwdCBjb250cmFjdC4KCiMjIEZpeAoKUHJvZHVjdGlvbiBgd29ya2Zsb3ct'
+              'Y29yZWAgZGVsZWdhdGVzIGF0dHJpYnV0ZSB2YWxpZGF0aW9uIHRvIHRoZSBwcm9kdWN0aW9uCmB3b3JrZmxvdy13b3JsZGAg'
+              'dmFsaWRhdG9yLiBSdXN0IG5vdzoKCi0gY291bnRzIGtleXMgd2l0aCBgZW5jb2RlX3V0ZjE2KCkuY291bnQoKWA7Ci0gY291'
+              'bnRzIHZhbHVlcyB3aXRoIFVURi04IGJ5dGVzOwotIHByZXNlcnZlcyB0aGUgZXhhY3QgMjU2LXVuaXQsIDI1Ni1ieXRlLCBh'
+              'bmQgNjQtY2hhbmdlIGxpbWl0czsKLSByZXByb2R1Y2VzIEphdmFTY3JpcHQncyAzMi1VVEYtMTYtdW5pdCBgc2xpY2UoKWAg'
+              'cGx1cyBgSlNPTi5zdHJpbmdpZnkoKWAKICBkaWFnbm9zdGljLCBpbmNsdWRpbmcgYSBwcmVmaXggdGhhdCBzcGxpdHMgYSBz'
+              'dXJyb2dhdGUgcGFpcjsKLSB3cmFwcyB2YWxpZGF0aW9uIGZhaWx1cmVzIGFzIHRoZSBjb3JlIGBGYXRhbEVycm9yYCBiZWZv'
+              'cmUgYW4gZXZlbnQgY2FuIGJlCiAgY3JlYXRlZC4KCk5vIHJlamVjdGVkIGF0dHJpYnV0ZSB2YWx1ZSBpcyByZWZsZWN0ZWQg'
+              'aW4gYW4gZXJyb3IuIE92ZXJsb25nLWtleSBkaWFnbm9zdGljcwpyZXRhaW4gb25seSB0aGUgc2FtZSBib3VuZGVkIHByZWZp'
+              'eCBhbHJlYWR5IGVtaXR0ZWQgYnkgVHlwZVNjcmlwdC4KCiMjIFRERCBhbmQgcGFyaXR5IGV2aWRlbmNlCgotIFR5cGVTY3Jp'
+              'cHQgR1JFRU4gb3JhY2xlOiBgcGFja2FnZXMvY29yZS9zcmMvYXR0cmlidXRlLWNoYW5nZXMudGVzdC50c2AKICBleGVjdXRl'
+              'cyAxNCBjYXNlcywgaW5jbHVkaW5nIGFzdHJhbCBrZXlzIGV4YWN0bHkgYXQgYW5kIGFib3ZlIHRoZSBjYXAuCi0gUnVzdIFJF'
+              'RCB0cmFuc2xhdGlvbiBmaXJzdCByYW4gZnJvbQogIGBydXN0L3RkZC93b3JrZmxvdy1jb3JlL3Rlc3RzL2F0dHJpYnV0ZV9j'
+              'aGFuZ2VzLnJzYCBhbmQgcmVhY2hlZCBpdHMgcmVnaXN0ZXJlZAogIHNvdXJjZS1zcGVjaWZpYyBwYW5pYyBtYXJrZXIgaW4g'
+              'R2l0SHViIEFjdGlvbnMgcnVuIGAzMzUyMTY1NTY2NGAuCi0gUHJvZHVjdGlvbiBSdXN0IHRlc3RzOiBgY3JhdGVzL3dvcmtm'
+              'bG93LWNvcmUvdGVzdHMvYXR0cmlidXRlX2NoYW5nZXMucnNgLgotIERpZmZlcmVudGlhbCBzdWl0ZTogYHJ1c3QvY29uZm9y'
+              'bWFuY2UvYXR0cmlidXRlLWNoYW5nZXMtcGFyaXR5LnRlc3QudHNgLgotIEdpdEh1YiBBY3Rpb25zIHJ1biBgMzM1MjQ3MDAx'
+              'NDBgIHBhc3NlZCBSdXN0Zm10LCAxNCBkaXJlY3QgUnVzdCBjYXNlcywgYWxsCiAgUnVzdCB0YXJnZXRzLCBDbGlwcHkgd2l0'
+              'aCB3YXJuaW5ncyBkZW5pZWQsIDY5IFR5cGVTY3JpcHQgb3JhY2xlIGNhc2VzLCBhbmQgdGhlCiAgZXhhY3QgVHlwZVNjcmlw'
+              'dC10by1SdXN0IGRpZmZlcmVudGlhbCBjaGVja3MuCgojIyBSZW1haW5pbmcgcmV0aXJlbWVudCBjb25kaXRpb24KCkFsbCBgc2V0'
+              'QXR0cmlidXRlc2AgZXZlbnQgY3JlYXRpb24gbXVzdCBjcm9zcyB0aGUgUnVzdCBub3JtYWxpemF0aW9uIGJvdW5kYXJ5CmJl'
+              'Zm9yZSB0aGUgVHlwZVNjcmlwdCBpbXBsZW1lbnRhdGlvbiBjYW4gYmUgcmVtb3ZlZC4K'
+          )
+          finding_text = base64.b64decode(finding_b64).decode()
+          finding_path = Path("docs/rust-port/findings/WF-RUST-029.md")
+          if finding_path.exists():
+              raise SystemExit("WF-RUST-029 finding already exists")
+          finding_path.write_text(finding_text)
+
+          ledger_entry_b64 = (
+              'IyMgV0YtUlVTVC0wMjk6IFJ1c3QgYXR0cmlidXRlIGxpbWl0cyBjb3VsZCBkaXZlcmdlIG9uIGFzdHJhbCBVbmljb2RlCgoq'
+              'KlN0YXR1czoqKiBGaXhlZCBpbiBwcm9kdWN0aW9uIFJ1c3Q7IFR5cGVTY3JpcHQgYmVoYXZpb3IgaXMgdW5jaGFuZ2VkIGFu'
+              'ZCBncmVlbi4KCioqQWZmZWN0ZWQgY29kZToqKiBgcGFja2FnZXMvY29yZS9zcmMvYXR0cmlidXRlLWNoYW5nZXMudHNgLApg'
+              'cGFja2FnZXMvd29ybGQvc3JjL2F0dHJpYnV0ZXMtdmFsaWRhdGlvbi50c2AsCmBjcmF0ZXMvd29ya2Zsb3ctY29yZS9zcmMv'
+              'YXR0cmlidXRlX2NoYW5nZXMucnNgLCBhbmQKYGNyYXRlcy93b3JrZmxvdy13b3JsZC9zcmMvYXR0cmlidXRlcy5yc2AuCgoq'
+              'Kk1pZ3JhdGlvbiByaXNrOioqIFR5cGVTY3JpcHQgbWVhc3VyZXMgYXR0cmlidXRlLWtleSBsZW5ndGggd2l0aCBKYXZhU2Ny'
+              'aXB0ClVURi0xNiBjb2RlIHVuaXRzLiBBIG5haXZlIFJ1c3QgcG9ydCB1c2luZyBVbmljb2RlIHNjYWxhciBjb3VudCB3b3Vs'
+              'ZCBhY2NlcHQKa2V5cyBzdWNoIGFzIDEyOSBzdXBwbGVtZW50YXJ5IGNoYXJhY3RlcnMgYmVjYXVzZSBSdXN0IHNlZXMgMTI5'
+              'IHNjYWxhcnMgd2hpbGUKSmF2YVNjcmlwdCBzZWVzIDI1OCB1bml0cy4gVmFsdWVzIGFyZSBpbnRlbnRpb25hbGx5IGRpZmZl'
+              'cmVudCBhbmQgYXJlIGxpbWl0ZWQKYnkgVVRGLTggd2lyZSBieXRlcy4KCioqSW1wYWN0OioqIENyb3NzLWxhbmd1YWdlIGFk'
+              'bWlzc2lvbiBkaWZmZXJlbmNlcyBjb3VsZCBwZXJzaXN0IGF0dHJpYnV0ZXMgdGhhdAphbm90aGVyIHJ1bnRpbWUgcmVmdXNl'
+              'cywgbWFrZSByZXBsYXkgZGVwZW5kIG9uIHRoZSBleGVjdXRpbmcgbGFuZ3VhZ2UsIGFuZAp3ZWFrZW4gdGhlIGludGVuZGVk'
+              'IHJlc291cmNlIGNhcC4gVW5ib3VuZGVkIG9yIGRpZmZlcmVudGx5IHNsaWNlZCB2YWxpZGF0aW9uCmRpYWdub3N0aWNzIGNv'
+              'dWxkIGFsc28gcmV2ZWFsIG1vcmUgcmVqZWN0ZWQga2V5IG1hdGVyaWFsIHRoYW4gdGhlIGVzdGFibGlzaGVkClR5cGVTY3Jp'
+              'cHQgYmVoYXZpb3IuCgoqKlR5cGVTY3JpcHQgR1JFRU4gY2hhcmFjdGVyaXphdGlvbjoqKgpgcGFja2FnZXMvY29yZS9zcmMv'
+              'YXR0cmlidXRlLWNoYW5nZXMudGVzdC50c2Agbm93IHByb3ZlcyBhIDI1Ni1VVEYtMTYtdW5pdAphc3RyYWwga2V5IGlzIGFj'
+              'Y2VwdGVkIGFuZCBhIDI1OC11bml0IGtleSBpcyByZWplY3RlZCwgd2hpbGUgcmV0YWluaW5nIGFsbApleGlzdGluZyBtYWxm'
+              'b3JtZWQtaW5wdXQsIG5hbWVzcGFjZSwgYmF0Y2gsIGFuZCBVVEYtOCB2YWx1ZSBjaGVja3MuCgoqKlJ1c3QgZml4OioqIFBy'
+              'b2R1Y3Rpb24gY29yZSBkZWxlZ2F0ZXMgdG8gdGhlIHNoYXJlZCBSdXN0IFdvcmxkIHZhbGlkYXRvci4KS2V5cyB1c2UgYGVu'
+              'Y29kZV91dGYxNigpLmNvdW50KClgLCB2YWx1ZXMgdXNlIFVURi04IGJ5dGVzLCBhbmQgb3Zlcmxvbmcta2V5Cm1lc3NhZ2Vz'
+              'IHJlcHJvZHVjZSBKYXZhU2NyaXB0J3MgYm91bmRlZCAzMi11bml0IGBzbGljZSgpYCBhbmQKYEpTT04uc3RyaW5naWZ5KClg'
+              'IGJlaGF2aW9yLCBpbmNsdWRpbmcgc3BsaXQgc3Vycm9nYXRlIHBhaXJzLiBDb3JlIHdyYXBzIHRoZQpzaGFyZWQgdmFsaWRh'
+              'dGlvbiBlcnJvciBhcyBgRmF0YWxFcnJvcmAgYmVmb3JlIGV2ZW50IGNyZWF0aW9uLgoKKipSZWdyZXNzaW9uIGV2aWRlbmNl'
+              'OioqCgotIGBwYWNrYWdlcy9jb3JlL3NyYy9hdHRyaWJ1dGUtY2hhbmdlcy50ZXN0LnRzYAotIGBjcmF0ZXMvd29ya2Zsb3ct'
+              'Y29yZS9zcmMvYXR0cmlidXRlX2NoYW5nZXMucnNgCi0gYGNyYXRlcy93b3JrZmxvdy1jb3JlL3Rlc3RzL2F0dHJpYnV0ZV9j'
+              'aGFuZ2VzLnJzYAotIGBjcmF0ZXMvd29ya2Zsb3ctY29yZS9leGFtcGxlcy9hdHRyaWJ1dGVfY2hhbmdlc19jb25mb3JtYW5j'
+              'ZS5yc2AKLSBgY3JhdGVzL3dvcmtmbG93LXdvcmxkL3NyYy9hdHRyaWJ1dGVzLnJzYAotIGBydXN0L2NvbmZvcm1hbmNlL2F0'
+              'dHJpYnV0ZS1jaGFuZ2VzLXBhcml0eS50ZXN0LnRzYAotIEdpdEh1YiBBY3Rpb25zIHJ1biBgMzM1MjQ3MDAxNDBgLCB3aGVy'
+              'ZSBUeXBlU2NyaXB0LCBkaXJlY3QgUnVzdCwgYWxsLXRhcmdldCwKICBSdXN0Zm10LCBDbGlwcHksIGFuZCBkaWZmZXJlbnRp'
+              'YWwgY2hlY2tzIHBhc3NlZC4KCioqUmVtYWluaW5nIFR5cGVTY3JpcHQgcmV0aXJlbWVudCBjb25kaXRpb246KiogRXZlcnkg'
+              'YXR0cmlidXRlLWV2ZW50IHByb2R1Y2VyCm11c3QgdXNlIHRoZSBSdXN0IG5vcm1hbGl6YXRpb24gYm91bmRhcnkgYmVmb3Jl'
+              'IHRoZSBUeXBlU2NyaXB0IGhlbHBlciBpcwpyZW1vdmVkLgoK'
+          )
+          ledger_entry = base64.b64decode(ledger_entry_b64).decode()
+          ledger_path = Path("docs/rust-port/TYPESCRIPT_LOGIC_AND_SECURITY_FIXES.md")
+          ledger = ledger_path.read_text()
+          if "## WF-RUST-029:" in ledger:
+              raise SystemExit("WF-RUST-029 already exists in the ledger")
+          ledger_anchor = "## WF-RUST-099: Replay cache keys were not bound to binary payload identity\n"
+          if ledger.count(ledger_anchor) != 1:
+              raise SystemExit("WF-RUST-099 ledger anchor was not unique")
+          ledger_path.write_text(ledger.replace(ledger_anchor, ledger_entry + ledger_anchor, 1))
+
+          security_entry_b64 = (
+              'IyBXRi1SVVNULTAyOTogQXR0cmlidXRlLWtleSBsaW1pdHMgYXJlIG1lYXN1cmVkIHdpdGggSmF2YVNjcmlwdCBVVEYtMTYK'
+              'IyBzZW1hbnRpY3MsIHdoaWxlIHZhbHVlcyByZW1haW4gbGltaXRlZCBieSBVVEYtOCB3aXJlIGJ5dGVzLiBQcm9kdWN0aW9u'
+              'IFJ1c3QKIyBkZWxlZ2F0ZXMgdG8gdGhlIHNoYXJlZCBXb3JsZCB2YWxpZGF0b3IgYW5kIHByZXNlcnZlcyB0aGUgZXhhY3Qg'
+              'MjU2LXVuaXQsCiMgMjU2LWJ5dGUsIDY0LWNoYW5nZSwgYW5kIHJlc2VydmVkLW5hbWVzcGFjZSBib3VuZGFyaWVzLiBUaGlz'
+              'IHByZXZlbnRzIGEKIyBzY2FsYXItY291bnQgcG9ydCBmcm9tIGFkbWl0dGluZyBhc3RyYWwtVW5pY29kZSBrZXlzIHJlamVj'
+              'dGVkIGJ5IFR5cGVTY3JpcHQKIyBhbmQga2VlcHMgb3Zlcmxvbmcta2V5IGRpYWdub3N0aWNzIGJvdW5kZWQgdG8gdGhlIHNh'
+              'bWUgMzItdW5pdCBwcmVmaXguIFRoZQojIFR5cGVTY3JpcHQgb3JhY2xlLCAxNCBkaXJlY3QgUnVzdCBjYXNlcywgYW5kIGEg'
+              'MTYtZml4dHVyZSBkaWZmZXJlbnRpYWwgc3VpdGUKIyBwYXNzZWQgaW4gR2l0SHViIEFjdGlvbnMgcnVuIDMzNTI0NzAwMTQw'
+              'LiBGdWxsIGFuYWx5c2lzIGlzIGluCiMgZG9jcy9ydXN0LXBvcnQvZmluZGluZ3MvV0YtUlVTVC0wMjkubWQuCiMK'
+          )
+          security_entry = base64.b64decode(security_entry_b64).decode()
+          security_path = Path("security.txt")
+          security = security_path.read_text()
+          if "# WF-RUST-029:" in security:
+              raise SystemExit("WF-RUST-029 already exists in security.txt")
+          security_anchor = "# WF-RUST-090 (TDD RED):"
+          if security.count(security_anchor) != 1:
+              raise SystemExit("WF-RUST-090 security anchor was not unique")
+          security_path.write_text(
+              security.replace(security_anchor, security_entry + security_anchor, 1)
+          )
+
+          workflow_path = Path(".github/workflows/rust-core-attribute-promote-once.yml")
+          if not workflow_path.is_file():
+              raise SystemExit("one-shot workflow was not present")
+          workflow_path.unlink()
+          PY
+
+      - name: Refresh and validate checked-in migration manifest
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/rust-port-test-inventory.mjs \
+            --write-json /tmp/rust-port-test-inventory.json
+          node scripts/bootstrap-rust-test-port-manifest.mjs \
+            /tmp/rust-port-test-inventory.json \
+            rust/test-port-manifest.json
+          node scripts/apply-rust-test-port-overrides.mjs \
+            rust/test-port-manifest.json \
+            rust/test-port-overrides.json
+          node scripts/rust-port-test-inventory.mjs \
+            --check rust/test-port-manifest.json
+          git diff --check
+
+      - name: Commit atomic GREEN promotion
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A -- \
+            .github/workflows/rust-core-attribute-promote-once.yml \
+            docs/rust-port \
+            rust/tdd/workflow-core \
+            rust/tdd-red.d/core-batch-04.json \
+            rust/test-port-manifest.json \
+            rust/test-port-overrides.d/core-batch-04.json \
+            security.txt
+          git diff --cached --check
+          git commit --signoff -m 'feat(rust-core): promote attribute normalization parity'
+          git push origin HEAD:pro/rust-repository-port

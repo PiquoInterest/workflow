@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "cases": [
+    {
+      "typescript": "packages/ai/src/agent/telemetry.test.ts",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--manifest-path",
+        "rust/tdd/workflow-ai/Cargo.toml",
+        "--test",
+        "telemetry"
+      ],
+      "failureMarker": "TDD RED: packages/ai/src/agent/telemetry.test.ts implementation pending"
+    }
+  ]
+}

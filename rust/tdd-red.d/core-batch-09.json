@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "cases": [
+    {
+      "typescript": "packages/core/src/byte-stream-framing.test.ts",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--manifest-path",
+        "rust/tdd/workflow-core/Cargo.toml",
+        "--test",
+        "byte_stream_framing"
+      ],
+      "failureMarker": "TDD RED: packages/core/src/byte-stream-framing.test.ts implementation pending"
+    },
+    {
+      "typescript": "packages/core/src/flushable-stream.test.ts",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--manifest-path",
+        "rust/tdd/workflow-core/Cargo.toml",
+        "--test",
+        "flushable_stream"
+      ],
+      "failureMarker": "TDD RED: packages/core/src/flushable-stream.test.ts implementation pending"
+    },
+    {
+      "typescript": "packages/core/src/delivery-barrier-dispenser.test.ts",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--manifest-path",
+        "rust/tdd/workflow-core/Cargo.toml",
+        "--test",
+        "delivery_barrier_dispenser"
+      ],
+      "failureMarker": "TDD RED: packages/core/src/delivery-barrier-dispenser.test.ts implementation pending"
+    }
+  ]
+}

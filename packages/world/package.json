@@ -37,7 +37,7 @@
     "build": "tsc",
     "dev": "tsc --watch",
     "clean": "tsc --build --clean && rm -rf dist",
-    "test": "vitest run src"
+    "test": "vitest run src && node ../../rust/conformance/run-world-parity.mjs"
   },
   "dependencies": {
     "ulid": "catalog:",

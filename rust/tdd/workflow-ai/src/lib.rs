@@ -1,0 +1,241 @@
+#![forbid(unsafe_code)]
+
+pub mod durable_agent;
+pub mod durable_agent_compat;
+pub mod stream_text_iterator;
+pub mod telemetry;
+pub mod workflow_chat_transport;
+
+use std::marker::PhantomData;
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct WeatherTool;
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct WeatherTools {
+    pub get_weather: WeatherTool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DurableAgent<Tools> {
+    pub model: String,
+    pub tools: Tools,
+}
+
+pub trait AgentTools {
+    type Tools;
+}
+
+impl<Tools> AgentTools for DurableAgent<Tools> {
+    type Tools = Tools;
+}
+
+pub type InferDurableAgentTools<Agent> = <Agent as AgentTools>::Tools;
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct UiMessage<Metadata, Tools> {
+    pub metadata: Metadata,
+    pub tools: PhantomData<Tools>,
+}
+
+pub type InferDurableAgentUiMessage<Agent, Metadata> =
+    UiMessage<Metadata, InferDurableAgentTools<Agent>>;
+
+pub fn durable_agent_type_contract() {
+    panic!("TDD RED: packages/ai/src/agent/durable-agent-types.test.ts implementation pending")
+}
+
+pub use workflow_ai::{CallableProbe, ErrorValue, SharedErrorObject, get_error_message};
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum IteratorCase {
+    GeneratorToStream,
+    BrowserMacrotaskYield,
+    NonBrowserNoYield,
+    AbortAfterFirst,
+    AlreadyAborted,
+    GeneratorError,
+    StreamToIterator,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
+pub struct StreamObservation {
+    pub values: Vec<i32>,
+    pub done: bool,
+    pub macrotask_yields: usize,
+    pub error: Option<String>,
+}
+
+pub fn exercise_stream_iterator(case: IteratorCase) -> StreamObservation {
+    let _ = case;
+    panic!("TDD RED: packages/ai/src/stream-iterator.test.ts implementation pending")
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ChatRepairCase {
+    RawInterleavedText,
+    RepairedInterleavedText,
+    DuplicateTextTail,
+    WellFormedMultiStep,
+    RawInterleavedReasoning,
+    RepairedInterleavedReasoning,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
+pub struct ChatRepairObservation {
+    pub consumer_error: Option<String>,
+    pub text: String,
+    pub reasoning: String,
+}
+
+pub fn exercise_chat_repair(case: ChatRepairCase) -> ChatRepairObservation {
+    let _ = case;
+    panic!(
+        "TDD RED: packages/ai/src/workflow-chat-transport.stream-repair.test.ts implementation pending"
+    )
+}
+
+pub fn scan_module_scope_state(package_path: &str) -> Vec<String> {
+    let _ = package_path;
+    panic!("TDD RED: packages/ai/src/module-scope-state.test.ts implementation pending")
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum FinishReasonTypeField {
+    Missing,
+    Null,
+    Undefined,
+    String(String),
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum FinishReasonInput {
+    String(String),
+    Object {
+        type_field: FinishReasonTypeField,
+        has_additional_properties: bool,
+    },
+    Undefined,
+    Null,
+    Number(i64),
+    Bool(bool),
+    Array(Vec<FinishReasonInput>),
+}
+
+pub fn normalize_finish_reason(input: &FinishReasonInput) -> String {
+    let _ = input;
+    panic!("TDD RED: packages/ai/src/agent/do-stream-step.test.ts implementation pending")
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum ToolCallInput {
+    Object(Vec<(String, String)>),
+    RawString(String),
+}
+
+pub fn safe_parse_tool_call_input(input: Option<&str>) -> ToolCallInput {
+    let _ = input;
+    panic!("TDD RED: packages/ai/src/agent/do-stream-step.test.ts implementation pending")
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum DoStreamStepCase {
+    MalformedToolCallInput,
+    PartialResponseMetadata,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ToolCallObservation {
+    pub tool_call_id: String,
+    pub tool_name: String,
+    pub input: ToolCallInput,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum UiMessageChunkObservation {
+    ToolInputAvailable {
+        tool_call_id: String,
+        tool_name: String,
+        input: ToolCallInput,
+    },
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ResponseMetadataObservation {
+    pub id: Option<String>,
+    pub model_id: Option<String>,
+    pub timestamp: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
+pub struct DoStreamStepObservation {
+    pub tool_calls: Vec<ToolCallObservation>,
+    pub written_chunks: Vec<UiMessageChunkObservation>,
+    pub response_metadata: Option<ResponseMetadataObservation>,
+}
+
+pub fn exercise_do_stream_step(case: DoStreamStepCase) -> DoStreamStepObservation {
+    let _ = case;
+    panic!("TDD RED: packages/ai/src/agent/do-stream-step.test.ts implementation pending")
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum ModelValue {
+    Null,
+    Bool(bool),
+    Number(i64),
+    String(String),
+    Array(Vec<ModelValue>),
+    Object(Vec<(String, ModelValue)>),
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct FunctionToolDefinition {
+    pub description: Option<String>,
+    pub input_schema: ModelValue,
+    pub strict: Option<bool>,
+    pub input_examples: Option<Vec<ModelValue>>,
+    pub provider_options: Option<ModelValue>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ProviderToolDefinition {
+    pub id: String,
+    pub args: Option<ModelValue>,
+    pub input_schema: ModelValue,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum ToolDefinition {
+    Function(FunctionToolDefinition),
+    Dynamic(FunctionToolDefinition),
+    Provider(ProviderToolDefinition),
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct FunctionModelTool {
+    pub name: String,
+    pub description: Option<String>,
+    pub input_schema: ModelValue,
+    pub strict: Option<bool>,
+    pub input_examples: Option<Vec<ModelValue>>,
+    pub provider_options: Option<ModelValue>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ProviderModelTool {
+    pub id: String,
+    pub name: String,
+    pub args: ModelValue,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum ModelTool {
+    Function(FunctionModelTool),
+    Provider(ProviderModelTool),
+}
+
+pub fn tools_to_model_tools(tools: Vec<(String, ToolDefinition)>) -> Vec<ModelTool> {
+    let _ = tools;
+    panic!("TDD RED: packages/ai/src/agent/tools-to-model-tools.test.ts implementation pending")
+}

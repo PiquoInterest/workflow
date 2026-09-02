@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "cases": [
+    {
+      "typescript": "packages/core/src/async-deserialization-ordering.test.ts",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--manifest-path",
+        "rust/tdd/workflow-core/Cargo.toml",
+        "--test",
+        "async_deserialization_ordering"
+      ],
+      "failureMarker": "TDD RED: packages/core/src/async-deserialization-ordering.test.ts implementation pending"
+    }
+  ]
+}

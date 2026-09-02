@@ -1,0 +1,4059 @@
+{
+  "schemaVersion": 1,
+  "sourceCount": 343,
+  "declaredTestCount": 5125,
+  "statusCounts": {
+    "unported": 223,
+    "partial": 0,
+    "red": 81,
+    "green": 39,
+    "blocked": 0
+  },
+  "entries": [
+    {
+      "typescript": "packages/ai/src/agent/do-stream-step.test.ts",
+      "sourceSha256": "3a39f0c0377d79e136a90f5da25090cc2b549ca84d9fc28cb03446977b560c7e",
+      "surface": "packages/ai",
+      "kind": "unit",
+      "lineCount": 256,
+      "declaredTestCount": 30,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-ai/tests/do_stream_step.rs"
+      ],
+      "notes": "All 30 finish-reason normalization, tool-input parsing, malformed streamed tool-call, and response-metadata merge declarations are translated. The malformed-input case is security-relevant because provider-controlled stream data must not crash a run or be silently reinterpreted."
+    },
+    {
+      "typescript": "packages/ai/src/agent/durable-agent-compat.test.ts",
+      "sourceSha256": "5416a69a94a36cb5c58e224127b4927ba4c132ecfc016013e8d6c1cff5ed8c51",
+      "surface": "packages/ai",
+      "kind": "unit",
+      "lineCount": 1783,
+      "declaredTestCount": 42,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-ai/tests/durable_agent_compat.rs"
+      ],
+      "notes": "Every executable TypeScript assertion is translated into 42 Rust tests. Coverage includes prepareCall/prepareStep precedence, abort and timeout propagation, string and structured instructions, constructor/method callback ordering, lifecycle event payloads, tool-call start/finish data, final and detailed v6 usage aggregation, local/global telemetry integrations, listener-failure isolation, and static/dynamic tool approval. The dynamic approval test is split so validated input and no-execution pause behavior fail independently."
+    },
+    {
+      "typescript": "packages/ai/src/agent/durable-agent-types.test.ts",
+      "sourceSha256": "dd2f11c15f507dd3c63b420ecfce8d0832771ddfa37363dd70bc024a03c58699",
+      "surface": "packages/ai",
+      "kind": "unit",
+      "lineCount": 56,
+      "declaredTestCount": 3,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-ai/tests/durable_agent_types.rs"
+      ],
+      "notes": "All three type-inference declarations are translated as Rust generic assignments. They are compile-time checked even while the runtime implementation marker remains RED."
+    },
+    {
+      "typescript": "packages/ai/src/agent/durable-agent.test.ts",
+      "sourceSha256": "b1ef84a509c70783713284ec17b562798e7cc08201283f89ab9b086f4998531b",
+      "surface": "packages/ai",
+      "kind": "unit",
+      "lineCount": 2986,
+      "declaredTestCount": 48,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-ai/tests/durable_agent.rs",
+        "rust/tdd/workflow-ai/tests/durable_agent/tooling_and_results.rs",
+        "rust/tdd/workflow-ai/tests/durable_agent/options_and_ui.rs"
+      ],
+      "notes": "All 48 current declarations are translated. Coverage includes local/provider/client tool execution, preformatted and error outputs, missing provider results, mixed execution, unresolved client calls, prepareStep precedence and capabilities, per-round message propagation, generation settings, tool choice and filtering, error recovery with corrected retries, finish/abort/context behavior, result geometry, tool-call repair and prompt patching, raw chunks, telemetry overrides, UI message collection, writer closure, and sendFinish suppression. Final GREEN must drive the actual Rust agent loop and may not replace the observation contract with hard-coded fixtures."
+    },
+    {
+      "typescript": "packages/ai/src/agent/stream-text-iterator.test.ts",
+      "sourceSha256": "142d8cab31384808ce3ca53e7b6c7a3b9373c632a219755acd14ed20d5c20f84",
+      "surface": "packages/ai",
+      "kind": "unit",
+      "lineCount": 1164,
+      "declaredTestCount": 15,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-ai/tests/stream_text_iterator.rs"
+      ],
+      "notes": "All 15 current declarations are translated: provider metadata to provider-options mapping, parallel and mixed providers, Gemini thought signatures, OpenAI item IDs, reasoning ordering and provider options, prepareStep system-message rules, multi-step system updates, and malformed tool-call input retention. Final GREEN must drive the real Rust iterator and provider prompt builder."
+    },
+    {
+      "typescript": "packages/ai/src/agent/telemetry.test.ts",
+      "sourceSha256": "545937d433ed6c294e2a44ebfbc6cc397105e27b5cea979513b5a7f9ee218eb1",
+      "surface": "packages/ai",
+      "kind": "unit",
+      "lineCount": 664,
+      "declaredTestCount": 9,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-ai/tests/telemetry.rs"
+      ],
+      "notes": "All nine current telemetry assertions are translated: response attributes, tool-call attributes, recordInputs and recordOutputs privacy controls, reasoning/cache accounting, tool result capture, tool output suppression, span-context propagation, and iterator option forwarding. Final GREEN must exercise the actual Rust span implementation and binding, not a fabricated observation."
+    },
+    {
+      "typescript": "packages/ai/src/agent/tools-to-model-tools.test.ts",
+      "sourceSha256": "67320a940c6ecbaf6b804749d9813ab4b94d857481090307707ef906801ee31b",
+      "surface": "packages/ai",
+      "kind": "unit",
+      "lineCount": 222,
+      "declaredTestCount": 12,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-ai/tests/tools_to_model_tools.rs"
+      ],
+      "notes": "All 12 function, provider, mixed, optional strict/inputExamples/providerOptions, dynamic-tool, and empty-tool declarations are translated. The Rust type model makes provider-only and function-only fields distinct before implementation."
+    },
+    {
+      "typescript": "packages/ai/src/get-error-message-security.test.ts",
+      "sourceSha256": "2c26a9ac6ec8abdf5fc6bfa272130c28e3abebc0e69b378f3c90e1414174ca6a",
+      "surface": "packages/ai",
+      "kind": "unit",
+      "lineCount": 29,
+      "declaredTestCount": 3,
+      "status": "green",
+      "rustTests": [
+        "rust/tdd/workflow-ai/tests/get_error_message_security.rs",
+        "crates/workflow-ai/tests/get_error_message_security.rs"
+      ],
+      "notes": "All three legacy JSON-normalization hazards are translated as a differential security contract: object-supplied toJSON callbacks must remain inert, cyclic object graphs must not panic, and BigInt values must produce a stable diagnostic string. The TypeScript characterization intentionally preserves the unsafe behavior while the Rust implementation is still RED. GREEN verified by the permanent read-only AI lane in workflow run 33584024158 at 31426849bbd4e67771a7bc3fa6c2e915ae963f06. That run passed the TypeScript oracles, production and translated Rust tests, Rustfmt, and Clippy with warnings denied."
+    },
+    {
+      "typescript": "packages/ai/src/get-error-message.test.ts",
+      "sourceSha256": "70cda4ac19b4b5dd5eb63ce0f2446f2aafb0a47f1b17ad7ca1f6e0bd54adc7dd",
+      "surface": "packages/ai",
+      "kind": "unit",
+      "lineCount": 58,
+      "declaredTestCount": 11,
+      "status": "green",
+      "rustTests": [
+        "rust/tdd/workflow-ai/tests/get_error_message.rs"
+      ],
+      "notes": "All 11 Error, string, object, nested object, nullish, number, boolean, array, empty-string, and subclass normalization declarations are translated. GREEN verified by the permanent read-only AI lane in workflow run 33584024158 at 31426849bbd4e67771a7bc3fa6c2e915ae963f06. That run passed the TypeScript oracles, production and translated Rust tests, Rustfmt, and Clippy with warnings denied."
+    },
+    {
+      "typescript": "packages/ai/src/module-scope-state.test.ts",
+      "sourceSha256": "5c474e3bddec4d4ebef7a16d11dd8d2b02ff96d661bcdd25996791950efe555d",
+      "surface": "packages/ai",
+      "kind": "unit",
+      "lineCount": 27,
+      "declaredTestCount": 1,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-ai/tests/module_scope_state.rs"
+      ],
+      "notes": "The package-local module-scope-state sweep is translated so the safety signal remains present when only the AI crate tests run."
+    },
+    {
+      "typescript": "packages/ai/src/stream-iterator.test.ts",
+      "sourceSha256": "a072ffcfd09f13a13b78160d899c556ddae9f4294164f5767bae37a3954fe265",
+      "surface": "packages/ai",
+      "kind": "unit",
+      "lineCount": 151,
+      "declaredTestCount": 7,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-ai/tests/stream_iterator.rs"
+      ],
+      "notes": "All seven generator-to-stream, browser macrotask yield, Node no-yield, abort, already-aborted, generator-error, and stream-to-iterator declarations are translated. Final GREEN needs an actual async stream runtime rather than only observations."
+    },
+    {
+      "typescript": "packages/ai/src/workflow-chat-transport.stream-repair.test.ts",
+      "sourceSha256": "7b87d705071bce1da082bf482244ec33389e4f4bc06d32b9b2300cf7229c1ad8",
+      "surface": "packages/ai",
+      "kind": "unit",
+      "lineCount": 200,
+      "declaredTestCount": 6,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-ai/tests/workflow_chat_transport_stream_repair.rs"
+      ],
+      "notes": "All six raw-failure, text repair, duplicate-tail suppression, well-formed pass-through, raw reasoning failure, and reasoning repair declarations are translated. Final GREEN must drive the actual AI SDK consumer or a byte-for-byte compatible Rust state machine."
+    },
+    {
+      "typescript": "packages/ai/src/workflow-chat-transport.test.ts",
+      "sourceSha256": "5512c65a6e7b24bbc9381ea74d5806b958cb89b850d029d9bd9a24b30e29851f",
+      "surface": "packages/ai",
+      "kind": "unit",
+      "lineCount": 883,
+      "declaredTestCount": 23,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-ai/tests/workflow_chat_transport.rs"
+      ],
+      "notes": "All 23 current declarations are translated: constructor options, send/reconnect request shaping, response errors, abort-signal propagation and reuse, negative start-index resolution, malformed tail-header fallback, orphan reasoning/text/tool filtering, non-streamed and recovered tool calls, non-negative resume behavior, object-error formatting, and send/end callbacks. Final GREEN must execute the real Rust transport and stream normalizer."
+    },
+    {
+      "typescript": "packages/builders/src/base-builder-logging.test.ts",
+      "sourceSha256": "31aedd6fdecb7a5a0d3255cecd7f687fbab74c7093301a992d3d2db7cc942eee",
+      "surface": "packages/builders",
+      "kind": "unit",
+      "lineCount": 137,
+      "declaredTestCount": 5,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-builders/tests/base_builder_logging.rs"
+      ],
+      "notes": "All five declared logging cases are translated, including default silence, exact and wildcard DEBUG matching, explicit negation, and repeated Next-like compile summaries."
+    },
+    {
+      "typescript": "packages/builders/src/config-helpers.test.ts",
+      "sourceSha256": "6ca781e6ba446931b98930cd997a1da54592a5551bf7ba43b2727978c1221a9a",
+      "surface": "packages/builders",
+      "kind": "unit",
+      "lineCount": 20,
+      "declaredTestCount": 1,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-builders/tests/config_helpers.rs"
+      ],
+      "notes": "The workspace-root precedence case is translated with a real temporary filesystem tree containing both pnpm-workspace.yaml and an app-local package-lock.json."
+    },
+    {
+      "typescript": "packages/builders/src/constants.test.ts",
+      "sourceSha256": "48837121705f6b58f5ff75b0162f840ae4eaff67f9794dbbafe490baca2e2d3a",
+      "surface": "packages/builders",
+      "kind": "unit",
+      "lineCount": 122,
+      "declaredTestCount": 12,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-builders/tests/constants.rs"
+      ],
+      "notes": "All 12 current declarations are translated: default and namespaced workflow topics, exact WORKFLOW_SEQUENTIAL_REPLAYS=1 behavior, explicit namespace precedence, call-time environment resolution, and generated workflowEntrypoint option code including basePath and route-module timing. Final GREEN must use the real Rust route/config generator and preserve build-time versus call-time resolution semantics."
+    },
+    {
+      "typescript": "packages/builders/src/discover-entries-esbuild-plugin.test.ts",
+      "sourceSha256": "1fac328d20bc960ca0cbfd01b6ee129d9a3d9bc8ad4b6188db593528e100def4",
+      "surface": "packages/builders",
+      "kind": "unit",
+      "lineCount": 221,
+      "declaredTestCount": 5,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-builders/tests/discover_entries.rs"
+      ],
+      "notes": "All three executable TypeScript cases and their assertions are translated: explicit projectRoot propagation, absWorkingDir fallback, path normalization, single detect-mode transform observation, and transitive import-parent tracking through a bare package specifier. The inventory reports five declarations because it also sees lifecycle callbacks. Final GREEN must exercise the real Rust resolver and transform pipeline rather than returning fixture-specific observations."
+    },
+    {
+      "typescript": "packages/builders/src/esbuild-tsconfig.test.ts",
+      "sourceSha256": "ac2ff9aa4ed22fc7c5638c427063b9227df7639651aead9f616bd3f6d3187717",
+      "surface": "packages/builders",
+      "kind": "unit",
+      "lineCount": 180,
+      "declaredTestCount": 1,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-builders/tests/esbuild_tsconfig.rs"
+      ],
+      "notes": "Both regular and symlinked tsconfig behaviors are translated even though the inventory parser counts only the direct it() declaration. Final GREEN must also run the symlink fixture through real esbuild resolution."
+    },
+    {
+      "typescript": "packages/builders/src/external-package-warning.test.ts",
+      "sourceSha256": "9084d3e5ba0daacf8d1c44bede0a9f2617f95f6489e69e059ab0073726a82c93",
+      "surface": "packages/builders",
+      "kind": "unit",
+      "lineCount": 372,
+      "declaredTestCount": 10,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-builders/tests/external_package_warning.rs"
+      ],
+      "notes": "All 10 current declarations are translated: @workflow/serde dependency detection, serialization-symbol scanning, use-step and use-workflow detection, plain and pseudo-package suppression, empty-input behavior, per-builder warning deduplication, combined issue reporting, and entry-file detection without a serde dependency. Final GREEN must inspect real package metadata and source through bounded canonical paths and must not hard-code package names or warning fixtures."
+    },
+    {
+      "typescript": "packages/builders/src/fast-discovery.test.ts",
+      "sourceSha256": "f2833a3a4a07dab3cc0ca6733ed3e535448e6926401c1e695670255ba8587731",
+      "surface": "packages/builders",
+      "kind": "unit",
+      "lineCount": 800,
+      "declaredTestCount": 17,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-builders/tests/fast_discovery.rs"
+      ],
+      "notes": "All 17 fast-discovery declarations are translated with real temporary project, package, tsconfig, jsconfig, source, asset, and nested node_modules trees. Coverage preserves transitive relative imports, dotted JavaScript resolution, package re-exports, disabled node_modules descent with directly seeded package traversal, inherited and multi-wildcard aliases, non-source exclusion, comment-versus-regex parsing, nearest nested config selection, static serde registration, independent step/workflow/serde categorization, comment-only serde suppression, and direct-versus-nested package route specifiers. The comment, regex, alias, and package-boundary cases are security-relevant because raw text scans or unchecked path/specifier substitution could execute documentation, escape the intended project graph, or bind a durable function to the wrong package. Final GREEN must resolve canonical bounded paths and parse JavaScript import context rather than hard-code fixture names."
+    },
+    {
+      "typescript": "packages/builders/src/get-input-files.test.ts",
+      "sourceSha256": "c2dda3a348eafb3624e241a5798337a8dd31154ca5c6ed0fb857614b60cf8a91",
+      "surface": "packages/builders",
+      "kind": "unit",
+      "lineCount": 288,
+      "declaredTestCount": 9,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-builders/tests/get_input_files.rs"
+      ],
+      "notes": "All nine input discovery, .swc ignore, and diagnostics-path declarations are translated with real temporary filesystem trees. Coverage includes ordinary hidden files, the complete explicit generated/cache-directory denylist, supported extensions, idempotent .gitignore updates, existing ignore variants, explicit diagnostics directories, non-Vercel target isolation, and Vercel output fallback. Final GREEN must walk the real filesystem with bounded roots and must not rediscover generated output or dependency trees."
+    },
+    {
+      "typescript": "packages/builders/src/manifest-ids.test.ts",
+      "sourceSha256": "5ac6e54f8b7b29987b1471d9db9e49a23279e616373ffb9efbaec18594aa976e",
+      "surface": "packages/builders",
+      "kind": "unit",
+      "lineCount": 195,
+      "declaredTestCount": 7,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-builders/tests/manifest_ids.rs"
+      ],
+      "notes": "All seven duplicate-ID declarations are translated: divergent step and workflow bodies fail closed, identical pnpm peer copies deduplicate while retaining both manifest file entries, missing hashes fail closed, symbol-name mismatches are rejected, and re-merging the same file is idempotent. This is security-sensitive because accepting a duplicate ID from different source can substitute the code executed for a durable step. Final GREEN must use the real cryptographic source digest and preserve first-registration ownership."
+    },
+    {
+      "typescript": "packages/builders/src/module-specifier.test.ts",
+      "sourceSha256": "fc76771f75d3d3d21da84ef0f52fb8d8c25591ebbad442ac7f7762c48b93686f",
+      "surface": "packages/builders",
+      "kind": "unit",
+      "lineCount": 361,
+      "declaredTestCount": 13,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-builders/tests/module_specifier.rs"
+      ],
+      "notes": "All 13 package and relative-import declarations are translated using real package.json and source files: root/subpath/conditional exports, module/main entrypoints, deep fallback paths, direct versus transitive node_modules dependencies, project-local package files, workspace package IDs, non-exported files, and source-backed dist exports. Final GREEN must resolve declared dependency and export ownership rather than infer package identity from path shape alone."
+    },
+    {
+      "typescript": "packages/builders/src/node-module-esbuild-plugin.test.ts",
+      "sourceSha256": "63a1fca4ff43cdcbea0a6fa4aa3c5401d4fa30b92568c7e4df4d8d97f900debd",
+      "surface": "packages/builders",
+      "kind": "unit",
+      "lineCount": 765,
+      "declaredTestCount": 38,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-builders/tests/node_module_esbuild_plugin.rs",
+        "rust/tdd/workflow-builders/tests/node_module_esbuild_plugin/plugin.rs",
+        "rust/tdd/workflow-builders/tests/node_module_esbuild_plugin/helpers.rs"
+      ],
+      "notes": "All 37 executable it() cases are translated; the textual inventory reports 38 because it also matches the source file's split(...) helper call. The Rust fixtures preserve direct and node:-prefixed built-ins, multiple violations, top-level package attribution, main/module entry-field parity, namespace/default/aliased imports, tree-shaken unused imports, shared-module safe and unsafe exports, comment/string-aware source locations, Bun and bun: imports, package-name extraction including pnpm and scoped layouts, regular-expression escaping, import-clause identifier extraction, and used-versus-unused location lookup. Security-critical negatives prevent comments or strings from hijacking diagnostics, nested dependency internals from being exposed instead of the caller-controlled package boundary, unused imports from causing false failures, and path parsing from confusing scoped or nested packages. Final GREEN must inspect the real Rust bundle graph and parse bounded canonical source paths rather than raw substring-matching fixtures."
+    },
+    {
+      "typescript": "packages/builders/src/pseudo-package-esbuild-plugin.test.ts",
+      "sourceSha256": "ea0cfdf72856bcc2f8a7a472343f2ad45eee1f26df22046893ee7c900af945db",
+      "surface": "packages/builders",
+      "kind": "unit",
+      "lineCount": 399,
+      "declaredTestCount": 11,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-builders/tests/pseudo_package_esbuild_plugin.rs"
+      ],
+      "notes": "All 11 pseudo-package and dynamic-import declarations are translated with real temporary entry files and node_modules package trees. Coverage requires the four Next marker packages to resolve to empty modules, preserves unrelated code, leaves a missing marker unresolved without the plugin, inlines ordinary and nested dynamic imports, and retains explicitly external dynamic imports. Final GREEN must use the real Rust bundle graph; pseudo-module replacement must be exact-name only so attacker-controlled lookalike specifiers cannot be erased, while workflow bundles must not leave runtime import() edges that the sandbox cannot execute."
+    },
+    {
+      "typescript": "packages/builders/src/resolve-sourcemap.test.ts",
+      "sourceSha256": "0802be66ad7a64954394b2b5439c0c381fa2a46f39495e583326d6e438b712b6",
+      "surface": "packages/builders",
+      "kind": "unit",
+      "lineCount": 231,
+      "declaredTestCount": 16,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-builders/tests/resolve_sourcemap.rs"
+      ],
+      "notes": "All 16 sourcemap declarations are translated across explicit config, defaults, WORKFLOW_SOURCEMAP parsing, 0/1 aliases, invalid-value fallback, watch-mode development detection, NODE_ENV development detection, and the derived enabled flag. Final GREEN must preserve precedence as explicit config over environment over the caller default, while treating every non-false mode as enabled."
+    },
+    {
+      "typescript": "packages/builders/src/step-source-registration.test.ts",
+      "sourceSha256": "a8b942960653ff5313ff86c953e737b45c20c10ae8a8f3453d15e953b95cec5f",
+      "surface": "packages/builders",
+      "kind": "unit",
+      "lineCount": 218,
+      "declaredTestCount": 3,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-builders/tests/step_source_registration.rs"
+      ],
+      "notes": "All three serde-only import, identical pnpm peer-copy deduplication, and divergent-copy collision declarations are translated."
+    },
+    {
+      "typescript": "packages/builders/src/swc-esbuild-plugin.test.ts",
+      "sourceSha256": "5ffee2b0ca300739ac3acf24b19558b11e9750a344b341656e8e99971e9b0e67",
+      "surface": "packages/builders",
+      "kind": "unit",
+      "lineCount": 1348,
+      "declaredTestCount": 27,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-builders/tests/swc_esbuild_plugin.rs",
+        "rust/tdd/workflow-builders/tests/swc_esbuild_plugin/support.rs",
+        "rust/tdd/workflow-builders/tests/swc_esbuild_plugin/observer_and_manifest.rs",
+        "rust/tdd/workflow-builders/tests/swc_esbuild_plugin/bundling.rs",
+        "rust/tdd/workflow-builders/tests/swc_esbuild_plugin/side_effects_and_roots.rs"
+      ],
+      "notes": "All 27 TypeScript declarations are translated as 33 executable Rust cases after expanding the two parameterized extension matrices. Coverage preserves authoritative and awaited transform observers, observer failures, duplicate step/workflow ID rejection, byte-identical pnpm peer-copy deduplication, TypeScript extension rewriting and default preservation, path-alias inlining including transitive self-references, Node builtin and optional-native externalization, local-versus-package dependency bundling, exact sideEffectEntries behavior under sideEffects:false metadata, and independent projectRoot/moduleSpecifierRoot propagation. Security-critical cases require divergent duplicate IDs to fail closed, aliases to resolve inside a bounded project graph instead of leaking runtime-controlled specifiers, side-effect overrides to apply only to explicitly listed canonical files, and native/builtin modules never to be rewritten into attacker-selected relative paths. Final GREEN must drive a real Rust bundle graph and SWC transform boundary rather than fixture-specific output strings."
+    },
+    {
+      "typescript": "packages/builders/src/transform-utils.test.ts",
+      "sourceSha256": "8e89258e34376015dcf0e40a199323e941892f1a0e4ea4f4ca9e518f41e2869c",
+      "surface": "packages/builders",
+      "kind": "unit",
+      "lineCount": 489,
+      "declaredTestCount": 88,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-builders/tests/transform_utils.rs"
+      ],
+      "notes": "All 45 directive, serde, combined-detection, and transform-selection declarations are translated. Positive coverage preserves quote and whitespace variants, exact @workflow/serde imports, direct Symbol.for names, computed property names, bundled chunk output, directive prologues, generated route exclusions, and SDK serde files. Negative coverage rejects inline assignments, lookalike packages, partial symbol names, string-literal properties, unrelated symbols, comments, template literals, and multiline call arguments. These negatives are security-relevant because false-positive directive detection could compile attacker-controlled documentation or comments as executable durable workflow code. Final GREEN must tokenize or parse JavaScript context rather than rely on an unbounded raw substring scan."
+    },
+    {
+      "typescript": "packages/builders/src/vercel-build-output-api.test.ts",
+      "sourceSha256": "559966913a6ed912df0c5f525d80551dc41ba4b5c9b84cef51cf7849a57dadbb",
+      "surface": "packages/builders",
+      "kind": "unit",
+      "lineCount": 193,
+      "declaredTestCount": 1,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-builders/tests/vercel_build_output_api.rs"
+      ],
+      "notes": "The CJS __dirname/__filename regression is translated with explicit counts for the combined workflow function and separate webhook function. Final GREEN requires building and importing real ESM bundles under Node."
+    },
+    {
+      "typescript": "packages/builders/src/workflow-alias.test.ts",
+      "sourceSha256": "051b347625f7a0a79a25b87ba2d80485198ffd479357d46b8b2bd685a0d3fbd9",
+      "surface": "packages/builders",
+      "kind": "unit",
+      "lineCount": 97,
+      "declaredTestCount": 5,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-builders/tests/workflow_alias.rs"
+      ],
+      "notes": "All five current declarations are translated with real files and a directory symlink: workflows and src/workflows aliases, unrelated-file rejection, realpath containment rather than basename matching, and symlinked app alias recovery. Final GREEN must canonicalize paths without allowing an external same-name file to acquire an application alias."
+    },
+    {
+      "typescript": "packages/builders/src/workflow-bundle-boundary.test.ts",
+      "sourceSha256": "ecea08e99c71476753a5993804762b1a1f7fe8fadf91a688d6ad713c5347692b",
+      "surface": "packages/builders",
+      "kind": "unit",
+      "lineCount": 110,
+      "declaredTestCount": 2,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-builders/tests/workflow_bundle_boundary.rs"
+      ],
+      "notes": "Both bundle-boundary declarations are translated with the original minimal and core-API workflow source. Final GREEN must inspect the real Rust build graph and prove that world schemas and zod are absent from workflow bundles instead of returning a fixture-specific input list."
+    },
+    {
+      "typescript": "packages/builders/src/workflows-extractor.test.ts",
+      "sourceSha256": "92aa21def36a4468a3209b94bf08c7cd1b85e7d00b8a8194e13167e86b1553ad",
+      "surface": "packages/builders",
+      "kind": "unit",
+      "lineCount": 85,
+      "declaredTestCount": 2,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-builders/tests/workflows_extractor.rs"
+      ],
+      "notes": "Both extraction declarations are translated with actual bundle files: escaped Unicode identifiers inside workflowCode template literals must parse without diagnostics, and pure annotations around WORKFLOW_USE_STEP proxies must still produce the exact workflow and step IDs. Final GREEN must parse the bundle rather than matching only the fixture text."
+    },
+    {
+      "typescript": "packages/builders/src/write-if-changed.test.ts",
+      "sourceSha256": "13c7659aaddf0d9c63bb67cc5dbf5ea0c5faa751efed44dfed44815166053ab1",
+      "surface": "packages/builders",
+      "kind": "unit",
+      "lineCount": 253,
+      "declaredTestCount": 16,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-builders/tests/write_if_changed.rs"
+      ],
+      "notes": "All 16 content comparison, conditional write, and generated-file declarations are translated. The Rust fixtures preserve missing, unreadable, directory, equal-length mismatch, UTF-8 byte-length, malformed-byte-versus-replacement-character, inode/mtime stability, temp-file cleanup, changed output, first write, and explicit opt-out behavior. The byte comparison cases are security-relevant because lossy text decoding must not hide a changed generated artifact."
+    },
+    {
+      "typescript": "packages/cli/src/lib/bulk-cancel.test.ts",
+      "sourceSha256": "cdff977278d0464173b76d158ed2b6855f14b8dc34312c58479ccb77f3a971ed",
+      "surface": "packages/cli",
+      "kind": "unit",
+      "lineCount": 439,
+      "declaredTestCount": 12,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-cli/tests/bulk_cancel.rs"
+      ],
+      "notes": "All 12 TypeScript declarations are translated. Coverage preserves the 1..=500 integer limit, exact summary and per-run failure text, zero-result behavior, pending/running-only selection, round-robin page merging before truncation, single-call cancelMany behavior, bounded per-run fallback, has-more guidance, failure exit status, and confirmation decline without side effects. Security-relevant cases prove terminal runs cannot be pulled into an unpinned cancellation batch, an unconfirmed command cannot issue backend writes, and one status page cannot starve another before the global limit is applied. Final GREEN must use the real Rust World/CLI boundary and validate backend bulk results rather than manufacturing fixture observations."
+    },
+    {
+      "typescript": "packages/cli/src/lib/inspect/hydration.test.ts",
+      "sourceSha256": "50201683adef360a29b4dd92fe2a51d14a3743cc3b5c83918cb3d5e0c93f3b13",
+      "surface": "packages/cli",
+      "kind": "unit",
+      "lineCount": 33,
+      "declaredTestCount": 1,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-cli/tests/hydration.rs"
+      ],
+      "notes": "The encrypted step-error display contract is translated end to end: an error is dehydrated for run_1 under a 32-byte key, remains an encrypted display reference without a key, and hydrates to an Error carrying the original message with the key. Final GREEN must use the real Rust serialization and authenticated-encryption implementation and must select the key by run ID; opaque fixture shortcuts are not sufficient."
+    },
+    {
+      "typescript": "packages/cli/src/lib/inspect/output.test.ts",
+      "sourceSha256": "2be0d2a3ad11cb09dfcef5bf18d5e2ab65a201b4e867f99abdf1c0e705173484",
+      "surface": "packages/cli",
+      "kind": "unit",
+      "lineCount": 800,
+      "declaredTestCount": 24,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-cli/tests/inspect_output.rs",
+        "rust/tdd/workflow-cli/tests/inspect_output/support.rs",
+        "rust/tdd/workflow-cli/tests/inspect_output/formatting.rs",
+        "rust/tdd/workflow-cli/tests/inspect_output/runs.rs",
+        "rust/tdd/workflow-cli/tests/inspect_output/resources.rs"
+      ],
+      "notes": "All 24 TypeScript declarations are translated. Inputs use a distinct DateValue type and emitted rows use ISO strings, so final GREEN must perform the same JSON date projection rather than comparing preformatted fixtures. Coverage preserves run pageInfo, cursor/limit arguments, analytics-first reads with first-page storage fallback, wait upgrade guidance, optional sync/async describeRun fields, null extension values, and one stdout write for JSON output. Security-relevant cases require expired input/output to be replaced before display, 402-only upgrade classification, hostile describeRun fields to never overwrite canonical run identity or status, and throwing or rejecting extension hooks to contribute no fields instead of crashing inspection. Final GREEN must call the real Rust World read traits and retain the same fail-closed extension boundary."
+    },
+    {
+      "typescript": "packages/cli/src/lib/inspect/time-window.test.ts",
+      "sourceSha256": "c0a2bc81ce62a4a1e7cb71b5fadb97202a884b6f746073af995d1ea2bd1380b8",
+      "surface": "packages/cli",
+      "kind": "unit",
+      "lineCount": 89,
+      "declaredTestCount": 9,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-cli/tests/time_window.rs"
+      ],
+      "notes": "All nine current declarations are translated with an injected fixed clock: minute/hour/day/week relative durations, absolute timestamps, flag-specific invalid-input errors, absent/default/inverted windows, and plan-window metadata extraction. Final GREEN must parse general inputs and produce exact UTC ISO timestamps rather than special-case the fixtures."
+    },
+    {
+      "typescript": "packages/cli/src/lib/inspect/vercel-api.test.ts",
+      "sourceSha256": "a666384e7e2b74ced970be01857c718ca67aaffb1c7823b7b5952760b7a1f4f9",
+      "surface": "packages/cli",
+      "kind": "unit",
+      "lineCount": 58,
+      "declaredTestCount": 5,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-cli/tests/vercel_api.rs"
+      ],
+      "notes": "All five dashboard URL declarations are translated: production default, preview selection, run deep links, overview links, non-run query parameters, and explicit rejection of the legacy /observability path. Final GREEN must percent-encode untrusted path and query components while preserving these exact outputs for safe fixture values."
+    },
+    {
+      "typescript": "packages/core/e2e/benchmark.test.ts",
+      "sourceSha256": "6609b6ceb076893f606a34457ef526e2958534e362d5c6d4203477cf6f9c299e",
+      "surface": "packages/core",
+      "kind": "e2e",
+      "lineCount": 1448,
+      "declaredTestCount": 10,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-core/tests/benchmark.rs"
+      ],
+      "notes": "All 10 benchmark scenario declarations are translated. The Rust contract preserves the in-deployment preflight and clientStart clock anchor, exact workflow names and arguments, sequential sampling, bounded retry budgets, three-attempt zero-success abort, exact step/chunk count validation, TTFS targets, CRTT index buckets, size and progress profiles, replay cadence identity, fan-out first/last completion metrics, destination-kind STSO splitting, and whole-run overhead. WF-RUST-090 records that security and measurement-integrity cases require malformed trigger responses and mismatched return counts to fail closed, prevent a remote target from consuming an unbounded retry budget, and retain semantic cadence hashes so a changed workload cannot inherit an unrelated baseline. Final GREEN must drive the real Rust runtime and workbench route; fabricated observations or local-only timestamps are insufficient."
+    },
+    {
+      "typescript": "packages/core/e2e/build-errors.test.ts",
+      "sourceSha256": "fa811d28f88dbaf21227ab2d9289666c5ef6e9f20b60cbe32057c6e1ce5cc548",
+      "surface": "packages/core",
+      "kind": "e2e",
+      "lineCount": 302,
+      "declaredTestCount": 3,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-core/tests/build_errors.rs"
+      ],
+      "notes": "All four executable TypeScript paths are translated, including the conditionally registered dual-entry package case that the manifest declaration counter currently undercounts. Coverage preserves direct Node.js-module diagnostics, top-level external-package attribution when only its ESM entry reaches a Node builtin, Bun-specific wording, file location, step-function guidance, documentation links, and reporting all fs/path/crypto violations in one build. Security-relevant behavior requires workflow sandbox violations to fail closed and aggregate every forbidden import instead of stopping after the first, while transitive diagnostics name the dependency the user can act on rather than silently selecting its safer CJS entry. Final GREEN must execute the real Rust compiler/build graph against temporary source and package fixtures; regex-only source scanning is insufficient."
+    },
+    {
+      "typescript": "packages/core/e2e/dev.test.ts",
+      "sourceSha256": "42b7a6b6057f15e875a7a2132b427f21fd75a619d1eb915e81d591e38c4bfc97",
+      "surface": "packages/core",
+      "kind": "e2e",
+      "lineCount": 1550,
+      "declaredTestCount": 2,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-core/tests/dev_hmr.rs"
+      ],
+      "notes": "The generated declaration counter reports two plain test(...) calls, but the pinned source registers seven additional test.runIf(...) cases. All nine top-level cases are preserved, and the final HMR fuzz case is expanded into its 13 independently diagnosable mutations. The Rust suite also makes 12 load-bearing helper contracts explicit: configuration precedence, platform/canary timeout budgets, portable flow-route detection, UTF-16/UTF-8 log decoding, exact stable versus lower-bound canary log counts, quiescence before cursor windows, missing-output failure, stranded-step restoration, bounded poll diagnostics, and source conditionals. WF-RUST-091 records the shared-dev-server denial-of-service risk when a missed unlink leaves generated step registrations importing a deleted file. Final GREEN must drive the real Rust watcher, builder, generated artifacts, manifest, workflow execution, log stream, and failure-safe cleanup; returning the expected contract is insufficient."
+    },
+    {
+      "typescript": "packages/core/e2e/e2e-agent.test.ts",
+      "sourceSha256": "e30e21d7184aee781c342cac74555ac389c75144e60df5ada898944eeccc7e68",
+      "surface": "packages/core",
+      "kind": "e2e",
+      "lineCount": 329,
+      "declaredTestCount": 20,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-core/tests/e2e_agent.rs",
+        "rust/tdd/workflow-core/tests/e2e_agent/core.rs",
+        "rust/tdd/workflow-core/tests/e2e_agent/callbacks.rs",
+        "rust/tdd/workflow-core/tests/e2e_agent/tools.rs",
+        "rust/tdd/workflow-core/tests/e2e_agent/gaps.rs"
+      ],
+      "notes": "The pinned source contains 19 executable it(...) cases although the generated declaration counter reports 20. All 19 are translated, plus one Rust-only authorization target for WF-RUST-017. Coverage preserves basic text, function/provider/mixed/sequential/error-recovery/multimodal tools, constructor and method callback ordering, captured finish data, string instructions, timeout, prepareStep precedence and numbering, and every documented experimental gap. The TypeScript tool-approval case is retained explicitly as evidence that needsApproval currently produces both a call and result, while the separate Rust target requires one pending riskyTool call, zero results, and no execution before approval. Final GREEN must route the compatibility characterization through a TypeScript oracle and make the production Rust path satisfy the secure target; implementing the unsafe legacy result in the Rust agent loop is prohibited."
+    },
+    {
+      "typescript": "packages/core/e2e/e2e-region.test.ts",
+      "sourceSha256": "c53a9de8f71fb182a348b5fe391474ade2f22a2acefe4edb6b9ee2c597b84b7c",
+      "surface": "packages/core",
+      "kind": "e2e",
+      "lineCount": 473,
+      "declaredTestCount": 6,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-core/tests/e2e_region.rs",
+        "rust/tdd/workflow-core/tests/e2e_region/support.rs",
+        "rust/tdd/workflow-core/tests/e2e_region/explicit.rs",
+        "rust/tdd/workflow-core/tests/e2e_region/implicit.rs",
+        "rust/tdd/workflow-core/tests/e2e_region/stream_and_hooks.rs"
+      ],
+      "notes": "All six parameterized TypeScript declarations are translated as 27 executable Rust tests: three explicit starts, nine concurrent probes, one aggregate all-region pass, one in-progress cross-region stream, nineteen implicit starts, and two non-default-region hook round trips. Coverage preserves the complete 19-region set, strict run-ID tag/data-placement ownership, the documented execution-adjacency allowlist, unique concurrent run identity, stream visibility before completion, implicit VERCEL_REGION minting, opaque-token hook lookup, ordered sequential resume payloads, and terminal server state. Security-relevant cases require concurrent starts and opaque hook tokens to never cross-wire tenant run state, require readers to observe backend stream metadata rather than stale region-local state, and allow geographic execution elasticity without weakening exact tag ownership. Final GREEN must exercise real Rust run-ID tagging, queue routing, storage, stream, and hook-resume implementations; fixture-generated observations are insufficient."
+    },
+    {
+      "typescript": "packages/core/e2e/e2e.test.ts",
+      "sourceSha256": "95b031cacc4a0dc5adf190236f16bfb8c60f3e87531b9ebfb49879f5ef5b94d3",
+      "surface": "packages/core",
+      "kind": "e2e",
+      "lineCount": 4776,
+      "declaredTestCount": 107,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/e2e/event-log-race-repro.test.ts",
+      "sourceSha256": "22372ff5b5646e7d2e67e8ab951124ee8a44e73ffb4a9388e77aeed294250033",
+      "surface": "packages/core",
+      "kind": "e2e",
+      "lineCount": 1351,
+      "declaredTestCount": 1,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/e2e/local-build.test.ts",
+      "sourceSha256": "4d55c617d5b243ecdd875d22e4cc143143cb29aa40b2cc95cf02706ab799cca9",
+      "surface": "packages/core",
+      "kind": "e2e",
+      "lineCount": 261,
+      "declaredTestCount": 1,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-core/tests/local_build.rs"
+      ],
+      "notes": "The single describe.each declaration is expanded into all 13 workbench projects. Coverage preserves the SvelteKit import preflight, exact pnpm build invocation, Next Turbopack source-map fixture lifecycle, generic/source-map warning rejection, diagnostics manifests, native ESM import.meta output, and legacy step-route removal. WF-RUST-093 adds explicit hard process-tree deadlines, one shared 8 MiB output budget, interleaved stdout/stderr diagnostics, signal-aware failures, and non-ENOENT artifact-read propagation. Final GREEN must execute real Rust subprocess, builder, artifact, and cleanup paths; fabricated observations are insufficient."
+    },
+    {
+      "typescript": "packages/core/e2e/manifest.test.ts",
+      "sourceSha256": "7297a6283a2f4c539ffcfc455c9e5879c00eeffd6063ba8cd8ef438fbcd16c56",
+      "surface": "packages/core",
+      "kind": "e2e",
+      "lineCount": 368,
+      "declaredTestCount": 6,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-core/tests/manifest_e2e.rs"
+      ],
+      "notes": "All six parameterized TypeScript declarations are expanded into their 36 concrete project/scenario cases: structure across eight workbenches, dot-directory step/workflow discovery across two Next builders, and single-statement if/while/for extraction across all eight workbenches. Four additional Rust contract tests cover exact path routing, ID/graph validation, metadata validation, and WF-RUST-092. The TypeScript tryReadManifest helper catches every read and JSON error as null, so a malformed or unreadable manifest silently skips the suite. Rust preserves the intended missing-file skip but fails closed on parse and non-ENOENT I/O failures. Final GREEN must parse real generated JSON and validate the actual Rust builder output; fixture-only manifests are insufficient."
+    },
+    {
+      "typescript": "packages/core/e2e/route-bundle-isolation.test.ts",
+      "sourceSha256": "a88d3939b46037ef054309352d3db2bb893ca128d833243650e402b31ee559c0",
+      "surface": "packages/core",
+      "kind": "e2e",
+      "lineCount": 177,
+      "declaredTestCount": 1,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-core/tests/route_bundle_isolation.rs"
+      ],
+      "notes": "The isolated Next Turbopack hook-resume regression is translated with its exact build target, route bundle path, nonexistent token, 60-second harness deadline, forbidden dynamic-require/world-init failures, and healthy 500 Hook not found result. WF-RUST-094 strengthens the oracle: direct argv execution, Vercel and Node preload environment stripping, output caps, exact line-prefix marker parsing, bounded missing-result diagnostics, and duplicate/empty record rejection. Final GREEN must build and invoke the real route in a fresh sanitized Rust-managed process; fixture-only results are insufficient."
+    },
+    {
+      "typescript": "packages/core/e2e/utils.test.ts",
+      "sourceSha256": "08c1a31493f88a57ab077e486ba20caeef133c69348b8b4d89544a15c2a3d54a",
+      "surface": "packages/core",
+      "kind": "e2e",
+      "lineCount": 249,
+      "declaredTestCount": 15,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-core/tests/e2e_utils.rs"
+      ],
+      "notes": "All 15 TypeScript declarations are translated: six source-map matrix cases, five pickup-watchdog cases, three warmup cases, and one interleaved task-local run-tracking case. The Rust suite preserves transient status retries, 500 ms exponential polling capped at 5 s, short-budget sleep clamping, stalled-probe cancellation and infra-event attribution, and per-test isolation. WF-RUST-095 requires the total warmup deadline to include probe creation and bounded cancellation, eliminating a late-probe status read after expiry. WF-RUST-096 replaces whole-URL substring matching with exact hostname classification so remote lookalikes cannot select local-only behavior. Final GREEN must exercise the real Rust runtime, timers, cancellation, infra recorder, and task-local state; scripted observations are insufficient."
+    },
+    {
+      "typescript": "packages/core/src/abort-consistency.test.ts",
+      "sourceSha256": "2379633a7429bd1dbb531a8bb2a9dc2142c0e2919d2451aa3dca7dec022000d8",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 755,
+      "declaredTestCount": 23,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-core/tests/abort_consistency.rs"
+      ],
+      "notes": "All 22 executable TypeScript cases are translated. Coverage characterizes the dual hook/stream model across pre-aborted and late-aborted serialization, one-sided and two-sided transport failure, symbol identity, idempotent double abort, synchronous first-run listeners, replay listeners and durable reasons, cross-execution abort, fire-and-forget completion, and preservation of pending steps, hooks, and waits at suspension. WF-RUST-028 records the consistency and replay boundary. Final GREEN must exercise the production Rust serializer, event log, hook and stream transports, abort state machine, suspension collector, and replay scheduler."
+    },
+    {
+      "typescript": "packages/core/src/abort-controller-step.test.ts",
+      "sourceSha256": "b18c97ad852fb33f0ecf1be4341e9c81e87041c529e4d4b923c4c01c47046721",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 738,
+      "declaredTestCount": 19,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-core/tests/abort_controller_step.rs"
+      ],
+      "notes": "All 19 executable TypeScript cases are translated. Coverage includes stream-reader setup, pre-aborted hydration, stream-delivered reasons and listeners, throw-if-aborted behavior, step-context stream writes, durable hook resume, synchronous local abort, post-context safety, multiple consumers, AbortSignal.any compatibility, fatal abort classification, retry suppression, and the production requirement that resumeHookDurable is queued in pre-completion work before step_completed. WF-RUST-027 records this cancellation ordering boundary. Final GREEN must use the real Rust serialization bridge, step context, stream backend, durable hook writer, and step executor."
+    },
+    {
+      "typescript": "packages/core/src/abort-controller.test.ts",
+      "sourceSha256": "0f7addb151d6587c8b8ba5ba71c3dbc79ed9759eda15ff5cd15f92e1b750f77a",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 483,
+      "declaredTestCount": 22,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-core/tests/abort_controller.rs"
+      ],
+      "notes": "All 22 TypeScript declarations are translated directly. Coverage preserves controller construction, durable hook registration, reason forwarding, double-abort idempotence, typed replay-token divergence, duplicate matching receipts, listener add/remove behavior, throwIfAborted, independent controller state, static abort signals, AbortSignal.any propagation, pre-aborted inputs, one-pass iterable materialization, listener cleanup, workflow timeout rejection, internal system-hook flags, abort queue mutation, and deterministic replay tokens. Security-relevant cases require mismatched durable tokens to fail as replay divergence rather than cross-wire state, and composite signals to detach captured listeners after abort so longer-lived inputs cannot retain the composite indefinitely. Final GREEN must exercise the real Rust VM context, event consumer, delivery ordering, hook queue, deterministic ID generator, and listener lifecycle; scenario-specific observations are insufficient."
+    },
+    {
+      "typescript": "packages/core/src/abort-replay-ordering.test.ts",
+      "sourceSha256": "630af8325db9c50be437839a44e7dc8486cdfd2048f5e3845463c86d6e7c2090",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 172,
+      "declaredTestCount": 2,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-core/tests/abort_replay_ordering.rs"
+      ],
+      "notes": "Both deterministic TypeScript regression tests are translated with a delayed abort-reason hydration boundary. Coverage requires the in-flight abort to increment pendingDeliveries, keeps scheduleWhenIdle blocked until the reason is hydrated and _setAborted lands, preserves the reason, and releases the counter to zero. WF-RUST-019 records the security consequence: serializing a downstream signal as aborted=false can let work continue after cancellation. Final GREEN must exercise the real Rust event consumer, async payload hydration, idle gate, signal state, and decrement-on-error path; returning a precomputed observation is insufficient."
+    },
+    {
+      "typescript": "packages/core/src/async-deserialization-ordering.test.ts",
+      "sourceSha256": "c1f8fdbb04c29bcd715a61ccd5780b6371ed96da3c3dddd9d580694886de4d53",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 768,
+      "declaredTestCount": 9,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-core/tests/async_deserialization_ordering.rs"
+      ],
+      "notes": "All nine TypeScript declarations are translated directly. Coverage preserves event-log settlement order across inverse async hydration delays, sequential and ten-way concurrent steps, hook payloads, mixed completed/failed steps with FatalError identity, sleeps interleaved with steps, and different step functions. Availability regressions require buffered hook hydration failures to remain inert until claimed so no unhandled rejection can crash the process, and require abandoned hook delivery barriers to retire after a later branch proceeds. Final GREEN must exercise the real Rust event consumer, replay payload cache, class registry, async hydrator, promise queue, sleep/hook/step primitives, and idle barrier retirement; precomputed observations are insufficient."
+    },
+    {
+      "typescript": "packages/core/src/attribute-changes.test.ts",
+      "sourceSha256": "c22b755a5223976a23089984badc6836d5b9ea423691eacaa95828a3d12f4394",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 154,
+      "declaredTestCount": 11,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-core/tests/attribute_changes.rs"
+      ],
+      "notes": "All 11 TypeScript declarations are translated as 14 executable Rust cases after expanding non-object inputs. Coverage preserves insertion order, undefined-to-null deletion, empty records, plain-object rejection with actionable type names, JavaScript UTF-16 key limits including astral Unicode boundaries, UTF-8 value byte limits, reserved-prefix opt-in, and exact 64-attribute batch boundaries. Security-relevant cases require malformed runtime values to fail before event creation and prevent Unicode or multibyte inputs from bypassing storage limits. Final GREEN must share the real Rust World validator and wrap validation failures in the Rust FatalError boundary rather than duplicating constants or messages."
+    },
+    {
+      "typescript": "packages/core/src/bench-chunk-rtt-stats.test.ts",
+      "sourceSha256": "782fcdca40c9a683207f53f59421c31ae0a32a4ed1a711144c7cc49aab4b000c",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 378,
+      "declaredTestCount": 30,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-core/tests/bench_rtt_stats.rs"
+      ],
+      "notes": "All 30 TypeScript declarations are translated directly. Coverage preserves mechanism-based sequence buckets, chunk-count-independent progress bins, sparse input handling, exact mean-profile and histogram merges, doubling size bins, nearest-rank percentiles, one-decimal rounding, per-run delay maxima, steady-window rate trimming, skew-free CDV with duplicate/reorder/hole accounting, positive-CDV sequence padding, count-weighted averages, and percentile-of-percentiles aggregation. Final GREEN must share one production Rust implementation between the deployment reader and benchmark runner; fixture tables or precomputed summaries are insufficient."
+    },
+    {
+      "typescript": "packages/core/src/byte-stream-framing.test.ts",
+      "sourceSha256": "4aab3ce1a9ab5bcbd0d0d9df56f2115ca71f3a709332ecc5677baad4590c6371",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 541,
+      "declaredTestCount": 17,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-core/tests/byte_stream_framing.rs"
+      ],
+      "notes": "All 17 TypeScript declarations are translated. Coverage preserves the four-byte big-endian envelope, empty-chunk suppression, large and empty streams, the 100 MB producer and consumer cap, split and coalesced transport reads, truncated-frame rejection, one-hundred-chunk boundary preservation, legacy raw references, framed-v1 references, and world-stream round trips. WF-RUST-024 records the memory-exhaustion and protocol-desynchronization boundary. Final GREEN must use the production incremental Rust parser and must reject an advertised oversized length before allocating or waiting for its body."
+    },
+    {
+      "typescript": "packages/core/src/capabilities.test.ts",
+      "sourceSha256": "da34682ae0dd00cb07c6848befe7f66b4b08555b4c6d4bba6fa2bab8653e9e2d",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 107,
+      "declaredTestCount": 11,
+      "status": "green",
+      "rustTests": [
+        "crates/workflow-core/tests/capabilities.rs",
+        "rust/conformance/capabilities-parity.test.ts"
+      ],
+      "notes": "All 11 parameterized TypeScript declarations remain covered as 27 direct Rust cutoff cases, with additional compression, sealed-format, normalization, overlength, leading-zero, and JavaScript-safe-integer boundaries. Production Rust uses semver 1.0.26 for prerelease ordering, preserves the exact devl/encr/gzip/zstd/encp cutoffs, and fails closed to baseline capabilities for absent or malformed producer metadata. The differential suite executes the TypeScript oracle and Rust binary with the same values. Runtime producer adoption remains tracked separately."
+    },
+    {
+      "typescript": "packages/core/src/classify-error.test.ts",
+      "sourceSha256": "6218392cd3904c128ff061de5546290b708ac4636f14dc6ffe82c7429f9b6b3b",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 266,
+      "declaredTestCount": 28,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-core/tests/classify_error.rs"
+      ],
+      "notes": "All 28 TypeScript declarations are translated directly. Coverage preserves stable terminal categories for replay corruption, event limits, divergence, runtime/deployment/user errors, backend contract failures, transport errors, throttling, native OperationError, and non-Error throws. Retry classification keeps 429, 5xx, TRANSPORT, and TIMEOUT retryable while making 4xx, parse/schema violations, TooEarly pacing, plain values, and permanently lost event payloads terminal. WF-RUST-020 records the read-amplification and availability consequence of retrying an unrecoverable payload. Final GREEN must dispatch on the real Rust error enum/typed World metadata and may not infer categories from untrusted message text."
+    },
+    {
+      "typescript": "packages/core/src/context-errors.test.ts",
+      "sourceSha256": "ea43a1f4d3ebc824928dafbe02905116898dbb5fd5c54a4e04a9ef41193f8a71",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 243,
+      "declaredTestCount": 12,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-core/tests/context_errors.rs"
+      ],
+      "notes": "All 12 TypeScript declarations are translated as 16 executable Rust tests after expanding the four-way FatalError gate. Coverage preserves exact context phrasing and docs framing, active-workflow naming, generic fallback, fatal/no-retry classification, redirected caller stacks, lazy pretty terminal rendering, one-copy detail lines, and plain ANSI-free stored message/stack data. WF-RUST-022 records the prior functionName enumeration and ANSI persistence regressions. Final GREEN must use the production Rust error type and formatter; prebuilt strings or hidden serializable function-name fields are insufficient."
+    },
+    {
+      "typescript": "packages/core/src/define-hook.test.ts",
+      "sourceSha256": "29edc03d840106df3a3362c85f07d676e6ed7bff35e877c363bcfb01219541b1",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 111,
+      "declaredTestCount": 3,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-core/tests/define_hook.rs"
+      ],
+      "notes": "All three TypeScript cases are translated. The Rust boundary preserves schema-free payload forwarding, schema normalization before resume, and aggregated actionable validation errors. Security-relevant behavior requires invalid payloads to fail before resumeHook sees the token or payload. Final GREEN must accept a real standard-schema adapter and call the production Rust hook resume path only after successful validation."
+    },
+    {
+      "typescript": "packages/core/src/delivery-barrier-coverage.test.ts",
+      "sourceSha256": "4c0b28babd6f045de84f1169c13288d9c0e9d0fbc29f8792cd4c1e4d4ca63c31",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 929,
+      "declaredTestCount": 11,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-core/tests/delivery_barrier_coverage.rs"
+      ],
+      "notes": "All 11 TypeScript declarations are translated as 21 executable Rust cases after expanding both six-value consumer-hop matrices. Coverage preserves step-behind-step ordering across drain windows, wait/hook delivery behind an earlier step at 0/1/3/8/20/50 continuation hops, hook-behind-hook async-iterator ordering, abort-listener ordering, parked-chain idle reachability and lowest-first retirement, all-armed batch idle blocking, suspension snapshots for parallel and single-step controls, and termination with log-order draws enabled or disabled. Availability and replay-integrity cases require committed deliveries to prevent premature suspension without making abandoned payload chains gate their own cleanup; regressions otherwise produce dormant runs, deadlocks, retained barriers, or ULID replay divergence. Final GREEN must exercise the real Rust event consumer, barrier graph, quiescence turnstile, idle scheduler, deterministic ID allocator, and WorkflowSuspension snapshot; scenario-specific observations are insufficient."
+    },
+    {
+      "typescript": "packages/core/src/delivery-barrier-dispenser.test.ts",
+      "sourceSha256": "8233d9bbb61a6b21e640058a135e766bb6d45b84e45b5585e56bbf4e444a5226",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 334,
+      "declaredTestCount": 3,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-core/tests/delivery_barrier_dispenser.rs"
+      ],
+      "notes": "All three TypeScript regression cases are translated. The suite requires suspension to wait for a delivery parked behind an unclaimed payload, several parked segments to wake lowest-log-position first so later correlation draws remain deterministic, and a rejected promise queue not to kill the safety-net dispenser or leave delivery idle permanently false. WF-RUST-026 records the availability and replay-integrity boundary. Final GREEN must run the actual Rust event consumer, barrier registry, scheduler, and correlation allocator."
+    },
+    {
+      "typescript": "packages/core/src/describe-error.test.ts",
+      "sourceSha256": "e7831ba2ed9c48f78283fa9d2d19e39acee91ad9ed2c0d6e7240ccd9da5b496a",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 365,
+      "declaredTestCount": 34,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-core/tests/describe_error.rs"
+      ],
+      "notes": "All 34 TypeScript declarations are translated directly. Coverage preserves live and persisted attribution for user, serialization, context, runtime, corruption, replay-timeout, max-delivery, max-event, World-contract, and deployment-mismatch failures; precomputed typed codes override live classification; missing or unknown persisted values default safely to USER_ERROR; and all eight snapshot payloads retain exact static hints. Security-relevant behavior requires classification from trusted enum/code/name boundaries rather than untrusted message text, and hints must remain static so attacker-controlled error messages cannot alter operator guidance. Final GREEN must share the production Rust classification enum and persisted-signal parser."
+    },
+    {
+      "typescript": "packages/core/src/duplicate-event-fixtures.test.ts",
+      "sourceSha256": "26672ca1f9b8de070b3df9a3a2d1cf016d430d5c35da4fc7662ebf30dd182ac4",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 121,
+      "declaredTestCount": 1,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-core/tests/duplicate_event_fixtures.rs"
+      ],
+      "notes": "The single parameterized TypeScript declaration is expanded into all 16 shared fixture cases. Coverage preserves open-versus-closed entity consumers, retry attempts, terminal outcome classes, wait/hook/run duplicates, entityless step-body attributes, id-bearing workflow attributes, and sibling isolation. Security-relevant behavior requires duplicate classification to remain per entity and per event class so one entity cannot hide another's event and observability cannot conceal a divergence. Final GREEN must consume the same canonical fixture corpus as the Rust observability implementation rather than copying expected indices into runtime code."
+    },
+    {
+      "typescript": "packages/core/src/duplicate-events.test.ts",
+      "sourceSha256": "e3a023be3df7902970a5c782ea28acf8d1a9efe7b79a3f081080839b38f7fe59",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 266,
+      "declaredTestCount": 6,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-core/tests/duplicate_events.rs"
+      ],
+      "notes": "All six TypeScript replay cases are translated. Coverage drives step, wait, hook, and attribute duplicates through a suspension/result observation, verifies the exact duplicate event and class, keeps the next legitimate step pending, leaves no stranded event after a duplicate workflow attribute write, and still reports an unrelated unconsumed event as divergence. Security-relevant behavior requires duplicate suppression to be scoped by entity and class so malformed events cannot hide unrelated log corruption. Final GREEN must use the real Rust event consumer and workflow primitives rather than returning scenario-specific observations."
+    },
+    {
+      "typescript": "packages/core/src/encryption.test.ts",
+      "sourceSha256": "66b7f24a4537cbd97a4f5a9251f3eea41fc6b799c80673742e9f0e89116fd756",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 131,
+      "declaredTestCount": 7,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-core/tests/encryption.rs"
+      ],
+      "notes": "All seven TypeScript encryption cases are translated. Coverage preserves exact 32-byte keys, AES-GCM nonce-plus-tag overhead, round trips, short-envelope rejection, authenticated tamper/wrong-key failure, OperationError cause capture, operation/byteLength context, omission of nonce bytes from formatPrefix, and encrypt-usage failures. WF-RUST-021 records the authenticated-encryption and error-classification boundary. Final GREEN must use the production Rust cryptographic provider and random nonces; deterministic or home-grown crypto implementations are prohibited."
+    },
+    {
+      "typescript": "packages/core/src/events-consumer.test.ts",
+      "sourceSha256": "039fce0b4686558228bc9ef85be08ba29c4c6b451d9c877fb46f304596c81396",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 1514,
+      "declaredTestCount": 55,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/src/flushable-stream.test.ts",
+      "sourceSha256": "529ec9c5342322bccddb15d7991527c3c3191ad66dbb7b784687e64bdaa31ad8",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 581,
+      "declaredTestCount": 16,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-core/tests/flushable_stream.rs"
+      ],
+      "notes": "All 16 TypeScript declarations are translated. Coverage includes handled pre-await rejection, writable and readable lock polling, natural close, write and source failures, concurrent and delayed writes, singleton pollers, drain-barrier adoption, early-ack completion ordering, barrier failure, accepted-prefix durability, plain sinks, ordered delivery, sink close, and pending-operation cleanup. WF-RUST-025 records the durability boundary. Final GREEN must exercise the production async Rust pipe and prove that neither success nor failure settles before every accepted byte is durable."
+    },
+    {
+      "typescript": "packages/core/src/global.test.ts",
+      "sourceSha256": "19e6ca9a789fd46ebb102c4ae6c7133e3ad5cf44c71241308fe7249ddb8bd105",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 443,
+      "declaredTestCount": 23,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/src/hook-sleep-interaction.test.ts",
+      "sourceSha256": "598bd00d7bec0fcba513527c5a8669e0bcbcbd08f472661de0a56ccffc281037",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 1611,
+      "declaredTestCount": 18,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/src/log-format.test.ts",
+      "sourceSha256": "5df45625f10c8c0d448f1018fb3a8bd768f350ac2f0a53c1df3d26df6f2c3334",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 163,
+      "declaredTestCount": 8,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-core/tests/log_format.rs"
+      ],
+      "notes": "All eight TypeScript formatting cases are translated with exact plain-text output. Coverage preserves framing, known metadata rows, parsed machine names, framework-frame collapsing, sdk/user attribution, duplicate message suppression, malformed-name fallback, sorted unknown fields, and retry attempt summaries. Final GREEN must keep structured metadata separate from untrusted message text and must not execute terminal-control sequences from metadata values."
+    },
+    {
+      "typescript": "packages/core/src/log-order-draws.test.ts",
+      "sourceSha256": "9f8e910f1c41f2bc349bc49d671304f1b4d3769eb810d2b06ea1302282922ed9",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 320,
+      "declaredTestCount": 4,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-core/tests/log_order_draws.rs"
+      ],
+      "notes": "All four TypeScript regression cases are translated. The arrival-order control must still demonstrate a rebound, while default log-order draws preserve every shared correlation-id binding under prefix extension, remain stable across every dense prefix, and are deterministic for an identical prefix. WF-RUST-023 records the production corruption where one ordinal named a finalize step in a stale replay and a wait in a fresher replay. Final GREEN must mint identifiers inside the actual event-delivery cascade and replay the blocked-branch graph; precomputed binding tables are insufficient."
+    },
+    {
+      "typescript": "packages/core/src/logger.test.ts",
+      "sourceSha256": "98f355c9b2881415677088585226b604d987fb9dd2b9a64c45bfa9f05fab544d",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 188,
+      "declaredTestCount": 13,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-core/tests/logger.rs"
+      ],
+      "notes": "All 13 TypeScript logger cases are translated with exact console call arity and snapshot strings. Coverage preserves error/warn routing, quiet info/debug defaults, workflow:build DEBUG inclusion and exclusion, child metadata merging and call-site precedence, chained scopes, machine-name rendering, extra run metadata, no-metadata output, and exact step-failure/max-retry forms. Security-relevant behavior requires one preformatted string argument so log drains do not reinterpret multiline stacks or inspect attacker-controlled objects, and metadata conflict resolution must be deterministic. Final GREEN must use the production Rust logger and shared formatter."
+    },
+    {
+      "typescript": "packages/core/src/module-scope-state.test.ts",
+      "sourceSha256": "5bf456459770a14d9b558a642f81d4de596ea82f9ec09ff21b6bf8f0a34d42ae",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 30,
+      "declaredTestCount": 1,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-core/tests/module_scope_state.rs"
+      ],
+      "notes": "The repository scan assertion is translated. Final GREEN must run the actual Rust lint over workflow-core and report no unguarded mutable module-scope state; a hard-coded empty vector is insufficient."
+    },
+    {
+      "typescript": "packages/core/src/race-padded-draw-ordering.test.ts",
+      "sourceSha256": "d42f10e735553d734e05efecec40b4da256fefbecebed62e5b4a83649bda01dd",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 378,
+      "declaredTestCount": 3,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-core/tests/race_padded_draw_ordering.rs"
+      ],
+      "notes": "The generated declaration counter reports three tests, while the pinned source contains two executable it(...) cases. Both cold and warm shared-cache cases are translated, plus one Rust-only single-owner binding invariant extending WF-RUST-023. Coverage preserves all seven seeded correlation IDs, the 13-event log, watchdog recovery before settled-branch finalization, cache-priming hydration, complete event consumption, suspension with exactly finalizeS/finalizeW/settleW pending, identical cold/warm bindings, and rejection of correlation-ID or logical-step rebinding. Final GREEN must exercise the real Rust event consumer, Promise.race-equivalent scheduling, delayed hydration, ReplayPayloadCache, log-ordered draw allocator, suspension collector, and corruption path; fixture-precomputed observations are insufficient."
+    },
+    {
+      "typescript": "packages/core/src/readable-stream-telemetry.test.ts",
+      "sourceSha256": "2c6cbd455d96a6d8fe55a061738c3737a7ebda41a7d8dcf90621eca01f58b201",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 180,
+      "declaredTestCount": 3,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-core/tests/readable_stream_telemetry.rs"
+      ],
+      "notes": "All three TypeScript declarations are translated. Coverage preserves CLIENT span identity; exact run, stream, and operation attributes; numeric time-to-first-non-empty-chunk and connect durations; connect not exceeding TTFC; drained-only completion totals; raw payload byte counts for WorkflowServerReadableStream; framed wire-byte counts including each four-byte header; and reconnect totals. Final GREEN must instrument the real Rust World read and framed reconnect paths, use monotonic elapsed timing, and keep telemetry fire-and-forget so a missing or failing exporter cannot alter stream delivery."
+    },
+    {
+      "typescript": "packages/core/src/reconnecting-framed-stream.test.ts",
+      "sourceSha256": "bd9f8b85882418fa2b5a41d7efe6d388a2dbb2eedf5e5fa36f7e50cce81c78fa",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 605,
+      "declaredTestCount": 18,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/src/replay-payload-cache-security.test.ts",
+      "sourceSha256": "357f036c2cd0ac096b7805bab64b07b2aae5234059bbb906e1097a8d1519c519",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 223,
+      "declaredTestCount": 4,
+      "status": "green",
+      "rustTests": [
+        "crates/workflow-core/tests/replay_payload_cache.rs",
+        "crates/workflow-core/tests/replay_payload_cache_security.rs"
+      ],
+      "notes": "WF-RUST-099 is fixed in both the active TypeScript cache and production Rust. Both bind workflow/event keys to exact original bytes, share in-flight work for identical bytes, reject mismatches without preparing the conflicting payload, preserve terminal conflicts across in-flight completion and later lookup, reject same-key preparer re-entry, and expose only fixed redacted diagnostics. TypeScript copies identity and preparation buffers separately and publishes the entry before invoking custom preparation code. The permanent Rust-core workflow must keep the TypeScript regression and both production Rust replay-cache targets green."
+    },
+    {
+      "typescript": "packages/core/src/replay-payload-cache.test.ts",
+      "sourceSha256": "75970897075bd6670d404726a626845f7098cd92a1f493bc0777f5ab34456112",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 241,
+      "declaredTestCount": 9,
+      "status": "green",
+      "rustTests": [
+        "crates/workflow-core/tests/replay_payload_cache.rs"
+      ],
+      "notes": "All nine TypeScript declarations are covered by the production workflow-core replay payload cache. Coverage preserves exact in-flight preparation sharing; synchronous preparer normalization; speculative rejection retention until the ordered consumer observes it; retry only after observation; concurrent workflow/result/error/hook prewarming; cached decrypt/decompress work with fresh VM object revival; stale-snapshot resetScan behavior for events inserted below the scanned prefix; event-ID keyed reuse across rescans; legacy flattened-value bypass; missing event-data tolerance; memoization of share-safe primitives including undefined; the 4096-character cap; fresh hydration for mutable and oversized values; and retry after failed hydration. The permanent Rust core workflow builds and runs the TypeScript oracle first, then exercises the production Rust cache, all Rust targets, Rustfmt, Clippy with warnings denied, and differential conformance runners."
+    },
+    {
+      "typescript": "packages/core/src/retained-vm-loop.test.ts",
+      "sourceSha256": "9fa9796218235ace585ed7304881048497f4f37b6e464b5ace3ef21da223691e",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 949,
+      "declaredTestCount": 17,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/src/runtime-import.test.ts",
+      "sourceSha256": "4c909bd491f4341dfac61bb99e2b0a32671f62142dc95ec83b7f36ebf14c4c38",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 12,
+      "declaredTestCount": 1,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-core/tests/runtime_import.rs"
+      ],
+      "notes": "The runtime-entrypoint import assertion is translated. Final GREEN must prove module evaluation does not load Vercel-only or other platform adapter code, preserving portability and preventing environment-specific initialization side effects."
+    },
+    {
+      "typescript": "packages/core/src/runtime-trace-mode.test.ts",
+      "sourceSha256": "33172e4fe7ac964a1adef11447f28f589e8ea33b9ac7d4425adb8d043818fa8a",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 516,
+      "declaredTestCount": 11,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/src/runtime-world-singleton.test.ts",
+      "sourceSha256": "ae960793c2497a803ecad41cba1feff52ff9d1b3d92b0d3efcc2704226ef15a9",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 41,
+      "declaredTestCount": 1,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-core/tests/runtime_world_singleton.rs"
+      ],
+      "notes": "The World initialization assertion is translated. Coverage requires a 204 route response, the same World identity from getWorld after initialization, and exactly one local World construction. Final GREEN must exercise the real Rust singleton and concurrent-safe route initialization rather than fixture identity strings."
+    },
+    {
+      "typescript": "packages/core/src/runtime.test.ts",
+      "sourceSha256": "118b315cab1c5287887677edc3372fa1fa1f5eb95bb8f9292bc6ea9e128c105b",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 3177,
+      "declaredTestCount": 44,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/src/runtime/constants.test.ts",
+      "sourceSha256": "415942971cd23cff3362a82b03186d35eddafd436be9a9b5a4d3a03bc727c896",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 415,
+      "declaredTestCount": 48,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/src/runtime/count-step-started-events.test.ts",
+      "sourceSha256": "f78257321d59c8e39b4385691a605c99aba1b3629c88fca1ed7b4bc6cb82200c",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 166,
+      "declaredTestCount": 9,
+      "status": "green",
+      "rustTests": [
+        "crates/workflow-core/tests/count_step_started_events.rs",
+        "rust/conformance/count-step-started-events-parity.test.ts"
+      ],
+      "notes": "All nine parameterized TypeScript declarations are covered by the production workflow-core Rust implementation and differential oracle. The Rust tests add exact negative-zero and negative-infinity boundaries while preserving safe-integer advancement, null/empty logs, event filtering, owner-scoped counts, totalAttempts as bare starts plus the largest single owner, the workflow#3069 racer regression, genuine retry ceilings, and mixed owned-to-bare ceilings. Internal Rust accounting uses the private StepAttemptCount integer type; f64 exists only at the JavaScript compatibility boundary. The dedicated Rust core workflow runs Rustfmt, compilation, all tests, Clippy with warnings denied, the TypeScript oracle, and cross-language differential fixtures."
+    },
+    {
+      "typescript": "packages/core/src/runtime/cross-environment-delivery.test.ts",
+      "sourceSha256": "d337485ff0a4de42ba6012e2cfc572f23bcc5598b0540279b81064baba3f0a65",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 347,
+      "declaredTestCount": 15,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/src/runtime/deployment-guard.test.ts",
+      "sourceSha256": "244e5d4197dac588bd99276e0df3d9f5f6135bc40d8237e4c4615cd477e9e7cf",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 270,
+      "declaredTestCount": 11,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/src/runtime/get-port-lazy.test.ts",
+      "sourceSha256": "9bfea2669624364ceece7fe3ede61f6fbc8690c3d0431f497322ed9efc951bb5",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 66,
+      "declaredTestCount": 3,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/src/runtime/helpers.test.ts",
+      "sourceSha256": "8f889f36526a447bc5f22715f12d6c9fe55f4e73a33fc4c0fb432e4f58b4960e",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 1071,
+      "declaredTestCount": 75,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/src/runtime/precondition-guard-replay.test.ts",
+      "sourceSha256": "5897a57a9880b4e8e19741739d8821e7bdc8fe88c1e2e26380a637bee12465b4",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 1203,
+      "declaredTestCount": 12,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/src/runtime/quickjs-entrypoint.preload.test.ts",
+      "sourceSha256": "7a6342fa6e726d166695546c82751b6ceed7d8644abe68399515de33a1da23f1",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 198,
+      "declaredTestCount": 3,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/src/runtime/quickjs-hook-dispose-token.test.ts",
+      "sourceSha256": "5af2080160dc60251db334c2efb59bf68f2afd5e11ccb2848f81ac799d5960f0",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 111,
+      "declaredTestCount": 2,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/src/runtime/quickjs-partial-preload.test.ts",
+      "sourceSha256": "bccb571e25bb718efb50706ecaa741e52494281cf722cc85ca51b3148ce0bed3",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 128,
+      "declaredTestCount": 1,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/src/runtime/quickjs-runtime.test.ts",
+      "sourceSha256": "f7b035a81b97471e623e6b7ecd875947236a2687e5abb4a6de4345d64d284391",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 1651,
+      "declaredTestCount": 35,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/src/runtime/quickjs-serde.test.ts",
+      "sourceSha256": "2cece43572255ed3efa36274035097d3063d41570b240671fa2ffb129c374e8a",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 738,
+      "declaredTestCount": 21,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/src/runtime/replay-budget.test.ts",
+      "sourceSha256": "e1b36756ddc593556f923ebc4b8554333957840d7130f58025c526986362c319",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 242,
+      "declaredTestCount": 12,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/src/runtime/replay-recovery-reporter.test.ts",
+      "sourceSha256": "5835c543aa2c1315accddd294321d16bc6f835658dae598ce56f7650f0d1f0e4",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 69,
+      "declaredTestCount": 5,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/src/runtime/resume-hook.consumer-preload.test.ts",
+      "sourceSha256": "454f64fd4b909e4901678ba8dee3772151c2d7926a138c2f73b3719f1eb2ee53",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 700,
+      "declaredTestCount": 13,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/src/runtime/resume-hook.fast-path.test.ts",
+      "sourceSha256": "c2d856fc27942c70a93d2cbac1a8ea3c45f582f5f4a5e8bd4d7a5f5973d59659",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 271,
+      "declaredTestCount": 9,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/src/runtime/resume-hook.lazy.test.ts",
+      "sourceSha256": "cf5af80182d329c8e832ddd7347ebdcae587f30ea91dc5bc9022d2c4093c085e",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 581,
+      "declaredTestCount": 20,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/src/runtime/resume-hook.test.ts",
+      "sourceSha256": "506bfb3378275f1a0e1886d09477f2943f6f9d97188f7b57ce8f99280e4e6812",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 339,
+      "declaredTestCount": 10,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/src/runtime/resume-latency.runtime.test.ts",
+      "sourceSha256": "8bcdb6ff45aebbe6b0eb27bb02fd0c4da60b760e0edccfb103cde59dcfe50696",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 1234,
+      "declaredTestCount": 18,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/src/runtime/resume-latency.test.ts",
+      "sourceSha256": "d2a7b32d309cd58b878ed1c2d2fa3c722e7248dd1a85ae3de56c2b55c3a35e6f",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 327,
+      "declaredTestCount": 22,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/src/runtime/run-id-time.test.ts",
+      "sourceSha256": "21745d94d03348be7ec58685a2c64e6b8851f7f5e43e1a215914e4498a45a172",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 42,
+      "declaredTestCount": 5,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/src/runtime/run-return-value-long-poll.test.ts",
+      "sourceSha256": "c71a537ba6a06f9cc471b379f7e7bd26cdde90126dc8369f717f38b03c1680c3",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 331,
+      "declaredTestCount": 14,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/src/runtime/run-return-value-real-world.test.ts",
+      "sourceSha256": "72ea86bd9087cc377ff7f7a16ec42b3e448c9bc053741324f3d42efc3245d1c0",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 152,
+      "declaredTestCount": 3,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/src/runtime/runs.test.ts",
+      "sourceSha256": "3a9b24784d1dc12cdd1d3ca43ee99a7446173eaf9e54daa6563c1931b80feb2c",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 781,
+      "declaredTestCount": 30,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/src/runtime/start-lineage.test.ts",
+      "sourceSha256": "b77c487d4a8ed45c0dc7ee1dda4bf4f7ea4bcda5e40b3aa07db833a27b888879",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 157,
+      "declaredTestCount": 5,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/src/runtime/start.test.ts",
+      "sourceSha256": "908db910eccdfe5189f6c04b55318654b79e9058cc261270800c2fe0f6c7cc99",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 1483,
+      "declaredTestCount": 59,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/src/runtime/step-executor.test.ts",
+      "sourceSha256": "dc1c37f39e688785b28f1fa337c5c162a9c3ea52b413d3baa82f3dec16b21934",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 596,
+      "declaredTestCount": 12,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/src/runtime/step-latency.test.ts",
+      "sourceSha256": "64b222ab1bc3e157d6b64f5142a61df34a4618441bba5f092047a8ce230f7ada",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 616,
+      "declaredTestCount": 32,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/src/runtime/step-ownership.test.ts",
+      "sourceSha256": "3fdcd9daebc0651e5933f97e3584b2294491aee782d017d21d3830b6a4946b79",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 220,
+      "declaredTestCount": 16,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/src/runtime/step-single-flight.test.ts",
+      "sourceSha256": "84b6e8c9edecec99fbc1a51da8117e116e94060855cb0c9d0581b843c52daefb",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 92,
+      "declaredTestCount": 5,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/src/runtime/suspension-handler.test.ts",
+      "sourceSha256": "ecdce13b410bc8642fb4b0101eb5151be41ea2082769c9e82e52d713f5e0e0c6",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 2251,
+      "declaredTestCount": 61,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/src/runtime/vm-mode.test.ts",
+      "sourceSha256": "2413b576c1c7121eaa0d5b50af1a511395ec71678e30506822afd2c49ee4dce4",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 110,
+      "declaredTestCount": 15,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/src/runtime/wait-completion-replay.test.ts",
+      "sourceSha256": "6fca37815651becbc106384177774cd064843716e4338f6be9a4bbea897edeed",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 755,
+      "declaredTestCount": 9,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/src/runtime/wait-continuation.test.ts",
+      "sourceSha256": "4419b2ccdea573bce228b2374bd9787a2ca450f9f4dc9d5bc63dcb65044ef147",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 227,
+      "declaredTestCount": 17,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/src/runtime/wait-until.test.ts",
+      "sourceSha256": "456b3a1dc477a176f68ad03dd779f558cc2de6d2406be423442590fd2fcad54d",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 35,
+      "declaredTestCount": 3,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/src/runtime/world-init.test.ts",
+      "sourceSha256": "cf2dde308e52ba9640f8fe91f06ce6b3e9f53a269ed630e1297d50351ac9c91c",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 80,
+      "declaredTestCount": 3,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/src/schemas.test.ts",
+      "sourceSha256": "792efb0c215904c37e9b7a8d8bba8064cab5bbab735a17c2cf30affa111e6a77",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 21,
+      "declaredTestCount": 1,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/src/sealed-box.test.ts",
+      "sourceSha256": "233bcd26867de602ed0e94327bd9ec750355f0469fb5e979c1c1b414e18efaab",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 519,
+      "declaredTestCount": 38,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/src/serialization-format.test.ts",
+      "sourceSha256": "4255c280dcf47137d1c2673b2be0c25835772e148c6b6cfc3a9beb084f35b723",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 904,
+      "declaredTestCount": 78,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/src/serialization.test.ts",
+      "sourceSha256": "e05fbbc18fd70319f1b0a0c5caaf34f53cb5c4505b898ce65517b37ddb1dd76e",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 7307,
+      "declaredTestCount": 218,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/src/serialization/compat.test.ts",
+      "sourceSha256": "ca6b4b0e283cc2752339e7eb056085b508f856ec6ecc89000afb21714900803b",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 186,
+      "declaredTestCount": 11,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/src/serialization/compression-telemetry.test.ts",
+      "sourceSha256": "7c1f8b93950b3b63178a508d837f73b617a44fed24e0bceb34421618fc85847c",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 106,
+      "declaredTestCount": 3,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/src/serialization/compression.test.ts",
+      "sourceSha256": "71268cfb9142f4ca897e06a7d58993cfa5b111b1ead7e470c8744c1810692daf",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 480,
+      "declaredTestCount": 31,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/src/serialization/hardened.test.ts",
+      "sourceSha256": "45084ea54829ee8054480fe56081563c6a7b8704ba43e368572d367c69c831eb",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 871,
+      "declaredTestCount": 30,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/src/serialization/reducers/common-vm.test.ts",
+      "sourceSha256": "578b65e8466782446ec44c58d39499a2b2551668d744cc16e0873a04d40ef4b7",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 68,
+      "declaredTestCount": 3,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/src/serialization/serialization.test.ts",
+      "sourceSha256": "44845ffcb1db0a28e324bdf918b66f5bbaa5633eddff4ae7f0045ade4e67c6cd",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 1627,
+      "declaredTestCount": 154,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/src/serialization/workflow-vm.test.ts",
+      "sourceSha256": "24bc3984457a055d1c6e3518f2a5c2771cbdbb90793f56894a8d7a0b743a5226",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 187,
+      "declaredTestCount": 14,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/src/set-attributes.test.ts",
+      "sourceSha256": "0cc35765b8a877962543024ff13dc3ea83cd46fa72fd1801184d9407f89b4e0b",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 183,
+      "declaredTestCount": 6,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/src/source-map.test.ts",
+      "sourceSha256": "18e7537211a3e45978c22dd2a1066acc570162d948b6e7dbaa4ff159bb410dae",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 176,
+      "declaredTestCount": 10,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/src/step-delivery-hop-count.test.ts",
+      "sourceSha256": "9fcbee0d4a99b3e5c04aa6046578831e8b494be94cac11bc4106902815c4b5cf",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 496,
+      "declaredTestCount": 3,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/src/step-delivery-ordering.test.ts",
+      "sourceSha256": "452194d2db31df2902f4ff0c3ea71a9d059feebd8c0248d0c990f6a3251fd67f",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 978,
+      "declaredTestCount": 10,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/src/step-hydration-memoization.test.ts",
+      "sourceSha256": "e6cf8c838a39e248e6c9072fc2d7da42fcc9742459ef849404254a51d2f29302",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 188,
+      "declaredTestCount": 4,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/src/step.test.ts",
+      "sourceSha256": "d85c67bb6bafa34af1c236cd9d05fee0edfee2365e77714f231dcda0953065aa",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 1137,
+      "declaredTestCount": 31,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/src/step/context-storage.test.ts",
+      "sourceSha256": "28ca67065c9e76c5b2cfc2264c97f02767fac26604d4a4d4ba2a48e7c846177a",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 41,
+      "declaredTestCount": 3,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/src/step/writable-stream.test.ts",
+      "sourceSha256": "702fc6d075d4a81a1ced5d00c071b152ebcbb1d2a29e5eec3e39b23dbd0ccf54",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 244,
+      "declaredTestCount": 6,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/src/storm-log-replay.test.ts",
+      "sourceSha256": "d4a2f53d9be668f7fa387df09ee987e303be09da086f22fac8b9e9919a940d5c",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 368,
+      "declaredTestCount": 3,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/src/storm-log-sweep.test.ts",
+      "sourceSha256": "1ab528e08f1d56cc63295529fff034d940dc14b5afd9dbed9495f6fedd348613",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 280,
+      "declaredTestCount": 1,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/src/telemetry-elapsed-span.test.ts",
+      "sourceSha256": "aa5bf77d13ab5a56fbd79345898e0b1e37e55c2100dad4926453f24330c6bbdf",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 44,
+      "declaredTestCount": 1,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/src/telemetry-metrics.test.ts",
+      "sourceSha256": "ec475c0054b44c9b2dd0ae79331f8ee5a0437d6565232327126c6f272b914df6",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 31,
+      "declaredTestCount": 1,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/src/types.test.ts",
+      "sourceSha256": "d8d0ef733d7be005816ec371de9d4e44d076c222b355643294d0a50da9370d29",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 61,
+      "declaredTestCount": 5,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/src/unconsumed-check-delivery-idle.test.ts",
+      "sourceSha256": "3de71ca1b3d5c4b57500953dd5e3093b6959d10828082fc91ca16c721f2eedde",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 169,
+      "declaredTestCount": 3,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/src/util.test.ts",
+      "sourceSha256": "577fff6b949ea47a57491622f915dd2b3461344cc128a45037b706959583d518",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 167,
+      "declaredTestCount": 23,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/src/vm/index.test.ts",
+      "sourceSha256": "449b6ce1b88ef2a52507385fa20ad999c73a5d6daac9ccdf726fc571fb54379f",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 473,
+      "declaredTestCount": 31,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/src/vm/script-cache.test.ts",
+      "sourceSha256": "b80762796bf8f9abfe93c4694db9b7668644f5025ec8551875963cb9d7c0d477",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 203,
+      "declaredTestCount": 8,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/src/vm/uint8array-base64.test.ts",
+      "sourceSha256": "e087ebc545fee8f9504aa1178e998c8986e0cebe2796351590d967d23e635a41",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 492,
+      "declaredTestCount": 47,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/src/vm/uuid.test.ts",
+      "sourceSha256": "707008ddc17844e279ad9fbfc9e07ce3c38a43814023f894fe5860a800aef1f1",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 204,
+      "declaredTestCount": 15,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/src/workflow.test.ts",
+      "sourceSha256": "8a96cb03de39d6de92453046f52b6c4cd64a0b713742d5765e081ab6c25ec47b",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 6042,
+      "declaredTestCount": 90,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/src/workflow/hook.test.ts",
+      "sourceSha256": "f86dd62fdc5059450e4867f50ba8e66d1b96ee47771f35bc358aecfd8da7852a",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 1297,
+      "declaredTestCount": 41,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/src/workflow/set-attributes.test.ts",
+      "sourceSha256": "727c2defa17973372c40b0a4b24065ad4125f8b323ef09687bf84b661d848606",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 105,
+      "declaredTestCount": 8,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/src/workflow/sleep.test.ts",
+      "sourceSha256": "6fa4cb263593bea03fcd7976a122d2b9299d6a7dd8ebb33288691fba123441dc",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 456,
+      "declaredTestCount": 12,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/src/writable-stream-telemetry.test.ts",
+      "sourceSha256": "7ec9ae48a4cb6d584981b30bd346c1230a64a585e2a03d7a651f969ee7bba503",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 206,
+      "declaredTestCount": 6,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/core/src/writable-stream.test.ts",
+      "sourceSha256": "e1155c00cbe6f0f9666f2ec6925fdd043b15bc09736558d2155db4d0760149ae",
+      "surface": "packages/core",
+      "kind": "unit",
+      "lineCount": 983,
+      "declaredTestCount": 38,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/docs-typecheck/src/__tests__/docs.test.ts",
+      "sourceSha256": "c04b66ce17b6670980f5d36b7a03065556cb3609af55decd40103980703914c0",
+      "surface": "packages/docs-typecheck",
+      "kind": "unit",
+      "lineCount": 169,
+      "declaredTestCount": 4,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/docs-typecheck/src/__tests__/sitemap-guard.test.ts",
+      "sourceSha256": "e3f5f6f8a8c7989428ac5cbaf0475ad3db46673e9970d36d149376ad301aadea",
+      "surface": "packages/docs-typecheck",
+      "kind": "unit",
+      "lineCount": 62,
+      "declaredTestCount": 3,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/errors/src/ansi.test.ts",
+      "sourceSha256": "0ada3c4caf347e3276300df77abf5139f47d0fb0a6e7a5c857f04c9731058956",
+      "surface": "packages/errors",
+      "kind": "unit",
+      "lineCount": 130,
+      "declaredTestCount": 11,
+      "status": "green",
+      "rustTests": [
+        "rust/tdd/workflow-errors/tests/ansi.rs"
+      ],
+      "notes": "All 11 frame, inline annotation, code-token, hint, note, help, and docs snapshot declarations are translated. The test model keeps styled fragments readable as HTML-like tags, matching the TypeScript mock rather than embedding terminal escape bytes. GREEN verified against the TypeScript compatibility oracle, production Rust crate, translated Rust suite, Rustfmt, and Clippy in GitHub Actions run 33582056933 at 63c1eae22b98e4cd81f7f3a876b9462401425adb."
+    },
+    {
+      "typescript": "packages/errors/src/build-error.test.ts",
+      "sourceSha256": "1e9f5dd0d156cd50962dca250ab273e9dbf469520858f749e14942bb46f2f879",
+      "surface": "packages/errors",
+      "kind": "unit",
+      "lineCount": 37,
+      "declaredTestCount": 4,
+      "status": "green",
+      "rustTests": [
+        "rust/tdd/workflow-errors/tests/build_error.rs"
+      ],
+      "notes": "All four public-name, hierarchy, hint framing, native cause identity, and name-guard declarations are translated. Final GREEN requires the JavaScript binding to preserve Error subclass and cause identity. GREEN verified against the TypeScript compatibility oracle, production Rust crate, translated Rust suite, Rustfmt, and Clippy in GitHub Actions run 33582056933 at 63c1eae22b98e4cd81f7f3a876b9462401425adb."
+    },
+    {
+      "typescript": "packages/errors/src/corrupted-event-log-error.test.ts",
+      "sourceSha256": "2a800e8f9b341a51b5a57bb6368aa15f457fed23bba283d2ae2ccbfc6e678627",
+      "surface": "packages/errors",
+      "kind": "unit",
+      "lineCount": 38,
+      "declaredTestCount": 4,
+      "status": "green",
+      "rustTests": [
+        "rust/tdd/workflow-errors/tests/corrupted_event_log_error.rs"
+      ],
+      "notes": "All four hierarchy, documentation, cause identity, and type-guard declarations are translated. GREEN verified against the TypeScript compatibility oracle, production Rust crate, translated Rust suite, Rustfmt, and Clippy in GitHub Actions run 33582056933 at 63c1eae22b98e4cd81f7f3a876b9462401425adb."
+    },
+    {
+      "typescript": "packages/errors/src/fatal-error.test.ts",
+      "sourceSha256": "817bc7d6350465f288c5f0374c8bed713643200a31aedc8746c3f803f374bdfb",
+      "surface": "packages/errors",
+      "kind": "unit",
+      "lineCount": 43,
+      "declaredTestCount": 5,
+      "status": "green",
+      "rustTests": [
+        "rust/tdd/workflow-errors/tests/fatal_error.rs"
+      ],
+      "notes": "All five retry-gate declarations are translated, including the security-sensitive requirement that only an Error with literal boolean fatal=true is treated as terminal. GREEN verified against the TypeScript compatibility oracle, production Rust crate, translated Rust suite, Rustfmt, and Clippy in GitHub Actions run 33582056933 at 63c1eae22b98e4cd81f7f3a876b9462401425adb."
+    },
+    {
+      "typescript": "packages/errors/src/module-scope-state.test.ts",
+      "sourceSha256": "9dfc40d721a1a988585ae92624b0e37e78f20bc3987b9640e2d0c7a6683dfa4a",
+      "surface": "packages/errors",
+      "kind": "unit",
+      "lineCount": 30,
+      "declaredTestCount": 1,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-errors/tests/module_scope_state.rs"
+      ],
+      "notes": "The package-local module-scope-state sweep is translated separately so running only the error test crate retains the original safety signal."
+    },
+    {
+      "typescript": "packages/errors/src/replay-divergence-error.test.ts",
+      "sourceSha256": "aa9ab5bc843754ac37aad93a5ae6395d25937aa0d61b99204c5b527ea89dd3e1",
+      "surface": "packages/errors",
+      "kind": "unit",
+      "lineCount": 24,
+      "declaredTestCount": 2,
+      "status": "green",
+      "rustTests": [
+        "rust/tdd/workflow-errors/tests/replay_divergence_error.rs"
+      ],
+      "notes": "Both replay-signal declarations are translated. The planned guard must require both the public name and eventId, preventing an ordinary runtime error from being misclassified as replay divergence. GREEN verified against the TypeScript compatibility oracle, production Rust crate, translated Rust suite, Rustfmt, and Clippy in GitHub Actions run 33582056933 at 63c1eae22b98e4cd81f7f3a876b9462401425adb."
+    },
+    {
+      "typescript": "packages/errors/src/runtime-decryption-error.test.ts",
+      "sourceSha256": "a09beb833fa090224ee0e864dfc95f2d0287534ed41eb34289faf8a16ae0df95",
+      "surface": "packages/errors",
+      "kind": "unit",
+      "lineCount": 63,
+      "declaredTestCount": 6,
+      "status": "green",
+      "rustTests": [
+        "rust/tdd/workflow-errors/tests/runtime_decryption_error.rs"
+      ],
+      "notes": "All six hierarchy, docs, cause identity, optional diagnostic context, property omission, and name-guard declarations are translated. GREEN verified against the TypeScript compatibility oracle, production Rust crate, translated Rust suite, Rustfmt, and Clippy in GitHub Actions run 33582056933 at 63c1eae22b98e4cd81f7f3a876b9462401425adb."
+    },
+    {
+      "typescript": "packages/errors/src/serialization-error.test.ts",
+      "sourceSha256": "f2fa41adfec47260aa2c8e3e4959e9c8a7c7e29479a8db790b1e588c921a21ce",
+      "surface": "packages/errors",
+      "kind": "unit",
+      "lineCount": 56,
+      "declaredTestCount": 6,
+      "status": "green",
+      "rustTests": [
+        "rust/tdd/workflow-errors/tests/serialization_error.rs"
+      ],
+      "notes": "All six hierarchy, bare-title, hint framing, cause identity, name-guard, and fatal retry-short-circuit declarations are translated. GREEN verified against the TypeScript compatibility oracle, production Rust crate, translated Rust suite, Rustfmt, and Clippy in GitHub Actions run 33582056933 at 63c1eae22b98e4cd81f7f3a876b9462401425adb."
+    },
+    {
+      "typescript": "packages/errors/src/workflow-error.test.ts",
+      "sourceSha256": "5aeee6f2573e6f06c8f4e00c8f7e8f575d3cf1861aefb3afe72676fdce2988eb",
+      "surface": "packages/errors",
+      "kind": "unit",
+      "lineCount": 22,
+      "declaredTestCount": 2,
+      "status": "green",
+      "rustTests": [
+        "rust/tdd/workflow-errors/tests/workflow_error.rs"
+      ],
+      "notes": "Both base-error declarations are translated, including the prior WorkflowError.is regression and stable documentation framing. Final GREEN requires the JavaScript binding to expose the correct native Error name and guard behavior. GREEN verified against the TypeScript compatibility oracle, production Rust crate, translated Rust suite, Rustfmt, and Clippy in GitHub Actions run 33582056933 at 63c1eae22b98e4cd81f7f3a876b9462401425adb."
+    },
+    {
+      "typescript": "packages/nest/src/cjs-rewrite.test.ts",
+      "sourceSha256": "d664de9836261f27a49034dd48e63a12024fb32bbeb23db9f227cd6e73481b2f",
+      "surface": "packages/nest",
+      "kind": "unit",
+      "lineCount": 409,
+      "declaredTestCount": 29,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/nest/src/module-scope-state.test.ts",
+      "sourceSha256": "91dbc4f0f13706823f53efb20e52fa7a49bf0c2dc3a674fccdfb9d9eb1847e0d",
+      "surface": "packages/nest",
+      "kind": "unit",
+      "lineCount": 30,
+      "declaredTestCount": 1,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/nest/src/parse-module-type.test.ts",
+      "sourceSha256": "6367ef854f5ca56a2ba1edde242e0f71aab4c2ab952186a34a9485f03a587b42",
+      "surface": "packages/nest",
+      "kind": "unit",
+      "lineCount": 27,
+      "declaredTestCount": 5,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/next/src/builder-eager.test.ts",
+      "sourceSha256": "31cc5b1f9a97ba1895d576e59dca7ed383cd10cf4a564a6fa3e7a00671c54f69",
+      "surface": "packages/next",
+      "kind": "unit",
+      "lineCount": 53,
+      "declaredTestCount": 3,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/next/src/index.test.ts",
+      "sourceSha256": "0681f551ae67f69e61ad955a2045f8afc2bd3c85b7920bccfe2fbd06cfccf9b8",
+      "surface": "packages/next",
+      "kind": "unit",
+      "lineCount": 440,
+      "declaredTestCount": 13,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/next/src/loader.test.ts",
+      "sourceSha256": "df2085aa404068aeb952608efa9a68d4a8e3ac7d55a51643343e2e101c21bcf6",
+      "surface": "packages/next",
+      "kind": "unit",
+      "lineCount": 53,
+      "declaredTestCount": 3,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/next/src/swc-plugin-cache.integration.test.ts",
+      "sourceSha256": "1bb840f4540d473e768486c8c392a1622c9dc8df5f3bd68e872208bf06b29933",
+      "surface": "packages/next",
+      "kind": "unit",
+      "lineCount": 63,
+      "declaredTestCount": 1,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/next/src/watch-ignore.test.ts",
+      "sourceSha256": "9d66a9c9c3c367bd7dcd1d0cdeffa4d59ad4284b69f8baa288a802a26b95a0bf",
+      "surface": "packages/next",
+      "kind": "unit",
+      "lineCount": 188,
+      "declaredTestCount": 14,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/next/src/watch-rebuild.test.ts",
+      "sourceSha256": "da2e087ed556c024ce12d80afd5f932179da4144413b0c877f5f92f807a2339d",
+      "surface": "packages/next",
+      "kind": "unit",
+      "lineCount": 389,
+      "declaredTestCount": 10,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/nitro/src/index.test.ts",
+      "sourceSha256": "3401a3e975858784cc98dcc5cb3aa5beb467bff516f9254150368c085939d0df",
+      "surface": "packages/nitro",
+      "kind": "unit",
+      "lineCount": 467,
+      "declaredTestCount": 21,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/rollup/src/index.test.ts",
+      "sourceSha256": "b7289677cfc7250d39987314294316c4ca28be41baade5abc38c49fca5b0ee70",
+      "surface": "packages/rollup",
+      "kind": "unit",
+      "lineCount": 135,
+      "declaredTestCount": 8,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/sveltekit/src/plugin.test.ts",
+      "sourceSha256": "f22a93a27bd75ca7059e62019d5fc939c34600e92ec3d0c040fd5e83f60c1966",
+      "surface": "packages/sveltekit",
+      "kind": "unit",
+      "lineCount": 148,
+      "declaredTestCount": 4,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/sveltekit/src/vc-config.test.ts",
+      "sourceSha256": "2d813e384196b0d912f37c36d37848770baa9403e7c5de1a0e4aa776f1e25916",
+      "surface": "packages/sveltekit",
+      "kind": "unit",
+      "lineCount": 51,
+      "declaredTestCount": 3,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/typescript-plugin/src/code-fixes.test.ts",
+      "sourceSha256": "3ad3d1eb9ef9d506addefdea8fe1242a6c7ebc667cf8a00987c963fbbb960c3b",
+      "surface": "packages/typescript-plugin",
+      "kind": "unit",
+      "lineCount": 301,
+      "declaredTestCount": 10,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/typescript-plugin/src/diagnostics.test.ts",
+      "sourceSha256": "a013af064068d46983344d3b27298bf975c6ae21b4a8925c88071d7aefe0a62c",
+      "surface": "packages/typescript-plugin",
+      "kind": "unit",
+      "lineCount": 1270,
+      "declaredTestCount": 63,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/typescript-plugin/src/hover.test.ts",
+      "sourceSha256": "4ea4891760c10370aa91e8f08c534f45436b0968f7dc1fd63657ce91eb8b4c9e",
+      "surface": "packages/typescript-plugin",
+      "kind": "unit",
+      "lineCount": 135,
+      "declaredTestCount": 7,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/typescript-plugin/src/index.test.ts",
+      "sourceSha256": "348ceb9c27777b38f6842752b9a26d2c1b5718b1b680bb2c37b10e40dba713b2",
+      "surface": "packages/typescript-plugin",
+      "kind": "unit",
+      "lineCount": 268,
+      "declaredTestCount": 8,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/typescript-plugin/src/utils.test.ts",
+      "sourceSha256": "00a9a51fbf748cc2faccd8ee1945d46b3bc7e7883bd3022063c6ac0fa0d403de",
+      "surface": "packages/typescript-plugin",
+      "kind": "unit",
+      "lineCount": 308,
+      "declaredTestCount": 14,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/utils/src/check-data-dir-security.test.ts",
+      "sourceSha256": "603e4d3b22865f21d0cd603802ac54d67278683d5ea3fc97a2b4531513bed900",
+      "surface": "packages/utils",
+      "kind": "unit",
+      "lineCount": 69,
+      "declaredTestCount": 4,
+      "status": "green",
+      "rustTests": [
+        "crates/workflow-utils/tests/check_data_dir_security.rs"
+      ],
+      "notes": "Four TypeScript regressions prove accessible files and raw suffix lookalikes are rejected. The production Rust suite adds the same object-type and component-boundary checks plus literal user-qualified tilde handling."
+    },
+    {
+      "typescript": "packages/utils/src/check-data-dir.test.ts",
+      "sourceSha256": "bb959e84c66022a46bc8f9ab571ad05bb266f6200c272eb0eb2a51af0c4dff59",
+      "surface": "packages/utils",
+      "kind": "unit",
+      "lineCount": 312,
+      "declaredTestCount": 23,
+      "status": "green",
+      "rustTests": [
+        "rust/tdd/workflow-utils/tests/check_data_dir.rs",
+        "crates/workflow-utils/tests/check_data_dir_security.rs"
+      ],
+      "notes": "All 23 TypeScript compatibility assertions execute against the production workflow-utils crate through the translated Rust suite. Five additional Rust security tests reject regular files, path-component suffix lookalikes, and user-qualified tilde confusion. The focused TypeScript compatibility and security suites must remain green in .github/workflows/rust-utils.yml."
+    },
+    {
+      "typescript": "packages/utils/src/debug-log-security.test.ts",
+      "sourceSha256": "034e3ff9745daa1b09c356e989371ca7e1a43872a667f40ddbec3eef40ec5ebf",
+      "surface": "packages/utils",
+      "kind": "unit",
+      "lineCount": 33,
+      "declaredTestCount": 2,
+      "status": "green",
+      "rustTests": [
+        "rust/tdd/workflow-utils/tests/debug_log_security.rs",
+        "crates/workflow-utils/tests/debug_log_security.rs"
+      ],
+      "notes": "The two TypeScript declarations intentionally characterize the legacy substring matcher accepting unrelated and explicitly negated selectors and forwarding diagnostic arguments. The Rust translation and direct production tests require token-aware rejection, zero sink calls, negative-selector precedence, and redacted Debug output. Verified by read-only Rust utility workflow run 33558964834."
+    },
+    {
+      "typescript": "packages/utils/src/debug-log.test.ts",
+      "sourceSha256": "32759c73c2ecbe05bfc52bff19e1a20bdea322354a6cc98350bbae04bcef92a4",
+      "surface": "packages/utils",
+      "kind": "unit",
+      "lineCount": 75,
+      "declaredTestCount": 6,
+      "status": "green",
+      "rustTests": [
+        "rust/tdd/workflow-utils/tests/debug_log.rs",
+        "crates/workflow-utils/tests/debug_log_security.rs"
+      ],
+      "notes": "All six TypeScript selector and sink assertions execute against production workflow-utils. Rust additionally rejects substring-confused and explicitly negated workflow selectors, never invokes the sink when disabled, and redacts Debug output for diagnostic payloads. TypeScript intentionally remains an oracle for the legacy unsafe behavior documented as WF-RUST-102."
+    },
+    {
+      "typescript": "packages/utils/src/get-port.test.ts",
+      "sourceSha256": "05d13618c6187c2f00f944e17f1f64679ea612ed28becd8d7fe8a0536107e600",
+      "surface": "packages/utils",
+      "kind": "unit",
+      "lineCount": 381,
+      "declaredTestCount": 20,
+      "status": "green",
+      "rustTests": [
+        "rust/tdd/workflow-utils/tests/get_port.rs"
+      ],
+      "notes": "All 20 TypeScript listener discovery, deterministic ordering, restart, concurrency, workflow-health probing, timeout, IPv6, fallback, and Windows netstat declarations execute against production workflow-utils. Rust additionally rejects partial or out-of-range Windows ports and control-byte injection in custom HTTP probe endpoints before network use. Verified by read-only utility workflow run 33580063231."
+    },
+    {
+      "typescript": "packages/utils/src/global-singleton.test.ts",
+      "sourceSha256": "ce919b7ffd7025853c842b997a56855e702848ca09bad41db74d3f24d92824c4",
+      "surface": "packages/utils",
+      "kind": "unit",
+      "lineCount": 110,
+      "declaredTestCount": 9,
+      "status": "green",
+      "rustTests": [
+        "rust/tdd/workflow-utils/tests/global_singleton.rs"
+      ],
+      "notes": "All nine TypeScript sharing, factory-once, mutation, process-registry, shape-version, name-isolation, and reset declarations execute against production workflow-utils. Rust additionally proves concurrent callers run one factory and that a name/version reused with another concrete type fails closed. Verified by read-only utility workflow run 33578496332."
+    },
+    {
+      "typescript": "packages/utils/src/module-scope-state-security.test.ts",
+      "sourceSha256": "a5343113db01942a5341c3acea8d764875c4530ddf20d98d23244f62b1c9e911",
+      "surface": "packages/utils",
+      "kind": "unit",
+      "lineCount": 80,
+      "declaredTestCount": 3,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-utils/tests/module_scope_state_security.rs"
+      ],
+      "notes": "Three differential security cases characterize legacy lint-gate bypasses: an unrelated property named globalSingleton, a local binary result that merely mentions globalThis, and a literal computed static field. Rust must reject all three while the TypeScript oracle preserves the pre-existing missed findings."
+    },
+    {
+      "typescript": "packages/utils/src/module-scope-state.test.ts",
+      "sourceSha256": "8b80b853796c38c35ea54d5ab898f019be757e3c20ec1b8435e4aac4abe6f501",
+      "surface": "packages/utils",
+      "kind": "unit",
+      "lineCount": 365,
+      "declaredTestCount": 19,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-utils/tests/module_scope_state.rs"
+      ],
+      "notes": "All 19 package-discovery and static-analysis assertions are translated, including cross-file empty collections, static fields, this resolution, .mts sources, and per-copy annotations."
+    },
+    {
+      "typescript": "packages/utils/src/parse-name-security.test.ts",
+      "sourceSha256": "bbd5920ad03523fbb69150aeca95170ba42c31a9858a3d4325538fe7c7a0b9a7",
+      "surface": "packages/utils",
+      "kind": "unit",
+      "lineCount": 48,
+      "declaredTestCount": 3,
+      "status": "green",
+      "rustTests": [
+        "crates/workflow-utils/tests/parse_name_security.rs"
+      ],
+      "notes": "The pre-fix TypeScript implementation is observed RED. Fixed TypeScript and Rust format parsed and fallback names as one logical line by escaping C0, DEL/C1, CR, LF, tab, U+2028, and U+2029 without reflecting controls into logs."
+    },
+    {
+      "typescript": "packages/utils/src/parse-name.test.ts",
+      "sourceSha256": "db68748378e8bce3ffa09bee331653e2e29b27a52323d3d2876e8d1d6c13468c",
+      "surface": "packages/utils",
+      "kind": "unit",
+      "lineCount": 330,
+      "declaredTestCount": 35,
+      "status": "green",
+      "rustTests": [
+        "rust/tdd/workflow-utils/tests/parse_name.rs",
+        "crates/workflow-utils/tests/parse_name_security.rs"
+      ],
+      "notes": "All 35 translated parser, formatter, and display-name tests execute against the production workflow-utils crate. Three TypeScript and three Rust security regressions require control characters and Unicode line separators to be escaped from log-oriented output while preserving ordinary names."
+    },
+    {
+      "typescript": "packages/utils/src/pluralize.test.ts",
+      "sourceSha256": "192099ba0c10660a98472fcc763e92c77de4edc5cb99fd6ef4949c16ff85d285",
+      "surface": "packages/utils",
+      "kind": "unit",
+      "lineCount": 28,
+      "declaredTestCount": 4,
+      "status": "green",
+      "rustTests": [
+        "rust/tdd/workflow-utils/tests/pluralize.rs"
+      ],
+      "notes": "All four translated test functions and eleven concrete assertions execute against the production workflow-utils pluralize implementation, preserving the exact TypeScript count === 1 contract."
+    },
+    {
+      "typescript": "packages/utils/src/promise.test.ts",
+      "sourceSha256": "d3aae1eb90fe9106e508fb989b33d081d76cf2bff6b4cab3f47fa3eaf0d72bf2",
+      "surface": "packages/utils",
+      "kind": "unit",
+      "lineCount": 48,
+      "declaredTestCount": 5,
+      "status": "green",
+      "rustTests": [
+        "rust/tdd/workflow-utils/tests/promise.rs"
+      ],
+      "notes": "All five TypeScript resolver, resolve, reject, call-once, and memoization declarations execute against production workflow-utils. Rust additionally proves first-settlement-wins behavior, cloned cross-thread resolution, and retry after an initializer panic. Verified by read-only utility workflow run 33578496332."
+    },
+    {
+      "typescript": "packages/utils/src/re-exports.test.ts",
+      "sourceSha256": "c169385a6485d0485c6c61af0e71a1f72c003d1efffa2ad2c420c7a945e3c351",
+      "surface": "packages/utils",
+      "kind": "unit",
+      "lineCount": 25,
+      "declaredTestCount": 3,
+      "status": "green",
+      "rustTests": [
+        "rust/tdd/workflow-utils/tests/re_exports.rs",
+        "crates/workflow-utils/tests/re_exports.rs"
+      ],
+      "notes": "All three TypeScript crate-root re-export declarations execute against the production workflow-utils parse-name exports. Verified by read-only utility workflow run 33560481078."
+    },
+    {
+      "typescript": "packages/utils/src/time.test.ts",
+      "sourceSha256": "4aa202d450822aec65053bff98d357bc520ea33b04b592d75d7c4f4a8e8b9667",
+      "surface": "packages/utils",
+      "kind": "unit",
+      "lineCount": 56,
+      "declaredTestCount": 9,
+      "status": "green",
+      "rustTests": [
+        "crates/workflow-world/tests/time_typescript_port.rs"
+      ],
+      "notes": "All nine TypeScript assertions pass in Rust, including differential behavior for relative and absolute durations, invalid dates, TimeClip truncation, and overflow rejection. Verified by Rust port workflow run 33455424866 at 3ab297fa184b92991d3ce616353e40050df11f9f."
+    },
+    {
+      "typescript": "packages/utils/src/workflow-routes.test.ts",
+      "sourceSha256": "11ef6ada51c5dcafef8eb86447b849e0f8183ee6de36258cddda076c31542622",
+      "surface": "packages/utils",
+      "kind": "unit",
+      "lineCount": 36,
+      "declaredTestCount": 3,
+      "status": "green",
+      "rustTests": [
+        "rust/tdd/workflow-utils/tests/workflow_routes.rs"
+      ],
+      "notes": "All three TypeScript flow, health, configured-base-path, and retired-step declarations execute against production workflow-utils. Rust additionally proves manifest construction, percent-encoded webhook tokens, query and fragment replacement, trailing-slash normalization, and rejection of relative or whitespace-confused base URLs. Verified by read-only utility workflow run 33579321645."
+    },
+    {
+      "typescript": "packages/utils/src/world-target.test.ts",
+      "sourceSha256": "d2931f86bdfb5546d1f71853958424613bd59112be1b98fbfd0a5b59900e2d9b",
+      "surface": "packages/utils",
+      "kind": "unit",
+      "lineCount": 94,
+      "declaredTestCount": 10,
+      "status": "green",
+      "rustTests": [
+        "rust/tdd/workflow-utils/tests/world_target.rs",
+        "crates/workflow-utils/tests/world_target.rs"
+      ],
+      "notes": "All ten TypeScript environment-resolution declarations execute against production workflow-utils. Direct production tests additionally pin empty environment values and exact Vercel target matching so prefix lookalikes are not accepted. Verified by read-only utility workflow run 33560481078."
+    },
+    {
+      "typescript": "packages/vitest/src/index.test.ts",
+      "sourceSha256": "a73d2a1f7a76b14f0624059a1813352234134ec75cf5c29b9800a5826f91a314",
+      "surface": "packages/vitest",
+      "kind": "unit",
+      "lineCount": 277,
+      "declaredTestCount": 5,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/web-shared/src/components/trace-viewer/components/detail-panel-width.test.ts",
+      "sourceSha256": "b898e3cd9a5c055a7b419c0f0587045bbc851b1b172e26cd9305e3090204d302",
+      "surface": "packages/web-shared",
+      "kind": "unit",
+      "lineCount": 124,
+      "declaredTestCount": 16,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/web-shared/src/components/trace-viewer/utils.test.ts",
+      "sourceSha256": "db1a7ba77882ece66cfd5d9d7df11c8797d96e67e16b82111c766c42dfff2366",
+      "surface": "packages/web-shared",
+      "kind": "unit",
+      "lineCount": 459,
+      "declaredTestCount": 33,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/web-shared/src/components/workflow-traces/trace-span-construction.test.ts",
+      "sourceSha256": "1a454dd43ac5a599f95f220b5bbddca54408023010838a399957d7ccbe8a0198",
+      "surface": "packages/web-shared",
+      "kind": "unit",
+      "lineCount": 112,
+      "declaredTestCount": 2,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/web-shared/src/lib/duplicate-events.test.ts",
+      "sourceSha256": "00a9ab42a38f2f30f4c805c9ead6b61f01c076ace61379efec74c453d0a00f5f",
+      "surface": "packages/web-shared",
+      "kind": "unit",
+      "lineCount": 340,
+      "declaredTestCount": 20,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/web-shared/src/lib/event-materialization.test.ts",
+      "sourceSha256": "20c50e31ee9adb473bd80572659cef33c5806c137db003dd1cf821e96941a6c7",
+      "surface": "packages/web-shared",
+      "kind": "unit",
+      "lineCount": 118,
+      "declaredTestCount": 6,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/web-shared/src/lib/trace-builder.test.ts",
+      "sourceSha256": "7fe6cb173770d4ac5f4793de8d4cf7fc7295bfe1d503562e2ea9c0b9a7525ee1",
+      "surface": "packages/web-shared",
+      "kind": "unit",
+      "lineCount": 144,
+      "declaredTestCount": 4,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/web-shared/src/lib/utils.test.ts",
+      "sourceSha256": "6c5e20193bf38859d45fb1b48d3360bdfe37217a9f5db63abece6bcc010cfd87",
+      "surface": "packages/web-shared",
+      "kind": "unit",
+      "lineCount": 34,
+      "declaredTestCount": 5,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/web-shared/test/attribute-panel.test.ts",
+      "sourceSha256": "ed6efc693d796e81d16033ba9599e56e89056496b2bb97a8200c5cc7ab3ae016",
+      "surface": "packages/web-shared",
+      "kind": "unit",
+      "lineCount": 102,
+      "declaredTestCount": 5,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/web-shared/test/collapse-refs.test.ts",
+      "sourceSha256": "5bd50b6afe95cb025c6df95b27052491ad7c2f3f7d5f0ae0b7dfbb725d551cdf",
+      "surface": "packages/web-shared",
+      "kind": "unit",
+      "lineCount": 111,
+      "declaredTestCount": 9,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/web-shared/test/copyable-data-block.test.ts",
+      "sourceSha256": "49be052f27df4a7866461b707b924364bda65e820977f99f14c2660500974d76",
+      "surface": "packages/web-shared",
+      "kind": "unit",
+      "lineCount": 196,
+      "declaredTestCount": 15,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/web-shared/test/error-stack-block.test.ts",
+      "sourceSha256": "7b9102deff0073b3f36e459d9d12a5400fa21ea33b5c7251dbf6935fed7fdcea",
+      "surface": "packages/web-shared",
+      "kind": "unit",
+      "lineCount": 52,
+      "declaredTestCount": 3,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/web-shared/test/event-list-duration.test.ts",
+      "sourceSha256": "ea11e9ca59a7bc70aa367b179f0308a82f4c0c76b7a1afc368ecd61ccb2ee894",
+      "surface": "packages/web-shared",
+      "kind": "unit",
+      "lineCount": 107,
+      "declaredTestCount": 5,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/web-shared/test/event-list-name.test.ts",
+      "sourceSha256": "0fbe17381d3ea7a0c565dfcdb20caa96b9294e9988ee265bb9423891d38b4753",
+      "surface": "packages/web-shared",
+      "kind": "unit",
+      "lineCount": 20,
+      "declaredTestCount": 1,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/web-shared/test/events-occurred-at-display.test.ts",
+      "sourceSha256": "4822d100b950d8f4a8587cac33614abd7bc1346fbfff0c33c10cc2c14ea0ef53",
+      "surface": "packages/web-shared",
+      "kind": "unit",
+      "lineCount": 160,
+      "declaredTestCount": 5,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/web-shared/test/exact-event-search-id.test.ts",
+      "sourceSha256": "4031211cf39fbbf12929fdeb84a4145a9f2e69901057cc9f5822d7083358f347",
+      "surface": "packages/web-shared",
+      "kind": "unit",
+      "lineCount": 92,
+      "declaredTestCount": 10,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/web-shared/test/format-duration-precise.test.ts",
+      "sourceSha256": "8cce70c120b50ad80d76265494895c09d52422204762f41437555790decaad8b",
+      "surface": "packages/web-shared",
+      "kind": "unit",
+      "lineCount": 31,
+      "declaredTestCount": 2,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/web-shared/test/hydration.test.ts",
+      "sourceSha256": "ab13d936701a2bfc55824e1028c0a784d221d91d7b8150fd4e00ab50588340ff",
+      "surface": "packages/web-shared",
+      "kind": "unit",
+      "lineCount": 251,
+      "declaredTestCount": 11,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/web-shared/test/middle-truncate-measurement-batch.test.ts",
+      "sourceSha256": "e15b174e6ce91fb66777382baf5165a31bdc871b655206a51c97ba6e3799c9f4",
+      "surface": "packages/web-shared",
+      "kind": "unit",
+      "lineCount": 136,
+      "declaredTestCount": 3,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/web-shared/test/serializable-revivers.test.ts",
+      "sourceSha256": "ae0d3529dfdf4327a73c8fbd742166c21f5ef5fa592a205b90116a6f3fd1e4e3",
+      "surface": "packages/web-shared",
+      "kind": "unit",
+      "lineCount": 206,
+      "declaredTestCount": 2,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/web-shared/test/span-detail-merge.test.ts",
+      "sourceSha256": "5f00ec3646c9732cd0c257f5aa00cc221ddf23ee072f68c46d8a459d78ff8ec2",
+      "surface": "packages/web-shared",
+      "kind": "unit",
+      "lineCount": 205,
+      "declaredTestCount": 18,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/web-shared/test/trace-builder-occurred-at.test.ts",
+      "sourceSha256": "13849f0cee5499a27dd12ad7a71621113d6d8054b566b6652589dedbc120047b",
+      "surface": "packages/web-shared",
+      "kind": "unit",
+      "lineCount": 119,
+      "declaredTestCount": 1,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/web-shared/test/trace-builder-v1.test.ts",
+      "sourceSha256": "c6b0cc785707d8776b80cb7e11c2fce86699659e6f5cb4ad7360dba9d2a78661",
+      "surface": "packages/web-shared",
+      "kind": "unit",
+      "lineCount": 267,
+      "declaredTestCount": 9,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/web-shared/test/trace-viewer-search.test.ts",
+      "sourceSha256": "b65938a7f6fcaddcca63ff7160443fd5f3bdf10caf0301e36fa5b1886b6a7562",
+      "surface": "packages/web-shared",
+      "kind": "unit",
+      "lineCount": 103,
+      "declaredTestCount": 4,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/web-shared/test/zstd-decoder.test.ts",
+      "sourceSha256": "4a22e2156e5abd6b82ee5a840b54ca15f53f6204240fc770637b001c515abb3b",
+      "surface": "packages/web-shared",
+      "kind": "unit",
+      "lineCount": 57,
+      "declaredTestCount": 2,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/web/app/lib/bulk-cancel-ui.test.ts",
+      "sourceSha256": "34ef0f2b0a457e44888a8c0741a009727584c2548f363785cd06cdee720258f6",
+      "surface": "packages/web",
+      "kind": "unit",
+      "lineCount": 102,
+      "declaredTestCount": 6,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/web/app/lib/client/hooks/use-infinite-list.test.ts",
+      "sourceSha256": "e14c06d4319ee46f279ff69f6be5cb01b2aceec862c7587fdd615127b3831341",
+      "surface": "packages/web",
+      "kind": "unit",
+      "lineCount": 207,
+      "declaredTestCount": 7,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/web/app/lib/client/hooks/use-paginated-list.test.ts",
+      "sourceSha256": "3cf4ae9f61c755a5682f64f7fecdece1ff6c53451f41d40e21795cc61612e032",
+      "surface": "packages/web",
+      "kind": "unit",
+      "lineCount": 425,
+      "declaredTestCount": 19,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/web/app/lib/client/hooks/use-resource-data.test.ts",
+      "sourceSha256": "149ec9ad1d41c16fcf4b93cad99f97a445b078208d2fd4cf59257981a5a12b23",
+      "surface": "packages/web",
+      "kind": "unit",
+      "lineCount": 220,
+      "declaredTestCount": 7,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/web/app/lib/client/hooks/use-trace-viewer.test.ts",
+      "sourceSha256": "035afb05a4feba03a7fe9993a24acb94c9533fd7389c7a75327820ceb84b5747",
+      "surface": "packages/web",
+      "kind": "unit",
+      "lineCount": 340,
+      "declaredTestCount": 8,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/web/app/lib/client/hooks/use-workflow-streams.test.ts",
+      "sourceSha256": "1ad06908268e461d83936dac1ac68b2607f8d5ab6e8630f73b7cc3433ae4fac5",
+      "surface": "packages/web",
+      "kind": "unit",
+      "lineCount": 105,
+      "declaredTestCount": 4,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/web/app/lib/client/listing-window.test.ts",
+      "sourceSha256": "35967e22e9953e6b4f64432bc029a6d7fa67802301ba1a19e6577ac181a52568",
+      "surface": "packages/web",
+      "kind": "unit",
+      "lineCount": 54,
+      "declaredTestCount": 3,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/web/app/lib/client/workflow-actions.test.ts",
+      "sourceSha256": "004f460e8ccd69e3de9141dcb56bc6fe29abd73b3ca4f525170d51bf5ff8de25",
+      "surface": "packages/web",
+      "kind": "unit",
+      "lineCount": 131,
+      "declaredTestCount": 10,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/web/app/lib/client/workflow-errors.test.ts",
+      "sourceSha256": "73ead1c6dea8c363215c922d8966434036d9fbc14576bd47c82048f68a2f7be7",
+      "surface": "packages/web",
+      "kind": "unit",
+      "lineCount": 72,
+      "declaredTestCount": 5,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/web/app/lib/client/workflow-primitives.test.ts",
+      "sourceSha256": "41d45b7436c42a8853bd021012065903f67f89ba36d9065ac2d179bf0cd11df7",
+      "surface": "packages/web",
+      "kind": "unit",
+      "lineCount": 261,
+      "declaredTestCount": 16,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/web/app/lib/client/workflow-streams.test.ts",
+      "sourceSha256": "e0b7c2aa7ea12165497cff57d2ac7e4f68a6076f5db0c6b05d9e4d5af1efe850",
+      "surface": "packages/web",
+      "kind": "unit",
+      "lineCount": 154,
+      "declaredTestCount": 8,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/web/app/lib/hooks/use-stream-reader.test.ts",
+      "sourceSha256": "1ae864f48f178d42f1c8cd46cfe4377f420fb0791413d7c459d77e1b42267d0c",
+      "surface": "packages/web",
+      "kind": "unit",
+      "lineCount": 81,
+      "declaredTestCount": 3,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/web/app/root.test.tsx",
+      "sourceSha256": "decd2b7374495192f78771aa610206a3f4ef215baa44fc1eb7eec072f66e2d3a",
+      "surface": "packages/web",
+      "kind": "unit",
+      "lineCount": 84,
+      "declaredTestCount": 4,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/web/app/server/workflow-server-actions.server.test.ts",
+      "sourceSha256": "7d4efe304e026638a7496730b157200df9d536431c120c2ab6a49144e24eebde",
+      "surface": "packages/web",
+      "kind": "unit",
+      "lineCount": 103,
+      "declaredTestCount": 3,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/web/vite-plugin-node-require.test.ts",
+      "sourceSha256": "6d5fab998140825b2a20f07bab2bfa17f849ea4018a93bbf4e27bc1366096186",
+      "surface": "packages/web",
+      "kind": "unit",
+      "lineCount": 84,
+      "declaredTestCount": 3,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/workflow/src/internal/builtins.test.ts",
+      "sourceSha256": "edf7741ec4311e319829b3a396849a4aab15fbeebd612888bdbe100b52807833",
+      "surface": "packages/workflow",
+      "kind": "unit",
+      "lineCount": 110,
+      "declaredTestCount": 2,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/workflow/src/module-scope-state.test.ts",
+      "sourceSha256": "8384637bb09871ae034049e21f2696161338679316e9f270d8cb6b123c86e1ab",
+      "surface": "packages/workflow",
+      "kind": "unit",
+      "lineCount": 30,
+      "declaredTestCount": 1,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/workflow/src/observability.test.ts",
+      "sourceSha256": "5c5f146350043443bf6a1f306955bf42eed11c87653bb013111ee374994615c3",
+      "surface": "packages/workflow",
+      "kind": "unit",
+      "lineCount": 49,
+      "declaredTestCount": 6,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/workflow/src/stdlib.test.ts",
+      "sourceSha256": "bc4f3cac04ce1d19a3a2f95109713d0670ce6f0a3de8746e5b0a38e5e053e58c",
+      "surface": "packages/workflow",
+      "kind": "unit",
+      "lineCount": 12,
+      "declaredTestCount": 1,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/world-local/src/config.test.ts",
+      "sourceSha256": "341856ba937327d9fbd53aaa5fb9bda41a895901f19a3f860a60da7bccfa7210",
+      "surface": "packages/world-local",
+      "kind": "unit",
+      "lineCount": 360,
+      "declaredTestCount": 31,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/world-local/src/fs.test.ts",
+      "sourceSha256": "65902b5035ba650585903d6ae3ea42151fe2a488f487f5a549867a69bffffd4b",
+      "surface": "packages/world-local",
+      "kind": "unit",
+      "lineCount": 1291,
+      "declaredTestCount": 49,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/world-local/src/init.test.ts",
+      "sourceSha256": "2e5e67d207cc13e4880c88f6ba741f77d01da52fe04662d8d5b58e4b0e4ad93c",
+      "surface": "packages/world-local",
+      "kind": "unit",
+      "lineCount": 476,
+      "declaredTestCount": 26,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/world-local/src/instrumentObject.test.ts",
+      "sourceSha256": "625d38c9cd94e88130a3c9734e2f2299d52233f74f8b7252ca9497ab4d5d1218",
+      "surface": "packages/world-local",
+      "kind": "unit",
+      "lineCount": 88,
+      "declaredTestCount": 4,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/world-local/src/module-scope-state.test.ts",
+      "sourceSha256": "9ac7a392ad7a6710fe20914fdeac3cb36b45d3c257d0ec0d8c4ae89477aade1e",
+      "surface": "packages/world-local",
+      "kind": "unit",
+      "lineCount": 30,
+      "declaredTestCount": 1,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/world-local/src/queue.test.ts",
+      "sourceSha256": "b8a88333be1dec9fd43979019431a9237aef6e381db58675267e196d15293c80",
+      "surface": "packages/world-local",
+      "kind": "unit",
+      "lineCount": 757,
+      "declaredTestCount": 26,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/world-local/src/reenqueue.test.ts",
+      "sourceSha256": "9287d66843bc0e36350f075279081c994bda746cb4aafb8a31e448ae98448411",
+      "surface": "packages/world-local",
+      "kind": "unit",
+      "lineCount": 364,
+      "declaredTestCount": 8,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/world-local/src/storage.test.ts",
+      "sourceSha256": "3af82e51dae371f5cd786ad75f6f869357e28c7030efd85a4083c54aa88cb87c",
+      "surface": "packages/world-local",
+      "kind": "unit",
+      "lineCount": 6279,
+      "declaredTestCount": 219,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/world-local/src/storage/hook-index.test.ts",
+      "sourceSha256": "e8004d1846679b829c7fc85c97ef9f932ba623869f603177c7129eef6587f5d3",
+      "surface": "packages/world-local",
+      "kind": "unit",
+      "lineCount": 340,
+      "declaredTestCount": 9,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/world-local/src/storage/hook-resume-dedup.test.ts",
+      "sourceSha256": "b33cab4bff4390d720da4be45b586d21b5449bec4767fd1f1b412a097cba20cf",
+      "surface": "packages/world-local",
+      "kind": "unit",
+      "lineCount": 286,
+      "declaredTestCount": 8,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/world-local/src/storage/hook-resume-producer-consumer.test.ts",
+      "sourceSha256": "b3ffb9a5aa96b2263aeae900518c3975fde616bc558766a42d5e4230c29f2e3f",
+      "surface": "packages/world-local",
+      "kind": "unit",
+      "lineCount": 174,
+      "declaredTestCount": 5,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/world-local/src/storage/hook-staging-slots.test.ts",
+      "sourceSha256": "07511344051808b22e17e5c1bf760af7d5e7a271d448ae00eb56adcecd52b357",
+      "surface": "packages/world-local",
+      "kind": "unit",
+      "lineCount": 261,
+      "declaredTestCount": 4,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/world-local/src/storage/run-status-wait.test.ts",
+      "sourceSha256": "287dbcbaeb9b5cd0a82fe946b64ae248ec9ce969674e76aa765a2a41fa32f114",
+      "surface": "packages/world-local",
+      "kind": "unit",
+      "lineCount": 144,
+      "declaredTestCount": 7,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/world-local/src/storage/runs-storage.test.ts",
+      "sourceSha256": "f3754e7994981632a686b537c45b1701fcaa453d7312e0427b10a3ec72cc19ac",
+      "surface": "packages/world-local",
+      "kind": "unit",
+      "lineCount": 235,
+      "declaredTestCount": 13,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/world-local/src/storage/slot-identity.test.ts",
+      "sourceSha256": "6b42252346635d96bf6bad879539bf2e919369fd814ba1f6d796a6af5b9ed965",
+      "surface": "packages/world-local",
+      "kind": "unit",
+      "lineCount": 514,
+      "declaredTestCount": 14,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/world-local/src/streamer.test.ts",
+      "sourceSha256": "94bdcef722f4dcd225e009baee8468b56c5d1ae62f7132ed37b1b9a822c2b06c",
+      "surface": "packages/world-local",
+      "kind": "unit",
+      "lineCount": 1205,
+      "declaredTestCount": 45,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/world-local/src/tag.test.ts",
+      "sourceSha256": "85c5c633fed814b6a916381ae7065614e573fd5d35fa93218752ca515605eb09",
+      "surface": "packages/world-local",
+      "kind": "unit",
+      "lineCount": 494,
+      "declaredTestCount": 18,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/world-local/src/vercel-deployment-warning.test.ts",
+      "sourceSha256": "6a67bd1e2a936ca359f2bcaa28d91440e4c0a65ab920e01c3f077d1d0e91e975",
+      "surface": "packages/world-local",
+      "kind": "unit",
+      "lineCount": 90,
+      "declaredTestCount": 7,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/world-postgres/src/module-scope-state.test.ts",
+      "sourceSha256": "f847a996daf67826298d5b49bd3c1197515da0e601f7f5c669c0a2cb6edca402",
+      "surface": "packages/world-postgres",
+      "kind": "unit",
+      "lineCount": 31,
+      "declaredTestCount": 1,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/world-postgres/src/queue.test.ts",
+      "sourceSha256": "f21df3dfcb16b82a11580d48159dee00574818352afcb075c0cfbae430b88085",
+      "surface": "packages/world-postgres",
+      "kind": "unit",
+      "lineCount": 693,
+      "declaredTestCount": 12,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/world-postgres/src/reenqueue.test.ts",
+      "sourceSha256": "fc3b359689ad831c0ac992dd6528a3c728ec5e7ba40f816561d46b092bac913b",
+      "surface": "packages/world-postgres",
+      "kind": "unit",
+      "lineCount": 371,
+      "declaredTestCount": 12,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/world-postgres/src/util.test.ts",
+      "sourceSha256": "4b2366cb051dc2c79e5e294f65539d828aa761e100f2e2f9aef0b692191cad66",
+      "surface": "packages/world-postgres",
+      "kind": "unit",
+      "lineCount": 50,
+      "declaredTestCount": 2,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/world-postgres/test/run-status-wait.test.ts",
+      "sourceSha256": "6647997f0fdaa55ee940c464b48f93116313771bb1b290ce9393b5c547be7f18",
+      "surface": "packages/world-postgres",
+      "kind": "unit",
+      "lineCount": 221,
+      "declaredTestCount": 9,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/world-postgres/test/spec.test.ts",
+      "sourceSha256": "78a8fe05df2de658156676210635b160f81f55359bd80efca492015518644b36",
+      "surface": "packages/world-postgres",
+      "kind": "unit",
+      "lineCount": 109,
+      "declaredTestCount": 3,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/world-postgres/test/storage.test.ts",
+      "sourceSha256": "ebb4e4224d8fbe2d97c199a785361db54995ccc4ba7ad0579e6ccc1295f3b0d8",
+      "surface": "packages/world-postgres",
+      "kind": "unit",
+      "lineCount": 4076,
+      "declaredTestCount": 147,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/world-sim/src/clock.test.ts",
+      "sourceSha256": "586f64f2da1a66bbfc50540eeb0e47f09786074b22df9682a42997efbec92fb7",
+      "surface": "packages/world-sim",
+      "kind": "unit",
+      "lineCount": 84,
+      "declaredTestCount": 6,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/world-sim/src/ids.test.ts",
+      "sourceSha256": "d553e95246e5364c642d5e188b96a468c1286cee3913a1747ca370108af7d924",
+      "surface": "packages/world-sim",
+      "kind": "unit",
+      "lineCount": 38,
+      "declaredTestCount": 3,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/world-sim/src/invariants.test.ts",
+      "sourceSha256": "7cec658d57e8f4caa9fd2f5b1bf91f24df07fb8da7bf0e84d32b473b9c13cc74",
+      "surface": "packages/world-sim",
+      "kind": "unit",
+      "lineCount": 474,
+      "declaredTestCount": 11,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/world-sim/src/queue.test.ts",
+      "sourceSha256": "76832d5b20d7d63123ca2f0a67c78b8a13b745f37fa2a79abe851d721f5d5054",
+      "surface": "packages/world-sim",
+      "kind": "unit",
+      "lineCount": 100,
+      "declaredTestCount": 6,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/world-sim/src/replay.test.ts",
+      "sourceSha256": "cffe38d6f578be9e37b4b64375d7cc45b64108d42f83da07152448e198fe4f9b",
+      "surface": "packages/world-sim",
+      "kind": "unit",
+      "lineCount": 171,
+      "declaredTestCount": 6,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/world-sim/src/store.test.ts",
+      "sourceSha256": "3a32c53fd1551412054b016be334a2860fed49b95e06ae6e6aa5a583ad68afb8",
+      "surface": "packages/world-sim",
+      "kind": "unit",
+      "lineCount": 693,
+      "declaredTestCount": 22,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/world-sim/src/tempo.test.ts",
+      "sourceSha256": "9521e36d650590c7c828c2481f607cbfdce457e934c7bbe19c9229cd44e8c5be",
+      "surface": "packages/world-sim",
+      "kind": "unit",
+      "lineCount": 175,
+      "declaredTestCount": 8,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/world-sim/src/writers.test.ts",
+      "sourceSha256": "8ac7dc83d0bf3adc90d14f6cbdc57c33ac354fa8193aa51eaaf087c8b96da23f",
+      "surface": "packages/world-sim",
+      "kind": "unit",
+      "lineCount": 165,
+      "declaredTestCount": 6,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/world-testing/test/embedded.test.ts",
+      "sourceSha256": "66540c4f0c2612b96519613ea98e57a1516cc9d3e10cffe0a8da7c8901fdc51e",
+      "surface": "packages/world-testing",
+      "kind": "unit",
+      "lineCount": 4,
+      "declaredTestCount": 0,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/world-testing/test/event-limit.test.ts",
+      "sourceSha256": "1fa994bb827e4b93f2dfccde7338bb6a5c1ed444b4b7c58673eea977aff6364f",
+      "surface": "packages/world-testing",
+      "kind": "unit",
+      "lineCount": 7,
+      "declaredTestCount": 0,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/world-testing/test/inline-batches-debug.test.ts",
+      "sourceSha256": "ba372e766fdf29afb7f6b877403bcf8799fecd4ffed11be7108f8fbe66ce0656",
+      "surface": "packages/world-testing",
+      "kind": "unit",
+      "lineCount": 4,
+      "declaredTestCount": 0,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/world-vercel/src/analytics.test.ts",
+      "sourceSha256": "209fa9eb3536930bb37134d4f0cbe278b49aab0c543e6ac9691a57227f967903",
+      "surface": "packages/world-vercel",
+      "kind": "unit",
+      "lineCount": 123,
+      "declaredTestCount": 5,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/world-vercel/src/create-run-id.test.ts",
+      "sourceSha256": "b0503cfe0bcd6a5e7110e644df4e9d6007124525416411f5ab82d79fa696e883",
+      "surface": "packages/world-vercel",
+      "kind": "unit",
+      "lineCount": 224,
+      "declaredTestCount": 25,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/world-vercel/src/encryption.test.ts",
+      "sourceSha256": "fa41992af603dc90a5914cb4b706073565b4bcf2b89e10f93352f7e2ff95f6c8",
+      "surface": "packages/world-vercel",
+      "kind": "unit",
+      "lineCount": 210,
+      "declaredTestCount": 12,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/world-vercel/src/event-retry.test.ts",
+      "sourceSha256": "5613672575db821bc58796bc917d22d98dce25f9bc6b99d1e11cd97d539e86c2",
+      "surface": "packages/world-vercel",
+      "kind": "unit",
+      "lineCount": 455,
+      "declaredTestCount": 31,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/world-vercel/src/events-batch.test.ts",
+      "sourceSha256": "2696d57cd368006931ffb398c2077dab641da6badb93c998d932bba712c67354",
+      "surface": "packages/world-vercel",
+      "kind": "unit",
+      "lineCount": 654,
+      "declaredTestCount": 14,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/world-vercel/src/events-retry.test.ts",
+      "sourceSha256": "3d9ac0762c826b7308ddd2a3ba02741fd081b28b3f4d609532e3cc733f8a5d64",
+      "surface": "packages/world-vercel",
+      "kind": "unit",
+      "lineCount": 136,
+      "declaredTestCount": 4,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/world-vercel/src/events-v4-ws.test.ts",
+      "sourceSha256": "3ce25445e57874d62365b27bda2bb3c8a2f800536e7deb89316ba2ff9896c54b",
+      "surface": "packages/world-vercel",
+      "kind": "unit",
+      "lineCount": 528,
+      "declaredTestCount": 18,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/world-vercel/src/events-v4.test.ts",
+      "sourceSha256": "360e51853de9e07a8cb95b3ec1e8bd34ce45a1f71e63ce183fcbc3303accfd3c",
+      "surface": "packages/world-vercel",
+      "kind": "unit",
+      "lineCount": 1695,
+      "declaredTestCount": 39,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/world-vercel/src/events.test.ts",
+      "sourceSha256": "ef5866cf30dacc44a0a0b6fbee604d68650750e36a22fb6b5d7932b4dd9f2de3",
+      "surface": "packages/world-vercel",
+      "kind": "unit",
+      "lineCount": 1933,
+      "declaredTestCount": 44,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/world-vercel/src/frames.test.ts",
+      "sourceSha256": "a9a0ea07ac93176f630368ff7592e84ea36848cdf5cc617030a73a9fa7bad3f3",
+      "surface": "packages/world-vercel",
+      "kind": "unit",
+      "lineCount": 286,
+      "declaredTestCount": 14,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/world-vercel/src/http-client.test.ts",
+      "sourceSha256": "50c047dcd7dfd6a6cf3d6aaef453bfde092dded1f022103619c6217c6b9abbcd",
+      "surface": "packages/world-vercel",
+      "kind": "unit",
+      "lineCount": 887,
+      "declaredTestCount": 35,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/world-vercel/src/http-core.test.ts",
+      "sourceSha256": "e561f67b6a54d3d3ff873eb695b8217a4bf254eb78ebfa7c516ddfcc5a352900",
+      "surface": "packages/world-vercel",
+      "kind": "unit",
+      "lineCount": 197,
+      "declaredTestCount": 20,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/world-vercel/src/instrumentObject.test.ts",
+      "sourceSha256": "625d38c9cd94e88130a3c9734e2f2299d52233f74f8b7252ca9497ab4d5d1218",
+      "surface": "packages/world-vercel",
+      "kind": "unit",
+      "lineCount": 88,
+      "declaredTestCount": 4,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/world-vercel/src/module-scope-state.test.ts",
+      "sourceSha256": "f4720812afedbba32117d82322031ed802d94b72a2c7f862e0527b974921e66c",
+      "surface": "packages/world-vercel",
+      "kind": "unit",
+      "lineCount": 30,
+      "declaredTestCount": 1,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/world-vercel/src/queue.test.ts",
+      "sourceSha256": "030f92550d9a1095edc88c6b332b428d4353fb75725b67f5384a9c8e0a767832",
+      "surface": "packages/world-vercel",
+      "kind": "unit",
+      "lineCount": 1303,
+      "declaredTestCount": 44,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/world-vercel/src/resolve-latest-deployment.test.ts",
+      "sourceSha256": "72849624f8aac1e2d1f03f4d3da39c83443ffeb3b2f2baeb02b05022daca3cdd",
+      "surface": "packages/world-vercel",
+      "kind": "unit",
+      "lineCount": 318,
+      "declaredTestCount": 15,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/world-vercel/src/run-id/codec.test.ts",
+      "sourceSha256": "296b9039c005720bc683b7c5b0bba7e61219501b9043d5e72960e2345d5b6872",
+      "surface": "packages/world-vercel",
+      "kind": "unit",
+      "lineCount": 158,
+      "declaredTestCount": 15,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/world-vercel/src/run-id/index.test.ts",
+      "sourceSha256": "8e4ea34059e9c70ba0035529f17bc3a28b65eebb033d3e95c77f10e38980ebe5",
+      "surface": "packages/world-vercel",
+      "kind": "unit",
+      "lineCount": 377,
+      "declaredTestCount": 25,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/world-vercel/src/run-status-long-poll.test.ts",
+      "sourceSha256": "4bec1d3fc9e2e794a19af5c124a29c01123b44ef1ecee12c992157f64bae40b4",
+      "surface": "packages/world-vercel",
+      "kind": "unit",
+      "lineCount": 398,
+      "declaredTestCount": 12,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/world-vercel/src/runs.test.ts",
+      "sourceSha256": "534fd0d8a98061127e9197f2be5c16e53eccdae786d4587caa6b3dc02b2f84fe",
+      "surface": "packages/world-vercel",
+      "kind": "unit",
+      "lineCount": 195,
+      "declaredTestCount": 5,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/world-vercel/src/steps.test.ts",
+      "sourceSha256": "be5a45d93282fde3b8a295be861829a55c9471c6fa91f6b7ab070d84af712ae7",
+      "surface": "packages/world-vercel",
+      "kind": "unit",
+      "lineCount": 145,
+      "declaredTestCount": 2,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/world-vercel/src/streamer.test.ts",
+      "sourceSha256": "c09960014e93941b0fa70efe20a2aee8ccd90e3cfa5d24891c4ce74eac44d1ac",
+      "surface": "packages/world-vercel",
+      "kind": "unit",
+      "lineCount": 414,
+      "declaredTestCount": 21,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/world-vercel/src/trace-propagation.test.ts",
+      "sourceSha256": "01b2a761c8e6a5e58e57496744f8d7c1cad8a80ce6126da6f8668ab69ed7f2e2",
+      "surface": "packages/world-vercel",
+      "kind": "unit",
+      "lineCount": 488,
+      "declaredTestCount": 10,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/world-vercel/src/utils.test.ts",
+      "sourceSha256": "62902301e2d538215fa852574368b5a6308d1ac11cfb919c2372b70d2d561d5e",
+      "surface": "packages/world-vercel",
+      "kind": "unit",
+      "lineCount": 832,
+      "declaredTestCount": 40,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/world-vercel/src/ws-protocol-conformance.test.ts",
+      "sourceSha256": "06fc31ce8f587cdad5f85b7fba575275e21df63dbb6fa94862081f3a1a675849",
+      "surface": "packages/world-vercel",
+      "kind": "unit",
+      "lineCount": 478,
+      "declaredTestCount": 12,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/world-vercel/src/ws-transport-module-copies.test.ts",
+      "sourceSha256": "fba89820fd1447785fcb4f4c678fc2c2484605734e0ad00703ea11666e371a7c",
+      "surface": "packages/world-vercel",
+      "kind": "unit",
+      "lineCount": 48,
+      "declaredTestCount": 3,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/world-vercel/src/ws-transport-spans.test.ts",
+      "sourceSha256": "a6e5ecd111d7b38b6bce7b5698a783ce6f38ad9554a067c9346171d829b695b9",
+      "surface": "packages/world-vercel",
+      "kind": "unit",
+      "lineCount": 553,
+      "declaredTestCount": 13,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/world-vercel/src/ws-transport.test.ts",
+      "sourceSha256": "a9ba181325711a32f239d2a499892674256f8f6b2d10ae6cfbdc8de50f92091d",
+      "surface": "packages/world-vercel",
+      "kind": "unit",
+      "lineCount": 1283,
+      "declaredTestCount": 61,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "packages/world/src/analytics.test.ts",
+      "sourceSha256": "17dba851311d3d865faaadebc0851bf681698fc5e3737199df6cc89874772517",
+      "surface": "packages/world",
+      "kind": "unit",
+      "lineCount": 78,
+      "declaredTestCount": 5,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-world/tests/analytics.rs"
+      ],
+      "notes": "All five provenance-field and UTC date-coercion declarations are translated. The expected-RED API keeps timezone-naive, timezone-aware, timestamp-object, and nullable behavior explicit before implementation."
+    },
+    {
+      "typescript": "packages/world/src/attributes-security.test.ts",
+      "sourceSha256": "12cbca87f763f0cda301925b46e3799eb893cc3746d0b4057ba68f0f0c610fce",
+      "surface": "packages/world",
+      "kind": "unit",
+      "lineCount": 31,
+      "declaredTestCount": 2,
+      "status": "green",
+      "rustTests": [
+        "crates/workflow-world/tests/attributes_security_typescript_port.rs"
+      ],
+      "notes": "Both prototype-key security declarations pass. Rust maps treat __proto__ as data, and typed deserialization rejects object-shaped values before materialization. Verified by Rust port workflow run 33455424866."
+    },
+    {
+      "typescript": "packages/world/src/attributes.test.ts",
+      "sourceSha256": "f2431a04c1b20246949cfe42ae216c6d22051f845cb047673749aa3f18349860",
+      "surface": "packages/world",
+      "kind": "unit",
+      "lineCount": 207,
+      "declaredTestCount": 24,
+      "status": "green",
+      "rustTests": [
+        "crates/workflow-world/tests/attributes_typescript_port.rs"
+      ],
+      "notes": "All 24 TypeScript declarations pass in the direct Rust mirror, covering key/value limits, UTF-16 and UTF-8 length rules, reserved keys, duplicate batches, exact post-merge counts, and immutable application. Verified by Rust port workflow run 33455424866."
+    },
+    {
+      "typescript": "packages/world/src/env-config.test.ts",
+      "sourceSha256": "371391082bccd1a454d286dfced67e2c34a96502305e6c88ff234edcf4acfca1",
+      "surface": "packages/world",
+      "kind": "unit",
+      "lineCount": 110,
+      "declaredTestCount": 14,
+      "status": "green",
+      "rustTests": [
+        "crates/workflow-world/tests/env_config_typescript_port.rs"
+      ],
+      "notes": "All numeric, flag, fallback, clamping, radix, warning-deduplication, event-limit, and process-environment declarations pass. Process-global behavior is isolated in a child test process. Verified by Rust port workflow run 33455424866."
+    },
+    {
+      "typescript": "packages/world/src/event-metadata.test.ts",
+      "sourceSha256": "02a45c211d06adbd807c8f5048d140adf5452d1bb1948d992ab2b0af44e64062",
+      "surface": "packages/world",
+      "kind": "unit",
+      "lineCount": 35,
+      "declaredTestCount": 4,
+      "status": "green",
+      "rustTests": [
+        "crates/workflow-world/tests/event_metadata_typescript_port.rs"
+      ],
+      "notes": "All four entity class, payload field, inherited-property, and sealed-noop declarations pass in Rust. Verified by Rust port workflow run 33455424866."
+    },
+    {
+      "typescript": "packages/world/src/events.test.ts",
+      "sourceSha256": "defc6392eea91d1120c6c3e167e84fcf1e2c8a44bf6ca01d76408c1e6851b6e0",
+      "surface": "packages/world",
+      "kind": "unit",
+      "lineCount": 148,
+      "declaredTestCount": 11,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-world/tests/events.rs"
+      ],
+      "notes": "All 11 token-retention, owner-message, cancellation-reason, stored-event, and backend-only noop declarations are translated before the event schema implementation is added."
+    },
+    {
+      "typescript": "packages/world/src/hooks.test.ts",
+      "sourceSha256": "d89618ef572079592545fd55c79b7a0b9d9034476ca6e8c89cb686cc1535e4cd",
+      "surface": "packages/world",
+      "kind": "unit",
+      "lineCount": 168,
+      "declaredTestCount": 12,
+      "status": "green",
+      "rustTests": [
+        "crates/workflow-world/tests/hooks_contract.rs",
+        "rust/conformance/hooks-parity.test.ts"
+      ],
+      "notes": "All 12 protocol-constant, context, capability, unknown-field, persistence-stripping, and bounded-version declarations pass in direct and differential tests. Verified by Rust port workflow run 33455424866."
+    },
+    {
+      "typescript": "packages/world/src/node-http-flag.test.ts",
+      "sourceSha256": "e5bf2e8f7d4547b9bee3bf60cf41a05bb219b866d6970caa80dc69255a2681e2",
+      "surface": "packages/world",
+      "kind": "unit",
+      "lineCount": 37,
+      "declaredTestCount": 3,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-world/tests/node_http_flag.rs"
+      ],
+      "notes": "All three default, explicit override, and implicit process-environment declarations are translated. Final GREEN additionally requires an isolated JavaScript binding test for live process.env mutation."
+    },
+    {
+      "typescript": "packages/world/src/node-http.test.ts",
+      "sourceSha256": "78d9deefb5d689117f169f4855e59beb65ffb8e1c57bac720c230c29706c4cc5",
+      "surface": "packages/world",
+      "kind": "unit",
+      "lineCount": 465,
+      "declaredTestCount": 23,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-world/tests/node_http.rs"
+      ],
+      "notes": "All 23 GET/POST, content-length, compression, streaming, abort, timeout, socket-reset, cancellation, queueing, and keep-alive declarations are translated against the planned Rust client contract. Final GREEN requires the same assertions against real loopback sockets rather than only a scripted contract harness."
+    },
+    {
+      "typescript": "packages/world/src/queue.test.ts",
+      "sourceSha256": "6312e56cdff24bf692fee3d7c158bc6d47c1085b9a77e726b32e42bed99e11f3",
+      "surface": "packages/world",
+      "kind": "unit",
+      "lineCount": 254,
+      "declaredTestCount": 32,
+      "status": "green",
+      "rustTests": [
+        "crates/workflow-world/tests/queue_typescript_port.rs"
+      ],
+      "notes": "All 32 prefix, queue-name, payload-discriminator, binary step-input, unknown-field, and creator-environment declarations pass in the direct Rust mirror. Verified by Rust port workflow run 33455424866."
+    },
+    {
+      "typescript": "packages/world/src/recovery.test.ts",
+      "sourceSha256": "cc8fdc732c3d0972a5ca3006f73773a65753f8c44a11a16cb6476c88ff083f10",
+      "surface": "packages/world",
+      "kind": "unit",
+      "lineCount": 98,
+      "declaredTestCount": 5,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-world/tests/recovery.rs"
+      ],
+      "notes": "All five namespace precedence, silent-success, debug-reporting, and always-visible enqueue-failure declarations are translated before recovery implementation."
+    },
+    {
+      "typescript": "packages/world/src/runs-security.test.ts",
+      "sourceSha256": "82b3991af9c8bc285ea378a0136ff3f22f12dc5adc9168137410005b8530028f",
+      "surface": "packages/world",
+      "kind": "unit",
+      "lineCount": 123,
+      "declaredTestCount": 6,
+      "status": "green",
+      "rustTests": [
+        "crates/workflow-world/tests/runs_security_typescript_port.rs"
+      ],
+      "notes": "All strict counter, exact summary, duplicate-ID, empty-result, and maximum-cardinality security cases pass. Rust additionally proves diagnostics do not reflect a sensitive run ID. Verified by Rust port workflow run 33455424866."
+    },
+    {
+      "typescript": "packages/world/src/runs.test.ts",
+      "sourceSha256": "e01d2781fb134ba2554e8f3ee49d49e8d24ffa17b0331ea378d0ed98b316e72b",
+      "surface": "packages/world",
+      "kind": "unit",
+      "lineCount": 155,
+      "declaredTestCount": 11,
+      "status": "green",
+      "rustTests": [
+        "crates/workflow-world/tests/runs_typescript_port.rs"
+      ],
+      "notes": "All 11 request-boundary, outcome-variant, required-field, unknown-outcome, and aggregate declarations pass in Rust. Verified by Rust port workflow run 33455424866."
+    },
+    {
+      "typescript": "packages/world/src/shared.test.ts",
+      "sourceSha256": "44ad71f7b3cd47633de3507ead499dd71f398b6af6ac841b4a8e018e3210d591",
+      "surface": "packages/world",
+      "kind": "unit",
+      "lineCount": 29,
+      "declaredTestCount": 1,
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-world/tests/shared.rs"
+      ],
+      "notes": "The optional analytics page-metadata declaration is translated, including UTC coercion of both lookback-window timestamps."
+    },
+    {
+      "typescript": "packages/world/src/slot-identity.test.ts",
+      "sourceSha256": "62c90b158ef61d0228594d90848249821fa4ce4dbeacc5a1419a30041900f3cf",
+      "surface": "packages/world",
+      "kind": "unit",
+      "lineCount": 94,
+      "declaredTestCount": 9,
+      "status": "green",
+      "rustTests": [
+        "crates/workflow-world/tests/slot_identity_typescript_port.rs"
+      ],
+      "notes": "All nine fixed-width ordering, round-trip, safe-integer, legacy-prefix, ULID separation, and timestamp-validation declarations pass in Rust. Verified by Rust port workflow run 33455424866."
+    },
+    {
+      "typescript": "packages/world/src/spec-version.test.ts",
+      "sourceSha256": "64a239607bece6f895bcd8bdd7c0552f65473961a875812206ce232922126e02",
+      "surface": "packages/world",
+      "kind": "unit",
+      "lineCount": 108,
+      "declaredTestCount": 11,
+      "status": "green",
+      "rustTests": [
+        "crates/workflow-world/tests/spec_version_typescript_port.rs"
+      ],
+      "notes": "All 11 version constants, minting, kill-switch, readable-ceiling, newer-world, and legacy declarations pass. The test-only constant assertion was replaced with an equivalent runtime-minted comparison so Clippy remains strict. Verified by Rust port workflow run 33455424866."
+    },
+    {
+      "typescript": "packages/world/src/steps-security.test.ts",
+      "sourceSha256": "d96a10a58ab069f4e9db61f36ce0fd63a50e97b40cf25621dba34319e8aede53",
+      "surface": "packages/world",
+      "kind": "unit",
+      "lineCount": 107,
+      "declaredTestCount": 3,
+      "status": "green",
+      "rustTests": [
+        "crates/workflow-world/tests/step_state_security.rs",
+        "rust/conformance/step-state-security.test.ts"
+      ],
+      "notes": "All contradictory-state, null-smuggling, unsafe-attempt, checked-next-attempt, and legacy compatibility fixtures pass in direct and differential Rust tests. Verified by Rust port workflow run 33455424866."
+    },
+    {
+      "typescript": "rust/conformance/attribute-changes-parity.test.ts",
+      "sourceSha256": "f4d3ed3c793ffad04d376c92706affb6f384eaed542963c602a82e43a2afbb7d",
+      "surface": "root",
+      "kind": "unit",
+      "lineCount": 182,
+      "declaredTestCount": 2,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "rust/conformance/capabilities-parity.test.ts",
+      "sourceSha256": "af4a0f5f0d6e03180ef6ab208631553f7927a04a3c9cb29eeb519eaf86143665",
+      "surface": "root",
+      "kind": "unit",
+      "lineCount": 73,
+      "declaredTestCount": 1,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "rust/conformance/count-step-started-events-parity.test.ts",
+      "sourceSha256": "9ca03ef655c087b8142be593dda4ed93a59152e8888d4d0975df67fbbc4f9220",
+      "surface": "root",
+      "kind": "unit",
+      "lineCount": 184,
+      "declaredTestCount": 2,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "rust/conformance/errors-parity.test.ts",
+      "sourceSha256": "a2224f5a111168842126ac66a375846bb373e5c4e578c186e1628c32898c0849",
+      "surface": "root",
+      "kind": "unit",
+      "lineCount": 377,
+      "declaredTestCount": 5,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "rust/conformance/hooks-parity.test.ts",
+      "sourceSha256": "814fefa1b84ed336814265a5096cdcf8bf6b2ea2ce39066ac670518614759173",
+      "surface": "root",
+      "kind": "unit",
+      "lineCount": 147,
+      "declaredTestCount": 3,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "rust/conformance/step-state-security.test.ts",
+      "sourceSha256": "7fc3991f73ca1258c811222d1723b6563b88077a12ed1f2983f83ff5c87efaf8",
+      "surface": "root",
+      "kind": "unit",
+      "lineCount": 253,
+      "declaredTestCount": 6,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "rust/conformance/world-parity.test.ts",
+      "sourceSha256": "3f07c7c052af4f15c4f67821c6940e39db34993173fe4f9b5daa2c7ab1c31310",
+      "surface": "root",
+      "kind": "unit",
+      "lineCount": 546,
+      "declaredTestCount": 24,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "workbench/vitest/test/cookbook-advanced.test.ts",
+      "sourceSha256": "08b29a545c0eabc6b5ab601b4975a99fd905c76f26af00d1c8c74ab36d3c46c0",
+      "surface": "workbench/vitest",
+      "kind": "workbench",
+      "lineCount": 63,
+      "declaredTestCount": 3,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "workbench/vitest/test/cookbook-agents.test.ts",
+      "sourceSha256": "efa0687b770d4e7864ac4dd4013bbda4b63bdbfd6e142652dc9263d39ee8b51d",
+      "surface": "workbench/vitest",
+      "kind": "workbench",
+      "lineCount": 133,
+      "declaredTestCount": 8,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "workbench/vitest/test/cookbook-common.test.ts",
+      "sourceSha256": "4e75d1738adac9ab654f988325589babf3bddde0a88ea672f60070bfe182ea25",
+      "surface": "workbench/vitest",
+      "kind": "workbench",
+      "lineCount": 231,
+      "declaredTestCount": 14,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "workbench/vitest/test/hook-token-reuse.test.ts",
+      "sourceSha256": "ed64b6d4adfed98369103387964ff2ae0d98d6b6c7bd2bb694a2839050e44e89",
+      "surface": "workbench/vitest",
+      "kind": "workbench",
+      "lineCount": 75,
+      "declaredTestCount": 2,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "workbench/vitest/test/inline-step-ownership.test.ts",
+      "sourceSha256": "d33e11d6a2ee2e5c37b372a2eff429e2ad6965bc206849207065442307e0679d",
+      "surface": "workbench/vitest",
+      "kind": "workbench",
+      "lineCount": 45,
+      "declaredTestCount": 1,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "workbench/vitest/test/local-deps.test.ts",
+      "sourceSha256": "89c36751c939df65b755edc74e54113d3c8c28ea80c1135e89f884aa15c202e0",
+      "surface": "workbench/vitest",
+      "kind": "workbench",
+      "lineCount": 41,
+      "declaredTestCount": 2,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "workbench/vitest/test/mock.test.ts",
+      "sourceSha256": "ca32b2b984216cb57e0a154da49cab27208db50d7be74085cfa5be7cf094b2e9",
+      "surface": "workbench/vitest",
+      "kind": "workbench",
+      "lineCount": 49,
+      "declaredTestCount": 3,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    },
+    {
+      "typescript": "workbench/vitest/test/workflow.test.ts",
+      "sourceSha256": "bba7c7f8eefca21f1b860941fffad64b04adc58ac1ef09741035eb53a90e99eb",
+      "surface": "workbench/vitest",
+      "kind": "workbench",
+      "lineCount": 109,
+      "declaredTestCount": 6,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
+    }
+  ]
+}

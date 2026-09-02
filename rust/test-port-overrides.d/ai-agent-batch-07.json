@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "entries": [
+    {
+      "typescript": "packages/ai/src/agent/durable-agent.test.ts",
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-ai/tests/durable_agent.rs",
+        "rust/tdd/workflow-ai/tests/durable_agent/tooling_and_results.rs",
+        "rust/tdd/workflow-ai/tests/durable_agent/options_and_ui.rs"
+      ],
+      "notes": "All 48 current declarations are translated. Coverage includes local/provider/client tool execution, preformatted and error outputs, missing provider results, mixed execution, unresolved client calls, prepareStep precedence and capabilities, per-round message propagation, generation settings, tool choice and filtering, error recovery with corrected retries, finish/abort/context behavior, result geometry, tool-call repair and prompt patching, raw chunks, telemetry overrides, UI message collection, writer closure, and sendFinish suppression. Final GREEN must drive the actual Rust agent loop and may not replace the observation contract with hard-coded fixtures."
+    }
+  ]
+}

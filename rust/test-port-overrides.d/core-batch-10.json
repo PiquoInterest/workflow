@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "entries": [
+    {
+      "typescript": "packages/core/src/abort-controller-step.test.ts",
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-core/tests/abort_controller_step.rs"
+      ],
+      "notes": "All 19 executable TypeScript cases are translated. Coverage includes stream-reader setup, pre-aborted hydration, stream-delivered reasons and listeners, throw-if-aborted behavior, step-context stream writes, durable hook resume, synchronous local abort, post-context safety, multiple consumers, AbortSignal.any compatibility, fatal abort classification, retry suppression, and the production requirement that resumeHookDurable is queued in pre-completion work before step_completed. WF-RUST-027 records this cancellation ordering boundary. Final GREEN must use the real Rust serialization bridge, step context, stream backend, durable hook writer, and step executor."
+    },
+    {
+      "typescript": "packages/core/src/abort-consistency.test.ts",
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-core/tests/abort_consistency.rs"
+      ],
+      "notes": "All 22 executable TypeScript cases are translated. Coverage characterizes the dual hook/stream model across pre-aborted and late-aborted serialization, one-sided and two-sided transport failure, symbol identity, idempotent double abort, synchronous first-run listeners, replay listeners and durable reasons, cross-execution abort, fire-and-forget completion, and preservation of pending steps, hooks, and waits at suspension. WF-RUST-028 records the consistency and replay boundary. Final GREEN must exercise the production Rust serializer, event log, hook and stream transports, abort state machine, suspension collector, and replay scheduler."
+    }
+  ]
+}

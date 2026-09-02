@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "cases": [
+    {
+      "typescript": "packages/core/src/context-errors.test.ts",
+      "command": ["cargo", "test", "--locked", "--manifest-path", "rust/tdd/workflow-core/Cargo.toml", "--test", "context_errors"],
+      "failureMarker": "TDD RED: packages/core/src/context-errors.test.ts implementation pending"
+    },
+    {
+      "typescript": "packages/core/src/describe-error.test.ts",
+      "command": ["cargo", "test", "--locked", "--manifest-path", "rust/tdd/workflow-core/Cargo.toml", "--test", "describe_error"],
+      "failureMarker": "TDD RED: packages/core/src/describe-error.test.ts implementation pending"
+    }
+  ]
+}

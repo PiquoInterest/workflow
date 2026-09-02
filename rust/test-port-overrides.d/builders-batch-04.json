@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "entries": [
+    {
+      "typescript": "packages/builders/src/get-input-files.test.ts",
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-builders/tests/get_input_files.rs"
+      ],
+      "notes": "All nine input discovery, .swc ignore, and diagnostics-path declarations are translated with real temporary filesystem trees. Coverage includes ordinary hidden files, the complete explicit generated/cache-directory denylist, supported extensions, idempotent .gitignore updates, existing ignore variants, explicit diagnostics directories, non-Vercel target isolation, and Vercel output fallback. Final GREEN must walk the real filesystem with bounded roots and must not rediscover generated output or dependency trees."
+    },
+    {
+      "typescript": "packages/builders/src/workflow-bundle-boundary.test.ts",
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-builders/tests/workflow_bundle_boundary.rs"
+      ],
+      "notes": "Both bundle-boundary declarations are translated with the original minimal and core-API workflow source. Final GREEN must inspect the real Rust build graph and prove that world schemas and zod are absent from workflow bundles instead of returning a fixture-specific input list."
+    },
+    {
+      "typescript": "packages/builders/src/write-if-changed.test.ts",
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-builders/tests/write_if_changed.rs"
+      ],
+      "notes": "All 16 content comparison, conditional write, and generated-file declarations are translated. The Rust fixtures preserve missing, unreadable, directory, equal-length mismatch, UTF-8 byte-length, malformed-byte-versus-replacement-character, inode/mtime stability, temp-file cleanup, changed output, first write, and explicit opt-out behavior. The byte comparison cases are security-relevant because lossy text decoding must not hide a changed generated artifact."
+    }
+  ]
+}

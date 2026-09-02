@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "cases": [
+    {
+      "typescript": "packages/core/src/attribute-changes.test.ts",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--manifest-path",
+        "rust/tdd/workflow-core/Cargo.toml",
+        "--test",
+        "attribute_changes"
+      ],
+      "failureMarker": "TDD RED: packages/core/src/attribute-changes.test.ts implementation pending"
+    },
+    {
+      "typescript": "packages/core/src/abort-replay-ordering.test.ts",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--manifest-path",
+        "rust/tdd/workflow-core/Cargo.toml",
+        "--test",
+        "abort_replay_ordering"
+      ],
+      "failureMarker": "TDD RED: packages/core/src/abort-replay-ordering.test.ts implementation pending"
+    }
+  ]
+}

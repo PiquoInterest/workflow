@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "cases": [
+    {
+      "typescript": "packages/builders/src/discover-entries-esbuild-plugin.test.ts",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--manifest-path",
+        "rust/tdd/workflow-builders/Cargo.toml",
+        "--test",
+        "discover_entries"
+      ],
+      "failureMarker": "TDD RED: packages/builders/src/discover-entries-esbuild-plugin.test.ts implementation pending"
+    },
+    {
+      "typescript": "packages/builders/src/external-package-warning.test.ts",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--manifest-path",
+        "rust/tdd/workflow-builders/Cargo.toml",
+        "--test",
+        "external_package_warning"
+      ],
+      "failureMarker": "TDD RED: packages/builders/src/external-package-warning.test.ts implementation pending"
+    }
+  ]
+}

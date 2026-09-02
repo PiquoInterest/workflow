@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "cases": [
+    {
+      "typescript": "packages/builders/src/manifest-ids.test.ts",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--manifest-path",
+        "rust/tdd/workflow-builders/Cargo.toml",
+        "--test",
+        "manifest_ids"
+      ],
+      "failureMarker": "TDD RED: packages/builders/src/manifest-ids.test.ts implementation pending"
+    },
+    {
+      "typescript": "packages/builders/src/workflow-alias.test.ts",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--manifest-path",
+        "rust/tdd/workflow-builders/Cargo.toml",
+        "--test",
+        "workflow_alias"
+      ],
+      "failureMarker": "TDD RED: packages/builders/src/workflow-alias.test.ts implementation pending"
+    },
+    {
+      "typescript": "packages/builders/src/workflows-extractor.test.ts",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--manifest-path",
+        "rust/tdd/workflow-builders/Cargo.toml",
+        "--test",
+        "workflows_extractor"
+      ],
+      "failureMarker": "TDD RED: packages/builders/src/workflows-extractor.test.ts implementation pending"
+    }
+  ]
+}

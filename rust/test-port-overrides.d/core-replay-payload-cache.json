@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "entries": [
+    {
+      "typescript": "packages/core/src/replay-payload-cache.test.ts",
+      "status": "green",
+      "rustTests": [
+        "crates/workflow-core/tests/replay_payload_cache.rs"
+      ],
+      "notes": "All nine TypeScript declarations are covered by the production workflow-core replay payload cache. Coverage preserves exact in-flight preparation sharing; synchronous preparer normalization; speculative rejection retention until the ordered consumer observes it; retry only after observation; concurrent workflow/result/error/hook prewarming; cached decrypt/decompress work with fresh VM object revival; stale-snapshot resetScan behavior for events inserted below the scanned prefix; event-ID keyed reuse across rescans; legacy flattened-value bypass; missing event-data tolerance; memoization of share-safe primitives including undefined; the 4096-character cap; fresh hydration for mutable and oversized values; and retry after failed hydration. The permanent Rust core workflow builds and runs the TypeScript oracle first, then exercises the production Rust cache, all Rust targets, Rustfmt, Clippy with warnings denied, and differential conformance runners."
+    }
+  ]
+}

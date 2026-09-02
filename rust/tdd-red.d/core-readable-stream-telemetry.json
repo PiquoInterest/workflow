@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "cases": [
+    {
+      "typescript": "packages/core/src/readable-stream-telemetry.test.ts",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--manifest-path",
+        "rust/tdd/workflow-core/Cargo.toml",
+        "--test",
+        "readable_stream_telemetry"
+      ],
+      "failureMarker": "TDD RED: packages/core/src/readable-stream-telemetry.test.ts implementation pending"
+    }
+  ]
+}

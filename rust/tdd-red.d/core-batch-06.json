@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "cases": [
+    {
+      "typescript": "packages/core/src/define-hook.test.ts",
+      "command": ["cargo", "test", "--locked", "--manifest-path", "rust/tdd/workflow-core/Cargo.toml", "--test", "define_hook"],
+      "failureMarker": "TDD RED: packages/core/src/define-hook.test.ts implementation pending"
+    },
+    {
+      "typescript": "packages/core/src/duplicate-event-fixtures.test.ts",
+      "command": ["cargo", "test", "--locked", "--manifest-path", "rust/tdd/workflow-core/Cargo.toml", "--test", "duplicate_event_fixtures"],
+      "failureMarker": "TDD RED: packages/core/src/duplicate-event-fixtures.test.ts implementation pending"
+    },
+    {
+      "typescript": "packages/core/src/encryption.test.ts",
+      "command": ["cargo", "test", "--locked", "--manifest-path", "rust/tdd/workflow-core/Cargo.toml", "--test", "encryption"],
+      "failureMarker": "TDD RED: packages/core/src/encryption.test.ts implementation pending"
+    },
+    {
+      "typescript": "packages/core/src/log-format.test.ts",
+      "command": ["cargo", "test", "--locked", "--manifest-path", "rust/tdd/workflow-core/Cargo.toml", "--test", "log_format"],
+      "failureMarker": "TDD RED: packages/core/src/log-format.test.ts implementation pending"
+    },
+    {
+      "typescript": "packages/core/src/module-scope-state.test.ts",
+      "command": ["cargo", "test", "--locked", "--manifest-path", "rust/tdd/workflow-core/Cargo.toml", "--test", "module_scope_state"],
+      "failureMarker": "TDD RED: packages/core/src/module-scope-state.test.ts implementation pending"
+    },
+    {
+      "typescript": "packages/core/src/runtime-import.test.ts",
+      "command": ["cargo", "test", "--locked", "--manifest-path", "rust/tdd/workflow-core/Cargo.toml", "--test", "runtime_import"],
+      "failureMarker": "TDD RED: packages/core/src/runtime-import.test.ts implementation pending"
+    },
+    {
+      "typescript": "packages/core/src/runtime-world-singleton.test.ts",
+      "command": ["cargo", "test", "--locked", "--manifest-path", "rust/tdd/workflow-core/Cargo.toml", "--test", "runtime_world_singleton"],
+      "failureMarker": "TDD RED: packages/core/src/runtime-world-singleton.test.ts implementation pending"
+    }
+  ]
+}

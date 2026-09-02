@@ -1,0 +1,21 @@
+[package]
+name = "workflow-ai-tdd"
+version = "0.1.0"
+edition = "2024"
+publish = false
+license = "Apache-2.0"
+rust-version = "1.87"
+description = "Expected-RED Rust tests translated from @workflow/ai before implementation"
+
+# This crate must compile and pass Clippy before its tests are allowed to fail
+# at the source-specific TDD markers registered in rust/tdd-red.json.
+[lib]
+path = "src/lib.rs"
+
+[dependencies]
+workflow-ai = { path = "../../../crates/workflow-ai" }
+
+[workspace]
+
+[lints.rust]
+unsafe_code = "forbid"

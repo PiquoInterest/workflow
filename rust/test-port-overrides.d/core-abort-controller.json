@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "entries": [
+    {
+      "typescript": "packages/core/src/abort-controller.test.ts",
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-core/tests/abort_controller.rs"
+      ],
+      "notes": "All 22 TypeScript declarations are translated directly. Coverage preserves controller construction, durable hook registration, reason forwarding, double-abort idempotence, typed replay-token divergence, duplicate matching receipts, listener add/remove behavior, throwIfAborted, independent controller state, static abort signals, AbortSignal.any propagation, pre-aborted inputs, one-pass iterable materialization, listener cleanup, workflow timeout rejection, internal system-hook flags, abort queue mutation, and deterministic replay tokens. Security-relevant cases require mismatched durable tokens to fail as replay divergence rather than cross-wire state, and composite signals to detach captured listeners after abort so longer-lived inputs cannot retain the composite indefinitely. Final GREEN must exercise the real Rust VM context, event consumer, delivery ordering, hook queue, deterministic ID generator, and listener lifecycle; scenario-specific observations are insufficient."
+    }
+  ]
+}

@@ -1,0 +1,219 @@
+name: Rust port
+
+on:
+  push:
+    branches:
+      - pro/rust-repository-port
+  pull_request:
+    paths:
+      - 'Cargo.toml'
+      - 'Cargo.lock'
+      - 'crates/workflow-world/**'
+      - 'rust/conformance/**'
+      - 'rust/test-port-manifest.json'
+      - 'scripts/rust-port-test-inventory.mjs'
+      - 'scripts/bootstrap-rust-test-port-manifest.mjs'
+      - '**/*.test.ts'
+      - '**/*.test.tsx'
+      - '**/*.test.mts'
+      - '**/*.test.cts'
+      - '**/*.spec.ts'
+      - '**/*.spec.tsx'
+      - '**/*.spec.mts'
+      - '**/*.spec.cts'
+      - 'packages/errors/src/**'
+      - 'packages/serde/src/**'
+      - 'packages/utils/src/time*'
+      - 'packages/world/src/**'
+      - 'docs/rust-port/**'
+      - 'security.txt'
+      - '.github/workflows/rust-port.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  bootstrap-test-manifest:
+    name: Bootstrap checked-in TypeScript test manifest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/pro/rust-repository-port'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout migration branch
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: pro/rust-repository-port
+          fetch-depth: 0
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 22.x
+
+      - name: Refresh manifest without losing reviewed statuses
+        run: |
+          node scripts/rust-port-test-inventory.mjs \
+            --write-json /tmp/rust-port-test-inventory.json
+          node scripts/bootstrap-rust-test-port-manifest.mjs \
+            /tmp/rust-port-test-inventory.json \
+            rust/test-port-manifest.json
+          node scripts/rust-port-test-inventory.mjs \
+            --check rust/test-port-manifest.json
+
+      - name: Commit the initial or refreshed manifest
+        run: |
+          if [[ -z "$(git status --porcelain -- rust/test-port-manifest.json)" ]]; then
+            echo 'Test-port manifest is already current.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add rust/test-port-manifest.json
+          git commit --signoff -m 'test(rust-port): refresh TypeScript test manifest'
+          git push origin HEAD:pro/rust-repository-port
+
+  test-inventory:
+    name: TypeScript test corpus inventory
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 22.x
+
+      - name: Generate deterministic test inventory
+        run: |
+          node scripts/rust-port-test-inventory.mjs \
+            --write-json /tmp/rust-port-test-inventory.json \
+            --write-markdown /tmp/rust-port-test-inventory.md
+
+      - name: Validate checked-in test-port manifest
+        run: |
+          if [[ -f rust/test-port-manifest.json ]]; then
+            node scripts/rust-port-test-inventory.mjs \
+              --check rust/test-port-manifest.json
+          else
+            echo '::notice::rust/test-port-manifest.json has not been bootstrapped yet'
+          fi
+
+      - name: Upload test inventory
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: rust-port-test-inventory-${{ github.sha }}
+          path: |
+            /tmp/rust-port-test-inventory.json
+            /tmp/rust-port-test-inventory.md
+          if-no-files-found: error
+          retention-days: 7
+
+  rustfmt-snapshot:
+    name: Canonical Rust 1.87 formatting snapshot
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Install Rust 1.87
+        uses: actions-rust-lang/setup-rust-toolchain@46268bd060767258de96ed93c1251119784f2ab6 # v1.16.1
+        with:
+          toolchain: 1.87.0
+          components: rustfmt
+
+      - name: Format migration crate
+        run: cargo fmt --package workflow-world
+
+      - name: Upload formatted crate
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: workflow-world-rustfmt-${{ github.sha }}
+          path: crates/workflow-world
+          if-no-files-found: error
+          retention-days: 1
+
+      - name: Upload exact TypeScript oracle sources
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: rust-port-typescript-oracles-${{ github.sha }}
+          path: |
+            packages/errors/src/index.ts
+            packages/errors/src/index-implementation.ts
+            packages/serde/src/index.ts
+            packages/utils/src/time.ts
+            packages/utils/src/time-implementation.ts
+            packages/world/src/hooks.ts
+            packages/world/src/steps.ts
+            packages/world/src/steps-security.test.ts
+          if-no-files-found: error
+          retention-days: 1
+
+  world-contract:
+    name: World, steps, hooks, errors, serde, and time parity
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Install Rust 1.87
+        uses: actions-rust-lang/setup-rust-toolchain@46268bd060767258de96ed93c1251119784f2ab6 # v1.16.1
+        with:
+          toolchain: 1.87.0
+          components: clippy,rustfmt
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v5.0.0
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 22.x
+          cache: pnpm
+
+      - name: Install JavaScript dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Check canonical Rust formatting
+        run: cargo fmt --package workflow-world -- --check
+
+      - name: Compile and test Rust contracts
+        run: cargo test --locked -p workflow-world --all-targets
+
+      - name: Lint Rust contracts
+        run: cargo clippy --locked -p workflow-world --all-targets -- -D warnings
+
+      - name: Run TypeScript World and utility oracle tests
+        run: |
+          pnpm --filter @workflow/world test
+          pnpm --filter @workflow/utils test
+
+      - name: Build TypeScript oracle dependency boundary
+        run: pnpm --filter @workflow/utils build
+
+      - name: Run TypeScript error oracle tests
+        run: pnpm --filter @workflow/errors test
+
+      - name: Build differential conformance runners
+        run: cargo build --locked -p workflow-world --examples
+
+      - name: Compare TypeScript and Rust behavior
+        run: |
+          WORKFLOW_RUST_CONFORMANCE_BIN=target/debug/examples/conformance \
+            pnpm exec vitest run rust/conformance/world-parity.test.ts
+          WORKFLOW_RUST_STEP_CONFORMANCE_BIN=target/debug/examples/steps_conformance \
+            pnpm exec vitest run rust/conformance/step-state-security.test.ts
+          WORKFLOW_RUST_CONFORMANCE_BIN=target/debug/examples/hooks_conformance \
+            pnpm exec vitest run rust/conformance/hooks-parity.test.ts
+          WORKFLOW_RUST_CONFORMANCE_BIN=target/debug/examples/errors_conformance \
+            pnpm exec vitest run rust/conformance/errors-parity.test.ts

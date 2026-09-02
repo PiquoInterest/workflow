@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "cases": [
+    {
+      "typescript": "packages/core/src/abort-controller.test.ts",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--manifest-path",
+        "rust/tdd/workflow-core/Cargo.toml",
+        "--test",
+        "abort_controller"
+      ],
+      "failureMarker": "TDD RED: packages/core/src/abort-controller.test.ts implementation pending"
+    }
+  ]
+}

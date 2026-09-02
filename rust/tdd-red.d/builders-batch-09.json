@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "cases": [
+    {
+      "typescript": "packages/builders/src/fast-discovery.test.ts",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--manifest-path",
+        "rust/tdd/workflow-builders/Cargo.toml",
+        "--test",
+        "fast_discovery"
+      ],
+      "failureMarker": "TDD RED: packages/builders/src/fast-discovery.test.ts implementation pending"
+    }
+  ]
+}

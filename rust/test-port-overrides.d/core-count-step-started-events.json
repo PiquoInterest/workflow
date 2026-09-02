@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "entries": [
+    {
+      "typescript": "packages/core/src/runtime/count-step-started-events.test.ts",
+      "status": "green",
+      "rustTests": [
+        "crates/workflow-core/tests/count_step_started_events.rs",
+        "rust/conformance/count-step-started-events-parity.test.ts"
+      ],
+      "notes": "All nine parameterized TypeScript declarations are covered by the production workflow-core Rust implementation and differential oracle. The Rust tests add exact negative-zero and negative-infinity boundaries while preserving safe-integer advancement, null/empty logs, event filtering, owner-scoped counts, totalAttempts as bare starts plus the largest single owner, the workflow#3069 racer regression, genuine retry ceilings, and mixed owned-to-bare ceilings. Internal Rust accounting uses the private StepAttemptCount integer type; f64 exists only at the JavaScript compatibility boundary. The dedicated Rust core workflow runs Rustfmt, compilation, all tests, Clippy with warnings denied, the TypeScript oracle, and cross-language differential fixtures."
+    }
+  ]
+}

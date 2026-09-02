@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "entries": [
+    {
+      "typescript": "packages/builders/src/transform-utils.test.ts",
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-builders/tests/transform_utils.rs"
+      ],
+      "notes": "All 45 directive, serde, combined-detection, and transform-selection declarations are translated. Positive coverage preserves quote and whitespace variants, exact @workflow/serde imports, direct Symbol.for names, computed property names, bundled chunk output, directive prologues, generated route exclusions, and SDK serde files. Negative coverage rejects inline assignments, lookalike packages, partial symbol names, string-literal properties, unrelated symbols, comments, template literals, and multiline call arguments. These negatives are security-relevant because false-positive directive detection could compile attacker-controlled documentation or comments as executable durable workflow code. Final GREEN must tokenize or parse JavaScript context rather than rely on an unbounded raw substring scan."
+    }
+  ]
+}

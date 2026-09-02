@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "entries": [
+    {
+      "typescript": "packages/ai/src/workflow-chat-transport.test.ts",
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-ai/tests/workflow_chat_transport.rs"
+      ],
+      "notes": "All 23 current declarations are translated: constructor options, send/reconnect request shaping, response errors, abort-signal propagation and reuse, negative start-index resolution, malformed tail-header fallback, orphan reasoning/text/tool filtering, non-streamed and recovered tool calls, non-negative resume behavior, object-error formatting, and send/end callbacks. Final GREEN must execute the real Rust transport and stream normalizer."
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "entries": [
+    {
+      "typescript": "packages/core/src/define-hook.test.ts",
+      "status": "red",
+      "rustTests": ["rust/tdd/workflow-core/tests/define_hook.rs"],
+      "notes": "All three TypeScript cases are translated. The Rust boundary preserves schema-free payload forwarding, schema normalization before resume, and aggregated actionable validation errors. Security-relevant behavior requires invalid payloads to fail before resumeHook sees the token or payload. Final GREEN must accept a real standard-schema adapter and call the production Rust hook resume path only after successful validation."
+    },
+    {
+      "typescript": "packages/core/src/duplicate-event-fixtures.test.ts",
+      "status": "red",
+      "rustTests": ["rust/tdd/workflow-core/tests/duplicate_event_fixtures.rs"],
+      "notes": "The single parameterized TypeScript declaration is expanded into all 16 shared fixture cases. Coverage preserves open-versus-closed entity consumers, retry attempts, terminal outcome classes, wait/hook/run duplicates, entityless step-body attributes, id-bearing workflow attributes, and sibling isolation. Security-relevant behavior requires duplicate classification to remain per entity and per event class so one entity cannot hide another's event and observability cannot conceal a divergence. Final GREEN must consume the same canonical fixture corpus as the Rust observability implementation rather than copying expected indices into runtime code."
+    },
+    {
+      "typescript": "packages/core/src/encryption.test.ts",
+      "status": "red",
+      "rustTests": ["rust/tdd/workflow-core/tests/encryption.rs"],
+      "notes": "All seven TypeScript encryption cases are translated. Coverage preserves exact 32-byte keys, AES-GCM nonce-plus-tag overhead, round trips, short-envelope rejection, authenticated tamper/wrong-key failure, OperationError cause capture, operation/byteLength context, omission of nonce bytes from formatPrefix, and encrypt-usage failures. WF-RUST-021 records the authenticated-encryption and error-classification boundary. Final GREEN must use the production Rust cryptographic provider and random nonces; deterministic or home-grown crypto implementations are prohibited."
+    },
+    {
+      "typescript": "packages/core/src/log-format.test.ts",
+      "status": "red",
+      "rustTests": ["rust/tdd/workflow-core/tests/log_format.rs"],
+      "notes": "All eight TypeScript formatting cases are translated with exact plain-text output. Coverage preserves framing, known metadata rows, parsed machine names, framework-frame collapsing, sdk/user attribution, duplicate message suppression, malformed-name fallback, sorted unknown fields, and retry attempt summaries. Final GREEN must keep structured metadata separate from untrusted message text and must not execute terminal-control sequences from metadata values."
+    },
+    {
+      "typescript": "packages/core/src/module-scope-state.test.ts",
+      "status": "red",
+      "rustTests": ["rust/tdd/workflow-core/tests/module_scope_state.rs"],
+      "notes": "The repository scan assertion is translated. Final GREEN must run the actual Rust lint over workflow-core and report no unguarded mutable module-scope state; a hard-coded empty vector is insufficient."
+    },
+    {
+      "typescript": "packages/core/src/runtime-import.test.ts",
+      "status": "red",
+      "rustTests": ["rust/tdd/workflow-core/tests/runtime_import.rs"],
+      "notes": "The runtime-entrypoint import assertion is translated. Final GREEN must prove module evaluation does not load Vercel-only or other platform adapter code, preserving portability and preventing environment-specific initialization side effects."
+    },
+    {
+      "typescript": "packages/core/src/runtime-world-singleton.test.ts",
+      "status": "red",
+      "rustTests": ["rust/tdd/workflow-core/tests/runtime_world_singleton.rs"],
+      "notes": "The World initialization assertion is translated. Coverage requires a 204 route response, the same World identity from getWorld after initialization, and exactly one local World construction. Final GREEN must exercise the real Rust singleton and concurrent-safe route initialization rather than fixture identity strings."
+    }
+  ]
+}

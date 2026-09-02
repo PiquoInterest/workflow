@@ -1,0 +1,309 @@
+Contact: https://github.com/PiquoInterest/workflow/security/advisories/new
+Expires: 2027-08-31T00:00:00Z
+Preferred-Languages: en
+Canonical: https://github.com/PiquoInterest/workflow/blob/main/security.txt
+Policy: https://github.com/PiquoInterest/workflow/blob/main/docs/rust-port/SECURITY.md
+Acknowledgments: https://github.com/PiquoInterest/workflow/blob/main/docs/rust-port/TYPESCRIPT_LOGIC_AND_SECURITY_FIXES.md
+
+# Rust migration security record
+#
+# Security-relevant TypeScript behavior discovered during the Rust migration is
+# recorded in docs/rust-port/TYPESCRIPT_LOGIC_AND_SECURITY_FIXES.md. Every item
+# must identify the original behavior, impact, replacement behavior, regression
+# tests, and repository-wide retirement condition.
+#
+# WF-RUST-005: TypeScript StepSchema models lifecycle-dependent fields as
+# independently optional. It therefore accepts contradictory records such as a
+# pending step with terminal output, a running step with completedAt, or a
+# failed step with output and no error. The TypeScript characterization test
+# keeps those unsafe acceptances reproducible. Rust uses a status-discriminated
+# StepState enum and rejects forbidden, missing, and null-smuggled fields before
+# a record reaches a Rust World. Validation errors never reflect payload data.
+#
+# WF-RUST-011: Hook resume protocol revisions previously accepted zero,
+# negative, fractional, and out-of-range JavaScript numbers. A value such as
+# 1.5 could satisfy a >= 1 capability gate despite having no defined protocol
+# contract. TypeScript and Rust now require positive unsigned 32-bit integers,
+# and the Rust boundary normalizes integral JSON forms to exact integer output.
+# Direct Rust, TypeScript-oracle, and differential tests cover the accepted and
+# rejected boundaries.
+#
+# WF-RUST-012: TypeScript StepSchema accepts negative, fractional, and
+# above-safe-integer attempt counters because the field uses unconstrained
+# z.number(). Steps are created at attempt zero and incremented on each start,
+# so Rust preserves zero while requiring every persisted attempt to be an exact
+# unsigned JavaScript-safe integer. This prevents retry accounting from moving
+# backwards, representing partial attempts, or losing identity above 2^53 - 1.
+# Direct Rust, TypeScript characterization, and differential tests cover the
+# accepted and rejected boundaries without reflecting rejected values.
+#
+# WF-RUST-013 (TDD RED): AI provider stream chunks are an untrusted protocol
+# boundary. Malformed tool-call JSON must be preserved as raw input instead of
+# crashing the workflow or silently becoming a different argument object, and
+# partial response-metadata chunks must merge without erasing earlier identity
+# fields. The complete 30-declaration TypeScript suite is translated at
+# rust/tdd/workflow-ai/tests/do_stream_step.rs. Rust implementation remains
+# intentionally RED until those tests can pass against the real stream state
+# machine; a panic marker is not treated as a security fix.
+#
+# WF-RUST-014 (TDD RED): AI telemetry can contain prompts, model output,
+# reasoning, tool arguments, and tool results. The Rust port must preserve the
+# TypeScript privacy controls: recordInputs=false omits prompt material and
+# recordOutputs=false omits response text, tool-call arguments, and tool results
+# while retaining non-sensitive usage and finish metadata. All nine current
+# TypeScript telemetry assertions are translated at
+# rust/tdd/workflow-ai/tests/telemetry.rs. This remains an implementation gate,
+# not a closed security finding, until the actual Rust span path passes it.
+#
+# WF-RUST-015 (TDD RED): Provider metadata carried by tool calls and reasoning
+# is execution-relevant state. Gemini thought signatures, OpenAI item IDs, and
+# other provider fields must survive the assistant-message reconstruction used
+# for the next model turn. Dropping or cross-assigning this metadata can break
+# provider validation or associate opaque authorization/state tokens with the
+# wrong parallel call. All 15 current iterator assertions, including malformed
+# input retention and per-call metadata separation, are translated at
+# rust/tdd/workflow-ai/tests/stream_text_iterator.rs. Closure requires the real
+# Rust iterator and prompt builder to pass; the expected panic is not a fix.
+#
+# WF-RUST-016 (TDD RED): Chat reconnection consumes partially overlapping,
+# attacker-influenced stream windows. Negative tail offsets must resolve with
+# checked arithmetic and safely fall back when the server header is absent or
+# invalid. Orphan deltas and outputs must not reach the UI consumer without a
+# matching start/full-input chunk, while self-contained tool calls remain
+# valid. Abort signals must survive send-to-reconnect transitions, and error
+# formatting must never collapse structured failures to "[object Object]".
+# All 23 current TypeScript transport assertions are translated at
+# rust/tdd/workflow-ai/tests/workflow_chat_transport.rs. The finding remains an
+# implementation gate until the real Rust transport passes those tests.
+#
+# WF-RUST-017 (TDD RED): Tool approval is an authorization boundary. A tool
+# marked needsApproval, including a dynamic predicate, must receive the
+# validated tool input and pause before execution; no tool result may exist
+# until approval is supplied. Lifecycle and telemetry listeners must run in the
+# defined order, but a failing telemetry integration must not abort an otherwise
+# valid workflow stream. Abort/timeout signals and detailed token accounting
+# must also survive the compatibility layer. The complete DurableAgent
+# compatibility suite is translated at
+# rust/tdd/workflow-ai/tests/durable_agent_compat.rs. The full runtime
+# characterization at rust/tdd/workflow-core/tests/e2e_agent/gaps.rs proves the
+# current TypeScript E2E executes riskyTool without approval, while a separate
+# Rust-only target requires a pending call, zero results, and no execution.
+# Full analysis and closure requirements are recorded in
+# docs/rust-port/findings/WF-RUST-017.md. Closure requires the real Rust agent
+# loop, callbacks, approval state machine, storage, resume, and replay paths.
+#
+# WF-RUST-018 (TDD RED): Tool execution origin and validated input are trust
+# boundaries. Provider-executed tools must never invoke a same-named local
+# implementation. Schema-invalid local input must not execute; it is returned
+# to the model as an error-text result so a corrected retry can execute exactly
+# once. Client-only tools pause the loop without fabricating a result. Context,
+# repaired inputs, provider results, and parallel calls must remain associated
+# with the correct call ID. UI collection must stay independent of finish-chunk
+# emission so sendFinish=false cannot leak or synthesize terminal output. All
+# 48 current TypeScript assertions are translated under
+# rust/tdd/workflow-ai/tests/durable_agent/. Closure requires the real Rust
+# agent loop, tool dispatcher, repair path, callbacks, and UI stream writer.
+#
+# WF-RUST-019 (TDD RED): Abort-reason hydration is part of the cancellation
+# boundary. Before the TypeScript fix, scheduleWhenIdle could serialize a later
+# step's signal as aborted=false while asynchronous reason hydration was still
+# in flight, allowing work to continue after cancellation. The Rust test at
+# rust/tdd/workflow-core/tests/abort_replay_ordering.rs requires the abort
+# delivery to hold the idle gate, preserve the reason, and release its pending
+# counter on every exit. Full analysis is in
+# docs/rust-port/findings/WF-RUST-019.md; the finding remains open for Rust until
+# the real event consumer and hydration path pass it.
+#
+# WF-RUST-020 (TDD RED): Permanently missing event payloads are corruption, not
+# transient transport failures. Retrying them can turn one missing object into
+# sustained read amplification and queue starvation; one captured run made
+# 12,932 reads in 26 minutes. The Rust classification test requires a typed
+# CorruptedEventLog error to be terminal while retaining retries for 429, 5xx,
+# TRANSPORT, and TIMEOUT. Full analysis is in
+# docs/rust-port/findings/WF-RUST-020.md. Closure requires the production stream
+# parser and redelivery policy to consume the typed classification.
+#
+# WF-RUST-021 (TDD RED): Authenticated workflow encryption requires exact
+# 32-byte keys, fresh 12-byte nonces, a 16-byte GCM tag, and typed failures for
+# truncation, tampering, wrong keys, and invalid key usage. The Rust suite at
+# rust/tdd/workflow-core/tests/encryption.rs also requires low-level diagnostics
+# to avoid treating nonce bytes as a serialization format prefix. Full analysis
+# is in docs/rust-port/findings/WF-RUST-021.md. Closure requires the production
+# Rust serialization path and cross-language encrypted fixtures.
+#
+# WF-RUST-022 (TDD RED): Context errors are persisted and logged state. Internal
+# functionName fields must not be enumerable, stored messages and stacks must
+# contain no ANSI control bytes, and lazy terminal rendering must not duplicate
+# framed details. All four context violations remain fatal because replay
+# cannot repair a wrong calling context. The Rust suite at
+# rust/tdd/workflow-core/tests/context_errors.rs also requires caller-directed
+# stack capture. Full analysis is in
+# docs/rust-port/findings/WF-RUST-022.md. Closure requires production error,
+# serialization, rendering, and fatal-classification paths.
+#
+# WF-RUST-023 (TDD RED): Concurrent replays of different dense event-log
+# prefixes must never bind one correlation ID to different entities. The
+# original arrival-order control rebinds a finalize step to a wait and can turn
+# successful work into durable CORRUPTED_EVENT_LOG failure. The Rust suite at
+# rust/tdd/workflow-core/tests/log_order_draws.rs requires monotonic shared
+# bindings across extension, every dense prefix, and repeated evaluation. Full
+# analysis is in docs/rust-port/findings/WF-RUST-023.md. Closure requires the
+# production scheduler, allocator, and event consumer.
+#
+# WF-RUST-024 (TDD RED): Framed byte-stream length prefixes are untrusted. The
+# Rust decoder must reject producer chunks and advertised frames above
+# 100,000,000 bytes before allocating a payload-sized buffer, reject partial
+# headers and payloads at EOF, and preserve exact boundaries across split and
+# coalesced reads. All 17 TypeScript framing and stream-reference assertions are
+# translated at rust/tdd/workflow-core/tests/byte_stream_framing.rs. Full
+# analysis is in docs/rust-port/findings/WF-RUST-024.md. Closure requires the
+# production incremental parser, serializer, World stream path, and hydration.
+#
+# WF-RUST-025 (TDD RED): A group-commit stream sink can acknowledge buffer entry
+# before accepted bytes are durable. Neither success nor producer/sink failure
+# may settle the invocation before the sink drain barrier has committed the
+# accepted prefix. All 16 TypeScript polling, error, close, ordering, and drain
+# assertions are translated at
+# rust/tdd/workflow-core/tests/flushable_stream.rs. Full analysis is in
+# docs/rust-port/findings/WF-RUST-025.md. Closure requires the production async
+# pipe, World sink abstraction, drain barrier, and invocation completion path.
+#
+# WF-RUST-026 (TDD RED): Delivery barriers parked behind unclaimed payloads must
+# retire lowest-log-position first before end-of-log suspension, and a rejected
+# internal promise queue must not permanently kill the safety-net dispenser.
+# Otherwise runs can wedge or later correlation draws can become timing-based
+# and corrupt deterministic replay. All three production-shape TypeScript cases
+# are translated at
+# rust/tdd/workflow-core/tests/delivery_barrier-dispenser.rs. Full analysis is
+# in docs/rust-port/findings/WF-RUST-026.md. Closure requires the real event
+# consumer, barrier registry, scheduler, and correlation allocator.
+#
+# WF-RUST-027 (TDD RED): A step-initiated abort uses a stream for real-time
+# notification and a hook receipt for durable replay. The hook receipt must use
+# the durable resume entry point and must be drained as pre-completion work
+# before step_completed is written; merely publishing a lazy resume reopens the
+# stale-signal race and can execute later work after cancellation. All 19
+# executable TypeScript cases are translated at
+# rust/tdd/workflow-core/tests/abort_controller_step.rs. Full analysis is in
+# docs/rust-port/findings/WF-RUST-027.md. Closure requires the production
+# serializer, step context, stream bridge, durable hook writer, and executor.
+#
+# WF-RUST-028 (TDD RED): Abort state is dual-backed by a real-time stream and a
+# durable hook. Either channel may fail independently, so serialization, local
+# state, bound identities, replay facts, listener timing, idempotency, and
+# suspension output must follow an explicit convergence contract. All 22
+# executable TypeScript cases are translated at
+# rust/tdd/workflow-core/tests/abort_consistency.rs. Full analysis is in
+# docs/rust-port/findings/WF-RUST-028.md. Closure requires the production abort
+# state machine, transports, event consumer, replay scheduler, and suspension
+# collector.
+#
+# WF-RUST-090 (TDD RED): Benchmark trigger responses and replay metadata are
+# remote measurement inputs. Rust must reject malformed clocks and incomplete
+# step/chunk sets, retain cadence semantic hashes, run scenarios sequentially,
+# and bound retries so a remote target cannot forge a baseline or exhaust CI.
+# Full analysis is in docs/rust-port/findings/WF-RUST-090.md.
+#
+# WF-RUST-091 (TDD RED): A missed unlink can leave generated step registrations
+# importing a deleted file, poisoning a shared dev route with persistent 500s.
+# Rust must bound watcher and prewarm work, wait for rediscovery convergence,
+# and restore only still-referenced files on cleanup failure. Full analysis is
+# in docs/rust-port/findings/WF-RUST-091.md.
+#
+# WF-RUST-092 (TDD RED): Missing manifests may be optional, but malformed JSON,
+# permission errors, and other read failures are not absence. Rust preserves the
+# ENOENT skip while failing closed on corrupt or unreadable generated artifacts.
+# Full analysis is in docs/rust-port/findings/WF-RUST-092.md.
+#
+# WF-RUST-093 (TDD RED): Workbench builds need direct argv execution, hard
+# process-tree deadlines, a shared bounded stdout/stderr budget, signal-aware
+# diagnostics, and cleanup on every exit. This prevents descendants and output
+# amplification from outliving or exhausting CI. Full analysis is in
+# docs/rust-port/findings/WF-RUST-093.md.
+#
+# WF-RUST-094 (TDD RED): Route isolation is invalid if result markers can be
+# spoofed or NODE_OPTIONS/NODE_PATH can preload global world state. Rust accepts
+# exactly one marker-prefix record in a sanitized bounded subprocess. Full
+# analysis is in docs/rust-port/findings/WF-RUST-094.md.
+#
+# WF-RUST-095 (TDD RED): Warmup total deadlines must include probe creation,
+# pickup polling, and cancellation. Rust performs no status read once the
+# checked deadline is exhausted and bounds cancellation of stalled probes.
+# Full analysis is in docs/rust-port/findings/WF-RUST-095.md.
+#
+# WF-RUST-096: Local deployment classification must parse the URL authority
+# and compare the hostname exactly. Whole-URL substring matching lets remote
+# lookalikes, paths, or query text select local-only behavior. Full analysis is
+# in docs/rust-port/findings/WF-RUST-096.md.
+#
+# WF-RUST-097: Producer capability negotiation fails closed. Missing, malformed,
+# overlong, or numerically inexact producer versions receive only the baseline
+# devl format and raw byte streams. Rust uses real semantic-version ordering for
+# the encr, framed-stream, gzip/zstd, and encp cutoffs. This prevents a modern
+# writer from sending a representation that a legacy consumer cannot decode.
+# Full analysis is in docs/rust-port/findings/WF-RUST-097.md.
+#
+# WF-RUST-098: Retry accounting separates real lifecycle attempts from racing
+# duplicate step_started records. Rust stores internal counts in a checked
+# integer newtype, confines JavaScript numbers to the compatibility boundary,
+# and preserves ownedBy plus bare-plus-largest-owner counting. This prevents
+# concurrent replays from falsely exhausting healthy work while retaining a
+# hard ceiling for genuine timeout retries. Full analysis is in
+# docs/rust-port/findings/WF-RUST-098.md.
+#
+# WF-RUST-099: Active TypeScript and production Rust replay caches bind each
+# workflow/event key to an immutable copy of its exact bytes. Reusing a logical
+# key with different bytes is a terminal integrity conflict; the conflicting
+# payload is never prepared, in-flight waiters reject, and fixed diagnostics do
+# not expose run IDs, event IDs, payload bytes, or key material. Cache entries
+# are published before extensible preparation code runs, and same-key re-entry
+# fails without duplicate work or recursion. TypeScript and Rust regression
+# targets cover caller/preparer mutation, typed-array method override, in-flight
+# conflicts, terminal retention, and synchronous re-entry. Full analysis is in
+# docs/rust-port/findings/WF-RUST-099.md.
+
+#
+# WF-RUST-100: Workflow-data discovery previously treated any accessible
+# filesystem object as a directory and used raw string suffix checks. A regular
+# file at .workflow-data, or a directory such as not.workflow-data, could be
+# selected as a trusted local storage root. TypeScript now requires an actual
+# directory and exact path components. Rust mirrors that contract with
+# metadata().is_dir(), Path::ends_with(), lexical normalization, and injected
+# cwd/home context. Both TypeScript suites, the 23-case translated Rust suite,
+# and five Rust security regressions are required to stay green. Full analysis
+# is in docs/rust-port/findings/WF-RUST-100.md.
+
+#
+# WF-RUST-101: Machine-name formatters previously emitted parsed and legacy
+# names verbatim into log-oriented strings. CR/LF, ANSI and other C0/C1
+# controls, and Unicode line separators could forge log lines or alter terminal
+# rendering. TypeScript and Rust now escape these characters while preserving
+# ordinary output. The vulnerable TypeScript source is proved RED, and 35
+# translated Rust compatibility tests plus dedicated TypeScript/Rust security
+# regressions are required to stay green. Full analysis is in
+# docs/rust-port/findings/WF-RUST-101.md.
+
+#
+# WF-RUST-102: TypeScript workflow debug gating uses whole-string substring
+# matching, so unrelated names such as myworkflow:* and explicitly negated
+# selectors such as app:*,-workflow:* still forward diagnostic arguments. The
+# TypeScript characterization keeps that privacy defect reproducible. Rust
+# parses comma/whitespace-delimited selector tokens, gives -* and -workflow:*
+# precedence, rejects larger substring lookalikes, returns before touching the
+# sink, and redacts Debug output for diagnostic values. The expected-RED proof
+# and permanent GREEN run 33558964834 cover six compatibility, two translated
+# security, and three direct production security tests. Full analysis is in
+# docs/rust-port/findings/WF-RUST-102.md.
+
+#
+# WF-RUST-103: TypeScript AI error normalization delegates arbitrary
+# non-nullish values to JSON.stringify. That executes an object-controlled
+# toJSON hook and throws for cyclic objects and BigInts while another failure is
+# already being handled. The TypeScript characterization keeps all three legacy
+# behaviors reproducible. Rust preserves ordinary JSON compatibility but treats
+# callable fields as inert data, tracks shared-object identity, bounds recursive
+# traversal, canonicalizes BigInts, and returns fixed placeholders for cycles,
+# released references, excessive depth, and invalid BigInt text. Expected-RED
+# run 33583543050 and permanent GREEN run 33584024158 cover the TypeScript
+# oracles, translated Rust suites, direct production regressions, Rustfmt, and
+# Clippy. Full analysis is in docs/rust-port/findings/WF-RUST-103.md.

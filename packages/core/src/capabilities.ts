@@ -10,7 +10,8 @@
  * ## Adding a new format
  *
  * When a new serialization format is introduced:
- * 1. Add the format constant to `SerializationFormat` in `serialization.ts`
+ * 1. Add the format constant to `SerializationFormat` in
+ *    `serialization/types.ts`
  * 2. Add an entry to `FORMAT_VERSION_TABLE` below with the minimum
  *    `@workflow/core` version that supports it
  * 3. The `getRunCapabilities()` function will automatically include it
@@ -46,9 +47,9 @@
 
 import semver from 'semver';
 import {
+  type FormatPrefix,
   SerializationFormat,
-  type SerializationFormatType,
-} from './serialization.js';
+} from './serialization/types.js';
 
 /**
  * Capabilities of a workflow run based on its `@workflow/core` version.
@@ -59,7 +60,7 @@ export interface RunCapabilities {
    * Use `supportedFormats.has(SerializationFormat.ENCRYPTED)` to check
    * if encryption is supported, etc.
    */
-  supportedFormats: ReadonlySet<SerializationFormatType>;
+  supportedFormats: ReadonlySet<FormatPrefix>;
 
   /**
    * Whether the target run can decode wire-framed byte streams. When true,
@@ -78,7 +79,7 @@ export interface RunCapabilities {
  * assumed to be supported by all specVersion 2 runs (e.g., `devl`).
  */
 const FORMAT_VERSION_TABLE: ReadonlyArray<{
-  format: SerializationFormatType;
+  format: FormatPrefix;
   minVersion: string;
 }> = [
   { format: SerializationFormat.ENCRYPTED, minVersion: '4.2.0-beta.64' },
@@ -128,7 +129,7 @@ const CAPABILITY_VERSION_TABLE: ReadonlyArray<{
  * `@workflow/core` version. These are the baseline formats that were present
  * from the start of the specVersion 2 protocol.
  */
-const BASELINE_FORMATS: ReadonlySet<SerializationFormatType> = new Set([
+const BASELINE_FORMATS: ReadonlySet<FormatPrefix> = new Set([
   SerializationFormat.DEVALUE_V1,
 ]);
 
@@ -151,7 +152,7 @@ export function getRunCapabilities(
     };
   }
 
-  const formats = new Set<SerializationFormatType>(BASELINE_FORMATS);
+  const formats = new Set<FormatPrefix>(BASELINE_FORMATS);
 
   for (const { format, minVersion } of FORMAT_VERSION_TABLE) {
     if (semver.gte(workflowCoreVersion, minVersion)) {

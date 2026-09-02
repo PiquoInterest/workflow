@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "entries": [
+    {
+      "typescript": "packages/ai/src/agent/telemetry.test.ts",
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-ai/tests/telemetry.rs"
+      ],
+      "notes": "All nine current telemetry assertions are translated: response attributes, tool-call attributes, recordInputs and recordOutputs privacy controls, reasoning/cache accounting, tool result capture, tool output suppression, span-context propagation, and iterator option forwarding. Final GREEN must exercise the actual Rust span implementation and binding, not a fabricated observation."
+    }
+  ]
+}

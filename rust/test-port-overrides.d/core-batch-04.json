@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "entries": [
+    {
+      "typescript": "packages/core/src/capabilities.test.ts",
+      "status": "green",
+      "rustTests": [
+        "crates/workflow-core/tests/capabilities.rs",
+        "rust/conformance/capabilities-parity.test.ts"
+      ],
+      "notes": "All 11 parameterized TypeScript declarations remain covered as 27 direct Rust cutoff cases, with additional compression, sealed-format, normalization, overlength, leading-zero, and JavaScript-safe-integer boundaries. Production Rust uses semver 1.0.26 for prerelease ordering, preserves the exact devl/encr/gzip/zstd/encp cutoffs, and fails closed to baseline capabilities for absent or malformed producer metadata. The differential suite executes the TypeScript oracle and Rust binary with the same values. Runtime producer adoption remains tracked separately."
+    },
+    {
+      "typescript": "packages/core/src/attribute-changes.test.ts",
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-core/tests/attribute_changes.rs"
+      ],
+      "notes": "All 11 TypeScript declarations are translated as 14 executable Rust cases after expanding non-object inputs. Coverage preserves insertion order, undefined-to-null deletion, empty records, plain-object rejection with actionable type names, JavaScript UTF-16 key limits including astral Unicode boundaries, UTF-8 value byte limits, reserved-prefix opt-in, and exact 64-attribute batch boundaries. Security-relevant cases require malformed runtime values to fail before event creation and prevent Unicode or multibyte inputs from bypassing storage limits. Final GREEN must share the real Rust World validator and wrap validation failures in the Rust FatalError boundary rather than duplicating constants or messages."
+    },
+    {
+      "typescript": "packages/core/src/abort-replay-ordering.test.ts",
+      "status": "red",
+      "rustTests": [
+        "rust/tdd/workflow-core/tests/abort_replay_ordering.rs"
+      ],
+      "notes": "Both deterministic TypeScript regression tests are translated with a delayed abort-reason hydration boundary. Coverage requires the in-flight abort to increment pendingDeliveries, keeps scheduleWhenIdle blocked until the reason is hydrated and _setAborted lands, preserves the reason, and releases the counter to zero. WF-RUST-019 records the security consequence: serializing a downstream signal as aborted=false can let work continue after cancellation. Final GREEN must exercise the real Rust event consumer, async payload hydration, idle gate, signal state, and decrement-on-error path; returning a precomputed observation is insufficient."
+    }
+  ]
+}

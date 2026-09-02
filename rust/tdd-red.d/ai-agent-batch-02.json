@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "cases": [
+    {
+      "typescript": "packages/ai/src/agent/do-stream-step.test.ts",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--manifest-path",
+        "rust/tdd/workflow-ai/Cargo.toml",
+        "--test",
+        "do_stream_step"
+      ],
+      "failureMarker": "TDD RED: packages/ai/src/agent/do-stream-step.test.ts implementation pending"
+    },
+    {
+      "typescript": "packages/ai/src/agent/tools-to-model-tools.test.ts",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--manifest-path",
+        "rust/tdd/workflow-ai/Cargo.toml",
+        "--test",
+        "tools_to_model_tools"
+      ],
+      "failureMarker": "TDD RED: packages/ai/src/agent/tools-to-model-tools.test.ts implementation pending"
+    }
+  ]
+}

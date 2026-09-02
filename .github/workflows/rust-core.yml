@@ -1,0 +1,140 @@
+name: Rust core parity
+
+on:
+  push:
+    branches:
+      - pro/rust-repository-port
+    paths:
+      - 'crates/workflow-core/**'
+      - 'crates/workflow-world/src/attributes.rs'
+      - 'crates/workflow-world/src/error.rs'
+      - 'packages/core/src/attribute-changes.ts'
+      - 'packages/core/src/attribute-changes.test.ts'
+      - 'packages/core/src/capabilities.ts'
+      - 'packages/core/src/capabilities.test.ts'
+      - 'packages/core/src/serialization/types.ts'
+      - 'packages/core/src/replay-payload-cache.ts'
+      - 'packages/core/src/replay-payload-cache.test.ts'
+      - 'packages/core/src/replay-payload-cache-security.test.ts'
+      - 'packages/core/src/runtime/count-step-started-events.ts'
+      - 'packages/core/src/runtime/count-step-started-events.test.ts'
+      - 'packages/world/src/attributes-validation.ts'
+      - 'rust/conformance/attribute-changes-parity.test.ts'
+      - 'rust/conformance/capabilities-parity.test.ts'
+      - 'rust/conformance/count-step-started-events-parity.test.ts'
+      - 'rust/test-port-manifest.json'
+      - 'rust/test-port-overrides.d/core-batch-04.json'
+      - 'rust/test-port-overrides.d/core-count-step-started-events.json'
+      - 'rust/test-port-overrides.d/core-replay-payload-cache.json'
+      - 'rust/test-port-overrides.d/core-replay-payload-cache-security.json'
+      - 'rust/tdd-red.d/core-batch-04.json'
+      - 'rust/tdd-red.d/core-count-step-started-events.json'
+      - 'docs/rust-port/**'
+      - 'security.txt'
+      - '.github/workflows/rust-core.yml'
+  pull_request:
+    paths:
+      - 'crates/workflow-core/**'
+      - 'crates/workflow-world/src/attributes.rs'
+      - 'crates/workflow-world/src/error.rs'
+      - 'packages/core/src/attribute-changes.ts'
+      - 'packages/core/src/attribute-changes.test.ts'
+      - 'packages/core/src/capabilities.ts'
+      - 'packages/core/src/capabilities.test.ts'
+      - 'packages/core/src/serialization/types.ts'
+      - 'packages/core/src/replay-payload-cache.ts'
+      - 'packages/core/src/replay-payload-cache.test.ts'
+      - 'packages/core/src/replay-payload-cache-security.test.ts'
+      - 'packages/core/src/runtime/count-step-started-events.ts'
+      - 'packages/core/src/runtime/count-step-started-events.test.ts'
+      - 'packages/world/src/attributes-validation.ts'
+      - 'rust/conformance/attribute-changes-parity.test.ts'
+      - 'rust/conformance/capabilities-parity.test.ts'
+      - 'rust/conformance/count-step-started-events-parity.test.ts'
+      - 'rust/test-port-manifest.json'
+      - 'rust/test-port-overrides.d/core-batch-04.json'
+      - 'rust/test-port-overrides.d/core-count-step-started-events.json'
+      - 'rust/test-port-overrides.d/core-replay-payload-cache.json'
+      - 'rust/test-port-overrides.d/core-replay-payload-cache-security.json'
+      - 'rust/tdd-red.d/core-batch-04.json'
+      - 'rust/tdd-red.d/core-count-step-started-events.json'
+      - 'docs/rust-port/**'
+      - 'security.txt'
+      - '.github/workflows/rust-core.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  core-contracts:
+    name: Capability, attribute, replay-cache, and retry-accounting parity
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Install Rust 1.87
+        uses: actions-rust-lang/setup-rust-toolchain@46268bd060767258de96ed93c1251119784f2ab6 # v1.16.1
+        with:
+          toolchain: 1.87.0
+          components: clippy,rustfmt
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v5.0.0
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 22.x
+          cache: pnpm
+
+      - name: Install JavaScript dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build TypeScript oracle dependency graph
+        run: pnpm --filter '@workflow/core...' build
+
+      - name: Check Rust formatting
+        run: cargo fmt --manifest-path crates/workflow-core/Cargo.toml -- --check
+
+      - name: Prove production Rust attribute normalization tests are green
+        run: cargo test --locked --manifest-path crates/workflow-core/Cargo.toml --test attribute_changes
+
+      - name: Prove production Rust replay-cache behavior tests are green
+        run: cargo test --locked --manifest-path crates/workflow-core/Cargo.toml --test replay_payload_cache
+
+      - name: Prove production Rust replay-cache security tests are green
+        run: cargo test --locked --manifest-path crates/workflow-core/Cargo.toml --test replay_payload_cache_security
+
+      - name: Compile and test Rust core contracts
+        run: cargo test --locked --manifest-path crates/workflow-core/Cargo.toml --all-targets
+
+      - name: Lint Rust core contracts
+        run: cargo clippy --locked --manifest-path crates/workflow-core/Cargo.toml --all-targets -- -D warnings
+
+      - name: Run TypeScript oracles
+        run: |
+          pnpm exec vitest run \
+            packages/core/src/attribute-changes.test.ts \
+            packages/core/src/capabilities.test.ts \
+            packages/core/src/replay-payload-cache.test.ts \
+            packages/core/src/replay-payload-cache-security.test.ts \
+            packages/core/src/runtime/count-step-started-events.test.ts
+
+      - name: Build Rust differential runners
+        run: cargo build --locked --manifest-path crates/workflow-core/Cargo.toml --examples
+
+      - name: Compare TypeScript and Rust behavior
+        run: |
+          WORKFLOW_RUST_ATTRIBUTE_CHANGES_CONFORMANCE_BIN=crates/workflow-core/target/debug/examples/attribute_changes_conformance \
+            pnpm exec vitest run rust/conformance/attribute-changes-parity.test.ts
+          WORKFLOW_RUST_CAPABILITIES_CONFORMANCE_BIN=crates/workflow-core/target/debug/examples/capabilities_conformance \
+            pnpm exec vitest run rust/conformance/capabilities-parity.test.ts
+          WORKFLOW_RUST_STEP_ATTEMPT_CONFORMANCE_BIN=crates/workflow-core/target/debug/examples/count_step_started_events_conformance \
+            pnpm exec vitest run rust/conformance/count-step-started-events-parity.test.ts

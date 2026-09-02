@@ -95,8 +95,9 @@ export function parseClassName(name: string) {
  * name and the source module specifier without the internal `//` syntax.
  *
  * Falls back to the raw name if parsing fails (e.g. older name formats or
- * user-provided strings we don't recognize) so logs never silently drop
- * information.
+ * user-provided strings we don't recognize). Control and line-separator
+ * characters are escaped in both parsed and fallback output so one logical
+ * name cannot forge additional log lines or terminal control sequences.
  */
 export function formatStepName(name: string): string {
   return formatParsedName(parseStepName(name), name);
@@ -155,6 +156,36 @@ function shortNameFromSanitized(tag: string, name: string): string | null {
   return shortName || null;
 }
 
+function isSingleLineControlCodePoint(codePoint: number): boolean {
+  return (
+    codePoint <= 0x1f ||
+    (codePoint >= 0x7f && codePoint <= 0x9f) ||
+    codePoint === 0x2028 ||
+    codePoint === 0x2029
+  );
+}
+
+function escapeSingleLine(value: string): string {
+  const escaped: string[] = [];
+  for (const character of value) {
+    if (character === '\n') {
+      escaped.push('\\n');
+    } else if (character === '\r') {
+      escaped.push('\\r');
+    } else if (character === '\t') {
+      escaped.push('\\t');
+    } else {
+      const codePoint = character.codePointAt(0);
+      if (codePoint !== undefined && isSingleLineControlCodePoint(codePoint)) {
+        escaped.push(`\\u${codePoint.toString(16).padStart(4, '0')}`);
+      } else {
+        escaped.push(character);
+      }
+    }
+  }
+  return escaped.join('');
+}
+
 function formatParsedName(
   parsed: {
     shortName: string;
@@ -163,6 +194,8 @@ function formatParsedName(
   } | null,
   fallback: string
 ): string {
-  if (!parsed) return fallback;
-  return `${parsed.shortName} (${parsed.moduleSpecifier})`;
+  if (!parsed) return escapeSingleLine(fallback);
+  return `${escapeSingleLine(parsed.shortName)} (${escapeSingleLine(
+    parsed.moduleSpecifier
+  )})`;
 }

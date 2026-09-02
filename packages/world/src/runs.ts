@@ -283,21 +283,100 @@ export type BulkCancelWorkflowRunResult = z.infer<
   typeof BulkCancelWorkflowRunResultSchema
 >;
 
+const BulkCancelWorkflowRunsSummarySchema = z.object({
+  requested: z.number().int().nonnegative(),
+  cancelled: z.number().int().nonnegative(),
+  alreadyCancelled: z.number().int().nonnegative(),
+  notCancellable: z.number().int().nonnegative(),
+  notFound: z.number().int().nonnegative(),
+  failed: z.number().int().nonnegative(),
+});
+
+type BulkCancelWorkflowRunsSummary = z.infer<
+  typeof BulkCancelWorkflowRunsSummarySchema
+>;
+
+const BULK_CANCEL_SUMMARY_KEYS = [
+  'requested',
+  'cancelled',
+  'alreadyCancelled',
+  'notCancellable',
+  'notFound',
+  'failed',
+] as const;
+
+function summarizeBulkCancelWorkflowRunResults(
+  results: readonly BulkCancelWorkflowRunResult[]
+): BulkCancelWorkflowRunsSummary {
+  const summary: BulkCancelWorkflowRunsSummary = {
+    requested: results.length,
+    cancelled: 0,
+    alreadyCancelled: 0,
+    notCancellable: 0,
+    notFound: 0,
+    failed: 0,
+  };
+
+  for (const result of results) {
+    switch (result.outcome) {
+      case 'cancelled':
+        summary.cancelled += 1;
+        break;
+      case 'already_cancelled':
+        summary.alreadyCancelled += 1;
+        break;
+      case 'not_cancellable':
+        summary.notCancellable += 1;
+        break;
+      case 'not_found':
+        summary.notFound += 1;
+        break;
+      case 'failed':
+        summary.failed += 1;
+        break;
+    }
+  }
+
+  return summary;
+}
+
 /**
  * Aggregate result of a bulk cancellation. `results` preserves the order of
  * the requested `runIds`; `summary` counts each outcome.
  */
-export const BulkCancelWorkflowRunsResultSchema = z.object({
-  summary: z.object({
-    requested: z.number(),
-    cancelled: z.number(),
-    alreadyCancelled: z.number(),
-    notCancellable: z.number(),
-    notFound: z.number(),
-    failed: z.number(),
-  }),
-  results: z.array(BulkCancelWorkflowRunResultSchema),
-});
+export const BulkCancelWorkflowRunsResultSchema = z
+  .object({
+    summary: BulkCancelWorkflowRunsSummarySchema,
+    results: z
+      .array(BulkCancelWorkflowRunResultSchema)
+      .min(1)
+      .max(BULK_CANCEL_MAX_RUN_IDS),
+  })
+  .superRefine((value, context) => {
+    const runIds = new Set<string>();
+    for (const result of value.results) {
+      if (runIds.has(result.runId)) {
+        context.addIssue({
+          code: 'custom',
+          path: ['results'],
+          message: 'results must not contain duplicate run IDs',
+        });
+        break;
+      }
+      runIds.add(result.runId);
+    }
+
+    const expected = summarizeBulkCancelWorkflowRunResults(value.results);
+    for (const key of BULK_CANCEL_SUMMARY_KEYS) {
+      if (value.summary[key] !== expected[key]) {
+        context.addIssue({
+          code: 'custom',
+          path: ['summary', key],
+          message: 'summary must exactly match the per-run results',
+        });
+      }
+    }
+  });
 export type BulkCancelWorkflowRunsResult = z.infer<
   typeof BulkCancelWorkflowRunsResultSchema
 >;

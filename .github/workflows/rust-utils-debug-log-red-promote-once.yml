@@ -1,0 +1,133 @@
+name: Rust utilities target and re-export promote once
+
+on:
+  push:
+    branches:
+      - pro/rust-repository-port
+    paths:
+      - '.github/workflows/rust-utils-debug-log-red-promote-once.yml'
+
+concurrency:
+  group: rust-utils-target-re-export-promote-once
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  verify-and-promote:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Checkout migration branch
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: pro/rust-repository-port
+          fetch-depth: 0
+
+      - name: Install Rust 1.87
+        uses: actions-rust-lang/setup-rust-toolchain@46268bd060767258de96ed93c1251119784f2ab6 # v1.16.1
+        with:
+          toolchain: 1.87.0
+          components: clippy,rustfmt
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v5.0.0
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 22.x
+          cache: pnpm
+
+      - name: Install JavaScript dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Prove TypeScript compatibility oracles
+        run: |
+          pnpm exec biome ci \
+            packages/utils/src/re-exports.test.ts \
+            packages/utils/src/world-target.ts \
+            packages/utils/src/world-target.test.ts
+          pnpm exec vitest run \
+            packages/utils/src/re-exports.test.ts \
+            packages/utils/src/world-target.test.ts
+
+      - name: Prove world-target was RED before implementation
+        run: |
+          git worktree add --detach /tmp/world-target-red \
+            85a1a9b984f371fb14ce5a5f588b77a010c6c8bd
+          set +e
+          output="$(cargo test --locked \
+            --manifest-path /tmp/world-target-red/rust/tdd/workflow-utils/Cargo.toml \
+            --test world_target 2>&1)"
+          status=$?
+          set -e
+          printf '%s\n' "$output"
+          git worktree remove --force /tmp/world-target-red
+          if [ "$status" -eq 0 ]; then
+            echo 'world-target unexpectedly passed before production implementation' >&2
+            exit 1
+          fi
+          grep -F \
+            'TDD RED: packages/utils/src/world-target.test.ts implementation pending' \
+            <<<"$output"
+
+      - name: Prove re-exports were RED before parse-name implementation
+        run: |
+          git worktree add --detach /tmp/re-exports-red \
+            2cfb956247506b78c31d1e2d677a16b6412e5676
+          set +e
+          output="$(cargo test --locked \
+            --manifest-path /tmp/re-exports-red/rust/tdd/workflow-utils/Cargo.toml \
+            --test re_exports 2>&1)"
+          status=$?
+          set -e
+          printf '%s\n' "$output"
+          git worktree remove --force /tmp/re-exports-red
+          if [ "$status" -eq 0 ]; then
+            echo 're-exports unexpectedly passed before parse-name implementation' >&2
+            exit 1
+          fi
+          grep -F \
+            'TDD RED: packages/utils/src/parse-name.test.ts implementation pending' \
+            <<<"$output"
+
+      - name: Prove production and translated Rust suites are GREEN
+        run: |
+          cargo fmt --manifest-path crates/workflow-utils/Cargo.toml -- --check
+          cargo fmt --manifest-path rust/tdd/workflow-utils/Cargo.toml -- --check
+          cargo test --locked --manifest-path crates/workflow-utils/Cargo.toml --all-targets
+          cargo test --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test re_exports
+          cargo test --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test world_target
+          cargo clippy --locked --manifest-path crates/workflow-utils/Cargo.toml --all-targets -- -D warnings
+          cargo clippy --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test re_exports -- -D warnings
+          cargo clippy --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test world_target -- -D warnings
+
+      - name: Refuse to promote a different branch head
+        run: |
+          git fetch origin pro/rust-repository-port
+          test "$(git rev-parse HEAD)" = "$(git rev-parse origin/pro/rust-repository-port)"
+
+      - name: Promote verified mappings
+        run: |
+          python scripts/promote-rust-utils-world-target-re-exports-green.py
+          node scripts/rust-port-test-inventory.mjs \
+            --write-json /tmp/rust-port-test-inventory.json
+          node scripts/bootstrap-rust-test-port-manifest.mjs \
+            /tmp/rust-port-test-inventory.json \
+            rust/test-port-manifest.json
+          node scripts/rust-port-test-inventory.mjs \
+            --check rust/test-port-manifest.json
+
+      - name: Commit verified GREEN promotion
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- \
+            rust/tdd-red.json \
+            rust/test-port-overrides.json \
+            rust/test-port-manifest.json \
+            docs/rust-port/PARITY_MATRIX.md
+          git commit --signoff -m 'test(rust-utils): promote world-target and re-exports to GREEN'
+          git push origin HEAD:pro/rust-repository-port

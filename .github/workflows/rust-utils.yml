@@ -1,0 +1,191 @@
+name: Rust utilities parity
+
+on:
+  push:
+    branches:
+      - pro/rust-repository-port
+    paths:
+      - 'crates/workflow-utils/**'
+      - 'rust/tdd/workflow-utils/**'
+      - 'packages/utils/src/check-data-dir.ts'
+      - 'packages/utils/src/check-data-dir.test.ts'
+      - 'packages/utils/src/check-data-dir-security.test.ts'
+      - 'packages/utils/src/debug-log.ts'
+      - 'packages/utils/src/debug-log.test.ts'
+      - 'packages/utils/src/debug-log-security.test.ts'
+      - 'packages/utils/src/get-port.ts'
+      - 'packages/utils/src/get-port-internals.ts'
+      - 'packages/utils/src/get-port.test.ts'
+      - 'packages/utils/src/global-singleton.ts'
+      - 'packages/utils/src/global-singleton.test.ts'
+      - 'packages/utils/src/parse-name.ts'
+      - 'packages/utils/src/parse-name.test.ts'
+      - 'packages/utils/src/parse-name-security.test.ts'
+      - 'packages/utils/src/pluralize.ts'
+      - 'packages/utils/src/pluralize.test.ts'
+      - 'packages/utils/src/promise.ts'
+      - 'packages/utils/src/promise.test.ts'
+      - 'packages/utils/src/re-exports.test.ts'
+      - 'packages/utils/src/workflow-routes.ts'
+      - 'packages/utils/src/workflow-routes.test.ts'
+      - 'packages/utils/src/world-target.ts'
+      - 'packages/utils/src/world-target.test.ts'
+      - 'rust/tdd-red.json'
+      - 'rust/tdd-red.d/utils-debug-log-security.json'
+      - 'rust/test-port-manifest.json'
+      - 'rust/test-port-overrides.json'
+      - 'rust/test-port-overrides.d/utils-check-data-dir-security.json'
+      - 'rust/test-port-overrides.d/utils-debug-log-security.json'
+      - 'rust/test-port-overrides.d/utils-parse-name-security.json'
+      - 'docs/rust-port/**'
+      - 'security.txt'
+      - '.github/workflows/rust-utils.yml'
+  pull_request:
+    paths:
+      - 'crates/workflow-utils/**'
+      - 'rust/tdd/workflow-utils/**'
+      - 'packages/utils/src/check-data-dir.ts'
+      - 'packages/utils/src/check-data-dir.test.ts'
+      - 'packages/utils/src/check-data-dir-security.test.ts'
+      - 'packages/utils/src/debug-log.ts'
+      - 'packages/utils/src/debug-log.test.ts'
+      - 'packages/utils/src/debug-log-security.test.ts'
+      - 'packages/utils/src/get-port.ts'
+      - 'packages/utils/src/get-port-internals.ts'
+      - 'packages/utils/src/get-port.test.ts'
+      - 'packages/utils/src/global-singleton.ts'
+      - 'packages/utils/src/global-singleton.test.ts'
+      - 'packages/utils/src/parse-name.ts'
+      - 'packages/utils/src/parse-name.test.ts'
+      - 'packages/utils/src/parse-name-security.test.ts'
+      - 'packages/utils/src/pluralize.ts'
+      - 'packages/utils/src/pluralize.test.ts'
+      - 'packages/utils/src/promise.ts'
+      - 'packages/utils/src/promise.test.ts'
+      - 'packages/utils/src/re-exports.test.ts'
+      - 'packages/utils/src/workflow-routes.ts'
+      - 'packages/utils/src/workflow-routes.test.ts'
+      - 'packages/utils/src/world-target.ts'
+      - 'packages/utils/src/world-target.test.ts'
+      - 'rust/tdd-red.json'
+      - 'rust/tdd-red.d/utils-debug-log-security.json'
+      - 'rust/test-port-manifest.json'
+      - 'rust/test-port-overrides.json'
+      - 'rust/test-port-overrides.d/utils-check-data-dir-security.json'
+      - 'rust/test-port-overrides.d/utils-debug-log-security.json'
+      - 'rust/test-port-overrides.d/utils-parse-name-security.json'
+      - 'docs/rust-port/**'
+      - 'security.txt'
+      - '.github/workflows/rust-utils.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  utility-contracts:
+    name: Utility parity and security
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Install Rust 1.87
+        uses: actions-rust-lang/setup-rust-toolchain@46268bd060767258de96ed93c1251119784f2ab6 # v1.16.1
+        with:
+          toolchain: 1.87.0
+          components: clippy,rustfmt
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v5.0.0
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 22.x
+          cache: pnpm
+
+      - name: Install JavaScript dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Check focused TypeScript formatting and lint
+        run: |
+          pnpm exec biome ci \
+            packages/utils/src/debug-log.ts \
+            packages/utils/src/debug-log.test.ts \
+            packages/utils/src/debug-log-security.test.ts \
+            packages/utils/src/get-port.ts \
+            packages/utils/src/get-port-internals.ts \
+            packages/utils/src/get-port.test.ts \
+            packages/utils/src/global-singleton.ts \
+            packages/utils/src/global-singleton.test.ts \
+            packages/utils/src/parse-name.ts \
+            packages/utils/src/parse-name-security.test.ts \
+            packages/utils/src/promise.ts \
+            packages/utils/src/promise.test.ts \
+            packages/utils/src/re-exports.test.ts \
+            packages/utils/src/workflow-routes.ts \
+            packages/utils/src/workflow-routes.test.ts \
+            packages/utils/src/world-target.ts \
+            packages/utils/src/world-target.test.ts
+
+      - name: Check Rust formatting
+        run: |
+          cargo fmt --manifest-path crates/workflow-utils/Cargo.toml -- --check
+          cargo fmt --manifest-path rust/tdd/workflow-utils/Cargo.toml -- --check
+
+      - name: Run production Rust utility tests
+        run: cargo test --locked --manifest-path crates/workflow-utils/Cargo.toml --all-targets
+
+      - name: Run complete translated TypeScript suites in Rust
+        run: |
+          cargo test --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test check_data_dir
+          cargo test --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test debug_log
+          cargo test --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test debug_log_security
+          cargo test --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test get_port
+          cargo test --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test global_singleton
+          cargo test --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test parse_name
+          cargo test --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test pluralize
+          cargo test --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test promise
+          cargo test --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test re_exports
+          cargo test --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test workflow_routes
+          cargo test --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test world_target
+
+      - name: Lint production Rust utilities
+        run: cargo clippy --locked --manifest-path crates/workflow-utils/Cargo.toml --all-targets -- -D warnings
+
+      - name: Lint translated Rust suites
+        run: |
+          cargo clippy --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test check_data_dir -- -D warnings
+          cargo clippy --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test debug_log -- -D warnings
+          cargo clippy --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test debug_log_security -- -D warnings
+          cargo clippy --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test get_port -- -D warnings
+          cargo clippy --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test global_singleton -- -D warnings
+          cargo clippy --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test parse_name -- -D warnings
+          cargo clippy --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test pluralize -- -D warnings
+          cargo clippy --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test promise -- -D warnings
+          cargo clippy --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test re_exports -- -D warnings
+          cargo clippy --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test workflow_routes -- -D warnings
+          cargo clippy --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test world_target -- -D warnings
+
+      - name: Run TypeScript utility oracles
+        run: |
+          pnpm exec vitest run \
+            packages/utils/src/check-data-dir.test.ts \
+            packages/utils/src/check-data-dir-security.test.ts \
+            packages/utils/src/debug-log.test.ts \
+            packages/utils/src/debug-log-security.test.ts \
+            packages/utils/src/get-port.test.ts \
+            packages/utils/src/global-singleton.test.ts \
+            packages/utils/src/parse-name.test.ts \
+            packages/utils/src/parse-name-security.test.ts \
+            packages/utils/src/pluralize.test.ts \
+            packages/utils/src/promise.test.ts \
+            packages/utils/src/re-exports.test.ts \
+            packages/utils/src/workflow-routes.test.ts \
+            packages/utils/src/world-target.test.ts
