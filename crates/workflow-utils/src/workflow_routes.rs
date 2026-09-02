@@ -131,9 +131,7 @@ struct ParsedAbsoluteUrl<'a> {
 impl<'a> ParsedAbsoluteUrl<'a> {
     fn parse(value: &'a str) -> Result<Self, String> {
         validate_absolute_url(value)?;
-        let (scheme, rest) = value
-            .split_once("://")
-            .ok_or_else(|| invalid_url(value))?;
+        let (scheme, rest) = value.split_once("://").ok_or_else(|| invalid_url(value))?;
         let without_fragment = rest.split_once('#').map_or(rest, |(part, _)| part);
         let without_query = without_fragment
             .split_once('?')
@@ -156,9 +154,7 @@ fn validate_absolute_url(value: &str) -> Result<(), String> {
     if value.is_empty() || value.chars().any(char::is_whitespace) {
         return Err(invalid_url(value));
     }
-    let (scheme, rest) = value
-        .split_once("://")
-        .ok_or_else(|| invalid_url(value))?;
+    let (scheme, rest) = value.split_once("://").ok_or_else(|| invalid_url(value))?;
     let mut chars = scheme.chars();
     let first = chars.next().ok_or_else(|| invalid_url(value))?;
     let starts_with_delimiter = matches!(rest.as_bytes().first(), Some(b'/' | b'?' | b'#'));
