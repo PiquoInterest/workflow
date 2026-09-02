@@ -27,7 +27,7 @@ fn rejects_a_local_binary_result_that_only_mentions_global_this() {
 }
 
 #[test]
-fn_resolves_literal_computed_static_fields() {
+fn resolves_literal_computed_static_fields() {
     let findings = scan_module_scope_sources(&one_source(
         "export class Registry {\n  static transports = new Map<string, number>();\n  static open(id: string) { Registry['transports'].set(id, 1); }\n}\n",
     ));
