@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "sourceCount": 341,
-  "declaredTestCount": 5119,
+  "sourceCount": 342,
+  "declaredTestCount": 5122,
   "statusCounts": {
-    "unported": 223,
+    "unported": 224,
     "partial": 0,
     "red": 89,
     "green": 29,
@@ -102,6 +102,17 @@
         "rust/tdd/workflow-ai/tests/tools_to_model_tools.rs"
       ],
       "notes": "All 12 function, provider, mixed, optional strict/inputExamples/providerOptions, dynamic-tool, and empty-tool declarations are translated. The Rust type model makes provider-only and function-only fields distinct before implementation."
+    },
+    {
+      "typescript": "packages/ai/src/get-error-message-security.test.ts",
+      "sourceSha256": "2c26a9ac6ec8abdf5fc6bfa272130c28e3abebc0e69b378f3c90e1414174ca6a",
+      "surface": "packages/ai",
+      "kind": "unit",
+      "lineCount": 29,
+      "declaredTestCount": 3,
+      "status": "unported",
+      "rustTests": [],
+      "notes": ""
     },
     {
       "typescript": "packages/ai/src/get-error-message.test.ts",
