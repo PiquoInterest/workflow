@@ -134,7 +134,9 @@ fn probe_address(
 
 fn remaining_timeout(deadline: Option<Instant>, fallback: Duration) -> Option<Duration> {
     match deadline {
-        Some(deadline) => deadline.checked_duration_since(Instant::now()).filter(|value| !value.is_zero()),
+        Some(deadline) => deadline
+            .checked_duration_since(Instant::now())
+            .filter(|value| !value.is_zero()),
         None => Some(fallback),
     }
 }
@@ -299,10 +301,7 @@ mod platform {
         if !output.status.success() {
             return Vec::new();
         }
-        parse_windows_netstat_ports_for_pid(
-            &String::from_utf8_lossy(&output.stdout),
-            process_id,
-        )
+        parse_windows_netstat_ports_for_pid(&String::from_utf8_lossy(&output.stdout), process_id)
     }
 }
 
