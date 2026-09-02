@@ -53,6 +53,138 @@ jobs:
             | sha256sum --check -
           tar -xzf /tmp/module-scope-implementation.tar.gz
 
+      - name: Apply parser-boundary fixes found by the first GREEN attempt
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path('crates/workflow-utils/src/module_scope_state.rs')
+          source = path.read_text()
+
+          declaration_start = source.index('fn find_declaration_equals')
+          declaration_end = source.index('fn update_depths', declaration_start)
+          declaration_replacement = r'''fn find_declaration_equals(tokens: &[Token], start: usize, end: usize) -> Option<usize> {
+              let mut depths = (0_i32, 0_i32, 0_i32);
+              let mut type_argument_depth = 0_usize;
+              for (index, token) in tokens.iter().enumerate().take(end).skip(start) {
+                  if token.operator() == Some("=")
+                      && depths == (0, 0, 0)
+                      && type_argument_depth == 0
+                  {
+                      return Some(index);
+                  }
+                  if token.is_punctuation(',')
+                      && depths == (0, 0, 0)
+                      && type_argument_depth == 0
+                  {
+                      return None;
+                  }
+                  update_type_argument_depth(token, &mut type_argument_depth, true);
+                  update_depths(token, &mut depths);
+              }
+              None
+          }
+
+          fn find_initializer_end(tokens: &[Token], start: usize, end: usize) -> usize {
+              let mut depths = (0_i32, 0_i32, 0_i32);
+              let mut type_argument_depth = 0_usize;
+              for (index, token) in tokens.iter().enumerate().take(end).skip(start) {
+                  if token.is_punctuation(',')
+                      && depths == (0, 0, 0)
+                      && type_argument_depth == 0
+                  {
+                      return index;
+                  }
+                  let opens_type_arguments =
+                      type_argument_depth > 0 || starts_type_argument_list(tokens, index, end);
+                  update_type_argument_depth(token, &mut type_argument_depth, opens_type_arguments);
+                  update_depths(token, &mut depths);
+              }
+              end
+          }
+
+          fn starts_type_argument_list(tokens: &[Token], index: usize, end: usize) -> bool {
+              if tokens.get(index).and_then(Token::operator) != Some("<") {
+                  return false;
+              }
+              if !tokens.get(index.wrapping_sub(1)).is_some_and(|token| {
+                  token.identifier().is_some()
+                      || token.is_punctuation(')')
+                      || token.is_punctuation(']')
+              }) {
+                  return false;
+              }
+
+              let mut depth = 0_usize;
+              for cursor in index..end {
+                  match tokens[cursor].operator() {
+                      Some("<") => depth += 1,
+                      Some(">") => depth = depth.saturating_sub(1),
+                      Some(">>") => depth = depth.saturating_sub(2),
+                      Some(">>>") => depth = depth.saturating_sub(3),
+                      _ => {}
+                  }
+                  if depth != 0 {
+                      continue;
+                  }
+                  return tokens.get(cursor + 1).is_some_and(|token| {
+                      token.is_punctuation('(')
+                          || token.is_punctuation('[')
+                          || token.is_punctuation('.')
+                          || token.is_punctuation(',')
+                          || token.is_punctuation(';')
+                          || matches!(
+                              token.operator(),
+                              Some("=" | "=>" | "?." | "?" | "|" | "&")
+                          )
+                  });
+              }
+              false
+          }
+
+          fn update_type_argument_depth(token: &Token, depth: &mut usize, allow_open: bool) {
+              match token.operator() {
+                  Some("<") if allow_open => *depth += 1,
+                  Some(">") if *depth > 0 => *depth = depth.saturating_sub(1),
+                  Some(">>") if *depth > 0 => *depth = depth.saturating_sub(2),
+                  Some(">>>") if *depth > 0 => *depth = depth.saturating_sub(3),
+                  _ => {}
+              }
+          }
+
+          '''
+          source = (
+              source[:declaration_start]
+              + declaration_replacement
+              + source[declaration_end:]
+          )
+
+          expression_start = source.index('fn expression_end')
+          expression_end = source.index('fn class_member_start', expression_start)
+          expression_replacement = r'''fn expression_end(tokens: &[Token], start: usize) -> usize {
+              let mut depths = (0_i32, 0_i32, 0_i32);
+              for (index, token) in tokens.iter().enumerate().skip(start) {
+                  if depths == (0, 0, 0)
+                      && (token.is_punctuation(',')
+                          || token.is_punctuation(';')
+                          || token.is_punctuation(')')
+                          || token.is_punctuation(']')
+                          || token.is_punctuation('}'))
+                  {
+                      return index;
+                  }
+                  update_depths(token, &mut depths);
+              }
+              tokens.len()
+          }
+
+          '''
+          source = source[:expression_start] + expression_replacement + source[expression_end:]
+          path.write_text(source)
+          PY
+
       - name: Verify production implementation
         shell: bash
         run: |
