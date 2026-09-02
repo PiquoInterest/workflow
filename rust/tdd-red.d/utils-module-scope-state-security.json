@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "cases": [
+    {
+      "typescript": "packages/utils/src/module-scope-state-security.test.ts",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--manifest-path",
+        "rust/tdd/workflow-utils/Cargo.toml",
+        "--test",
+        "module_scope_state_security"
+      ],
+      "failureMarker": "TDD RED: packages/utils/src/module-scope-state-security.test.ts implementation pending"
+    }
+  ]
+}
