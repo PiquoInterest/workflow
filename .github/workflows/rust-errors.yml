@@ -1,0 +1,141 @@
+name: Rust errors parity
+
+on:
+  push:
+    branches:
+      - pro/rust-repository-port
+    paths:
+      - 'crates/workflow-errors/**'
+      - 'rust/tdd/workflow-errors/**'
+      - 'packages/errors/src/ansi.ts'
+      - 'packages/errors/src/ansi.test.ts'
+      - 'packages/errors/src/index-implementation.ts'
+      - 'packages/errors/src/workflow-error.test.ts'
+      - 'packages/errors/src/build-error.test.ts'
+      - 'packages/errors/src/corrupted-event-log-error.test.ts'
+      - 'packages/errors/src/fatal-error.test.ts'
+      - 'packages/errors/src/replay-divergence-error.test.ts'
+      - 'packages/errors/src/runtime-decryption-error.test.ts'
+      - 'packages/errors/src/serialization-error.test.ts'
+      - '.github/workflows/rust-errors.yml'
+  pull_request:
+    paths:
+      - 'crates/workflow-errors/**'
+      - 'rust/tdd/workflow-errors/**'
+      - 'packages/errors/src/ansi.ts'
+      - 'packages/errors/src/ansi.test.ts'
+      - 'packages/errors/src/index-implementation.ts'
+      - 'packages/errors/src/workflow-error.test.ts'
+      - 'packages/errors/src/build-error.test.ts'
+      - 'packages/errors/src/corrupted-event-log-error.test.ts'
+      - 'packages/errors/src/fatal-error.test.ts'
+      - 'packages/errors/src/replay-divergence-error.test.ts'
+      - 'packages/errors/src/runtime-decryption-error.test.ts'
+      - 'packages/errors/src/serialization-error.test.ts'
+      - '.github/workflows/rust-errors.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  error-contracts:
+    name: Error parity and hardening
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Install Rust 1.87
+        uses: actions-rust-lang/setup-rust-toolchain@46268bd060767258de96ed93c1251119784f2ab6 # v1.16.1
+        with:
+          toolchain: 1.87.0
+          components: clippy,rustfmt
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v5.0.0
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 22.x
+          cache: pnpm
+
+      - name: Install JavaScript dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Check TypeScript error sources and tests
+        run: |
+          pnpm exec biome ci \
+            packages/errors/src/ansi.ts \
+            packages/errors/src/ansi.test.ts \
+            packages/errors/src/index-implementation.ts \
+            packages/errors/src/workflow-error.test.ts \
+            packages/errors/src/build-error.test.ts \
+            packages/errors/src/corrupted-event-log-error.test.ts \
+            packages/errors/src/fatal-error.test.ts \
+            packages/errors/src/replay-divergence-error.test.ts \
+            packages/errors/src/runtime-decryption-error.test.ts \
+            packages/errors/src/serialization-error.test.ts
+
+      - name: Run TypeScript compatibility oracles
+        run: |
+          pnpm exec vitest run \
+            packages/errors/src/ansi.test.ts \
+            packages/errors/src/workflow-error.test.ts \
+            packages/errors/src/build-error.test.ts \
+            packages/errors/src/corrupted-event-log-error.test.ts \
+            packages/errors/src/fatal-error.test.ts \
+            packages/errors/src/replay-divergence-error.test.ts \
+            packages/errors/src/runtime-decryption-error.test.ts \
+            packages/errors/src/serialization-error.test.ts
+
+      - name: Check Rust formatting
+        run: |
+          cargo fmt --manifest-path crates/workflow-errors/Cargo.toml -- --check
+          cargo fmt --manifest-path rust/tdd/workflow-errors/Cargo.toml -- --check
+
+      - name: Run production Rust error tests
+        run: cargo test --locked --manifest-path crates/workflow-errors/Cargo.toml --all-targets
+
+      - name: Run translated TypeScript suites in Rust
+        run: |
+          for test in \
+            ansi \
+            workflow_error \
+            build_error \
+            corrupted_event_log_error \
+            fatal_error \
+            replay_divergence_error \
+            runtime_decryption_error \
+            serialization_error
+          do
+            cargo test --locked \
+              --manifest-path rust/tdd/workflow-errors/Cargo.toml \
+              --test "$test"
+          done
+
+      - name: Lint production Rust errors
+        run: cargo clippy --locked --manifest-path crates/workflow-errors/Cargo.toml --all-targets -- -D warnings
+
+      - name: Lint translated Rust suites
+        run: |
+          for test in \
+            ansi \
+            workflow_error \
+            build_error \
+            corrupted_event_log_error \
+            fatal_error \
+            replay_divergence_error \
+            runtime_decryption_error \
+            serialization_error
+          do
+            cargo clippy --locked \
+              --manifest-path rust/tdd/workflow-errors/Cargo.toml \
+              --test "$test" -- -D warnings
+          done
