@@ -6,6 +6,7 @@ pub mod global_singleton;
 pub mod parse_name;
 pub mod pluralize;
 pub mod promise;
+pub mod workflow_routes;
 pub mod world_target;
 
 pub use check_data_dir::{
@@ -19,6 +20,10 @@ pub use parse_name::{
 };
 pub use pluralize::pluralize;
 pub use promise::{Deferred, OnceValue, once};
+pub use workflow_routes::{
+    WORKFLOW_ROUTE_BASE, WorkflowRoute, WorkflowRoutes, create_workflow_base_url,
+    create_workflow_health_endpoint, create_workflow_url, set_workflow_base_path,
+};
 pub use world_target::{
     Environment, is_vercel_world_target, resolve_workflow_target_world, uses_vercel_world,
 };
