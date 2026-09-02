@@ -208,12 +208,7 @@ fn make_descriptor(parts: DescriptorParts) -> ErrorDescriptor {
         context: parts.context,
         event_id: parts.event_id,
         fatal: parts.fatal,
-        hierarchy: parts
-            .hierarchy
-            .iter()
-            .copied()
-            .map(str::to_owned)
-            .collect(),
+        hierarchy: parts.hierarchy.iter().copied().map(str::to_owned).collect(),
     }
 }
 
