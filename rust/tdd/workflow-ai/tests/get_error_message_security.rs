@@ -1,7 +1,7 @@
 use std::panic::{AssertUnwindSafe, catch_unwind};
 use std::sync::Arc;
 
-use workflow_ai::{CallableProbe, ErrorValue, SharedErrorObject, get_error_message};
+use workflow_ai_tdd::{CallableProbe, ErrorValue, SharedErrorObject, get_error_message};
 
 #[test]
 fn object_supplied_to_json_callable_is_never_invoked() {
