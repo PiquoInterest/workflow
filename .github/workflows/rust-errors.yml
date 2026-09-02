@@ -69,6 +69,9 @@ jobs:
       - name: Install JavaScript dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Build TypeScript utility dependency
+        run: pnpm --filter @workflow/utils build
+
       - name: Check TypeScript error sources and tests
         run: |
           pnpm exec biome ci \
