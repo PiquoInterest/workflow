@@ -5,8 +5,8 @@
   "statusCounts": {
     "unported": 223,
     "partial": 0,
-    "red": 93,
-    "green": 25,
+    "red": 91,
+    "green": 27,
     "blocked": 0
   },
   "entries": [
@@ -18,9 +18,7 @@
       "lineCount": 256,
       "declaredTestCount": 30,
       "status": "red",
-      "rustTests": [
-        "rust/tdd/workflow-ai/tests/do_stream_step.rs"
-      ],
+      "rustTests": ["rust/tdd/workflow-ai/tests/do_stream_step.rs"],
       "notes": "All 30 finish-reason normalization, tool-input parsing, malformed streamed tool-call, and response-metadata merge declarations are translated. The malformed-input case is security-relevant because provider-controlled stream data must not crash a run or be silently reinterpreted."
     },
     {
@@ -31,9 +29,7 @@
       "lineCount": 1783,
       "declaredTestCount": 42,
       "status": "red",
-      "rustTests": [
-        "rust/tdd/workflow-ai/tests/durable_agent_compat.rs"
-      ],
+      "rustTests": ["rust/tdd/workflow-ai/tests/durable_agent_compat.rs"],
       "notes": "Every executable TypeScript assertion is translated into 42 Rust tests. Coverage includes prepareCall/prepareStep precedence, abort and timeout propagation, string and structured instructions, constructor/method callback ordering, lifecycle event payloads, tool-call start/finish data, final and detailed v6 usage aggregation, local/global telemetry integrations, listener-failure isolation, and static/dynamic tool approval. The dynamic approval test is split so validated input and no-execution pause behavior fail independently."
     },
     {
@@ -44,9 +40,7 @@
       "lineCount": 56,
       "declaredTestCount": 3,
       "status": "red",
-      "rustTests": [
-        "rust/tdd/workflow-ai/tests/durable_agent_types.rs"
-      ],
+      "rustTests": ["rust/tdd/workflow-ai/tests/durable_agent_types.rs"],
       "notes": "All three type-inference declarations are translated as Rust generic assignments. They are compile-time checked even while the runtime implementation marker remains RED."
     },
     {
@@ -72,9 +66,7 @@
       "lineCount": 1164,
       "declaredTestCount": 15,
       "status": "red",
-      "rustTests": [
-        "rust/tdd/workflow-ai/tests/stream_text_iterator.rs"
-      ],
+      "rustTests": ["rust/tdd/workflow-ai/tests/stream_text_iterator.rs"],
       "notes": "All 15 current declarations are translated: provider metadata to provider-options mapping, parallel and mixed providers, Gemini thought signatures, OpenAI item IDs, reasoning ordering and provider options, prepareStep system-message rules, multi-step system updates, and malformed tool-call input retention. Final GREEN must drive the real Rust iterator and provider prompt builder."
     },
     {
@@ -85,9 +77,7 @@
       "lineCount": 664,
       "declaredTestCount": 9,
       "status": "red",
-      "rustTests": [
-        "rust/tdd/workflow-ai/tests/telemetry.rs"
-      ],
+      "rustTests": ["rust/tdd/workflow-ai/tests/telemetry.rs"],
       "notes": "All nine current telemetry assertions are translated: response attributes, tool-call attributes, recordInputs and recordOutputs privacy controls, reasoning/cache accounting, tool result capture, tool output suppression, span-context propagation, and iterator option forwarding. Final GREEN must exercise the actual Rust span implementation and binding, not a fabricated observation."
     },
     {
@@ -98,9 +88,7 @@
       "lineCount": 222,
       "declaredTestCount": 12,
       "status": "red",
-      "rustTests": [
-        "rust/tdd/workflow-ai/tests/tools_to_model_tools.rs"
-      ],
+      "rustTests": ["rust/tdd/workflow-ai/tests/tools_to_model_tools.rs"],
       "notes": "All 12 function, provider, mixed, optional strict/inputExamples/providerOptions, dynamic-tool, and empty-tool declarations are translated. The Rust type model makes provider-only and function-only fields distinct before implementation."
     },
     {
@@ -111,9 +99,7 @@
       "lineCount": 58,
       "declaredTestCount": 11,
       "status": "red",
-      "rustTests": [
-        "rust/tdd/workflow-ai/tests/get_error_message.rs"
-      ],
+      "rustTests": ["rust/tdd/workflow-ai/tests/get_error_message.rs"],
       "notes": "All 11 Error, string, object, nested object, nullish, number, boolean, array, empty-string, and subclass normalization declarations are translated."
     },
     {
@@ -124,9 +110,7 @@
       "lineCount": 27,
       "declaredTestCount": 1,
       "status": "red",
-      "rustTests": [
-        "rust/tdd/workflow-ai/tests/module_scope_state.rs"
-      ],
+      "rustTests": ["rust/tdd/workflow-ai/tests/module_scope_state.rs"],
       "notes": "The package-local module-scope-state sweep is translated so the safety signal remains present when only the AI crate tests run."
     },
     {
@@ -137,9 +121,7 @@
       "lineCount": 151,
       "declaredTestCount": 7,
       "status": "red",
-      "rustTests": [
-        "rust/tdd/workflow-ai/tests/stream_iterator.rs"
-      ],
+      "rustTests": ["rust/tdd/workflow-ai/tests/stream_iterator.rs"],
       "notes": "All seven generator-to-stream, browser macrotask yield, Node no-yield, abort, already-aborted, generator-error, and stream-to-iterator declarations are translated. Final GREEN needs an actual async stream runtime rather than only observations."
     },
     {
@@ -163,9 +145,7 @@
       "lineCount": 883,
       "declaredTestCount": 23,
       "status": "red",
-      "rustTests": [
-        "rust/tdd/workflow-ai/tests/workflow_chat_transport.rs"
-      ],
+      "rustTests": ["rust/tdd/workflow-ai/tests/workflow_chat_transport.rs"],
       "notes": "All 23 current declarations are translated: constructor options, send/reconnect request shaping, response errors, abort-signal propagation and reuse, negative start-index resolution, malformed tail-header fallback, orphan reasoning/text/tool filtering, non-streamed and recovered tool calls, non-negative resume behavior, object-error formatting, and send/end callbacks. Final GREEN must execute the real Rust transport and stream normalizer."
     },
     {
@@ -176,9 +156,7 @@
       "lineCount": 137,
       "declaredTestCount": 5,
       "status": "red",
-      "rustTests": [
-        "rust/tdd/workflow-builders/tests/base_builder_logging.rs"
-      ],
+      "rustTests": ["rust/tdd/workflow-builders/tests/base_builder_logging.rs"],
       "notes": "All five declared logging cases are translated, including default silence, exact and wildcard DEBUG matching, explicit negation, and repeated Next-like compile summaries."
     },
     {
@@ -189,9 +167,7 @@
       "lineCount": 20,
       "declaredTestCount": 1,
       "status": "red",
-      "rustTests": [
-        "rust/tdd/workflow-builders/tests/config_helpers.rs"
-      ],
+      "rustTests": ["rust/tdd/workflow-builders/tests/config_helpers.rs"],
       "notes": "The workspace-root precedence case is translated with a real temporary filesystem tree containing both pnpm-workspace.yaml and an app-local package-lock.json."
     },
     {
@@ -202,9 +178,7 @@
       "lineCount": 122,
       "declaredTestCount": 12,
       "status": "red",
-      "rustTests": [
-        "rust/tdd/workflow-builders/tests/constants.rs"
-      ],
+      "rustTests": ["rust/tdd/workflow-builders/tests/constants.rs"],
       "notes": "All 12 current declarations are translated: default and namespaced workflow topics, exact WORKFLOW_SEQUENTIAL_REPLAYS=1 behavior, explicit namespace precedence, call-time environment resolution, and generated workflowEntrypoint option code including basePath and route-module timing. Final GREEN must use the real Rust route/config generator and preserve build-time versus call-time resolution semantics."
     },
     {
@@ -215,9 +189,7 @@
       "lineCount": 221,
       "declaredTestCount": 5,
       "status": "red",
-      "rustTests": [
-        "rust/tdd/workflow-builders/tests/discover_entries.rs"
-      ],
+      "rustTests": ["rust/tdd/workflow-builders/tests/discover_entries.rs"],
       "notes": "All three executable TypeScript cases and their assertions are translated: explicit projectRoot propagation, absWorkingDir fallback, path normalization, single detect-mode transform observation, and transitive import-parent tracking through a bare package specifier. The inventory reports five declarations because it also sees lifecycle callbacks. Final GREEN must exercise the real Rust resolver and transform pipeline rather than returning fixture-specific observations."
     },
     {
@@ -228,9 +200,7 @@
       "lineCount": 180,
       "declaredTestCount": 1,
       "status": "red",
-      "rustTests": [
-        "rust/tdd/workflow-builders/tests/esbuild_tsconfig.rs"
-      ],
+      "rustTests": ["rust/tdd/workflow-builders/tests/esbuild_tsconfig.rs"],
       "notes": "Both regular and symlinked tsconfig behaviors are translated even though the inventory parser counts only the direct it() declaration. Final GREEN must also run the symlink fixture through real esbuild resolution."
     },
     {
@@ -254,9 +224,7 @@
       "lineCount": 800,
       "declaredTestCount": 17,
       "status": "red",
-      "rustTests": [
-        "rust/tdd/workflow-builders/tests/fast_discovery.rs"
-      ],
+      "rustTests": ["rust/tdd/workflow-builders/tests/fast_discovery.rs"],
       "notes": "All 17 fast-discovery declarations are translated with real temporary project, package, tsconfig, jsconfig, source, asset, and nested node_modules trees. Coverage preserves transitive relative imports, dotted JavaScript resolution, package re-exports, disabled node_modules descent with directly seeded package traversal, inherited and multi-wildcard aliases, non-source exclusion, comment-versus-regex parsing, nearest nested config selection, static serde registration, independent step/workflow/serde categorization, comment-only serde suppression, and direct-versus-nested package route specifiers. The comment, regex, alias, and package-boundary cases are security-relevant because raw text scans or unchecked path/specifier substitution could execute documentation, escape the intended project graph, or bind a durable function to the wrong package. Final GREEN must resolve canonical bounded paths and parse JavaScript import context rather than hard-code fixture names."
     },
     {
@@ -267,9 +235,7 @@
       "lineCount": 288,
       "declaredTestCount": 9,
       "status": "red",
-      "rustTests": [
-        "rust/tdd/workflow-builders/tests/get_input_files.rs"
-      ],
+      "rustTests": ["rust/tdd/workflow-builders/tests/get_input_files.rs"],
       "notes": "All nine input discovery, .swc ignore, and diagnostics-path declarations are translated with real temporary filesystem trees. Coverage includes ordinary hidden files, the complete explicit generated/cache-directory denylist, supported extensions, idempotent .gitignore updates, existing ignore variants, explicit diagnostics directories, non-Vercel target isolation, and Vercel output fallback. Final GREEN must walk the real filesystem with bounded roots and must not rediscover generated output or dependency trees."
     },
     {
@@ -280,9 +246,7 @@
       "lineCount": 195,
       "declaredTestCount": 7,
       "status": "red",
-      "rustTests": [
-        "rust/tdd/workflow-builders/tests/manifest_ids.rs"
-      ],
+      "rustTests": ["rust/tdd/workflow-builders/tests/manifest_ids.rs"],
       "notes": "All seven duplicate-ID declarations are translated: divergent step and workflow bodies fail closed, identical pnpm peer copies deduplicate while retaining both manifest file entries, missing hashes fail closed, symbol-name mismatches are rejected, and re-merging the same file is idempotent. This is security-sensitive because accepting a duplicate ID from different source can substitute the code executed for a durable step. Final GREEN must use the real cryptographic source digest and preserve first-registration ownership."
     },
     {
@@ -293,9 +257,7 @@
       "lineCount": 361,
       "declaredTestCount": 13,
       "status": "red",
-      "rustTests": [
-        "rust/tdd/workflow-builders/tests/module_specifier.rs"
-      ],
+      "rustTests": ["rust/tdd/workflow-builders/tests/module_specifier.rs"],
       "notes": "All 13 package and relative-import declarations are translated using real package.json and source files: root/subpath/conditional exports, module/main entrypoints, deep fallback paths, direct versus transitive node_modules dependencies, project-local package files, workspace package IDs, non-exported files, and source-backed dist exports. Final GREEN must resolve declared dependency and export ownership rather than infer package identity from path shape alone."
     },
     {
@@ -334,9 +296,7 @@
       "lineCount": 231,
       "declaredTestCount": 16,
       "status": "red",
-      "rustTests": [
-        "rust/tdd/workflow-builders/tests/resolve_sourcemap.rs"
-      ],
+      "rustTests": ["rust/tdd/workflow-builders/tests/resolve_sourcemap.rs"],
       "notes": "All 16 sourcemap declarations are translated across explicit config, defaults, WORKFLOW_SOURCEMAP parsing, 0/1 aliases, invalid-value fallback, watch-mode development detection, NODE_ENV development detection, and the derived enabled flag. Final GREEN must preserve precedence as explicit config over environment over the caller default, while treating every non-false mode as enabled."
     },
     {
@@ -377,9 +337,7 @@
       "lineCount": 489,
       "declaredTestCount": 88,
       "status": "red",
-      "rustTests": [
-        "rust/tdd/workflow-builders/tests/transform_utils.rs"
-      ],
+      "rustTests": ["rust/tdd/workflow-builders/tests/transform_utils.rs"],
       "notes": "All 45 directive, serde, combined-detection, and transform-selection declarations are translated. Positive coverage preserves quote and whitespace variants, exact @workflow/serde imports, direct Symbol.for names, computed property names, bundled chunk output, directive prologues, generated route exclusions, and SDK serde files. Negative coverage rejects inline assignments, lookalike packages, partial symbol names, string-literal properties, unrelated symbols, comments, template literals, and multiline call arguments. These negatives are security-relevant because false-positive directive detection could compile attacker-controlled documentation or comments as executable durable workflow code. Final GREEN must tokenize or parse JavaScript context rather than rely on an unbounded raw substring scan."
     },
     {
@@ -403,9 +361,7 @@
       "lineCount": 97,
       "declaredTestCount": 5,
       "status": "red",
-      "rustTests": [
-        "rust/tdd/workflow-builders/tests/workflow_alias.rs"
-      ],
+      "rustTests": ["rust/tdd/workflow-builders/tests/workflow_alias.rs"],
       "notes": "All five current declarations are translated with real files and a directory symlink: workflows and src/workflows aliases, unrelated-file rejection, realpath containment rather than basename matching, and symlinked app alias recovery. Final GREEN must canonicalize paths without allowing an external same-name file to acquire an application alias."
     },
     {
@@ -429,9 +385,7 @@
       "lineCount": 85,
       "declaredTestCount": 2,
       "status": "red",
-      "rustTests": [
-        "rust/tdd/workflow-builders/tests/workflows_extractor.rs"
-      ],
+      "rustTests": ["rust/tdd/workflow-builders/tests/workflows_extractor.rs"],
       "notes": "Both extraction declarations are translated with actual bundle files: escaped Unicode identifiers inside workflowCode template literals must parse without diagnostics, and pure annotations around WORKFLOW_USE_STEP proxies must still produce the exact workflow and step IDs. Final GREEN must parse the bundle rather than matching only the fixture text."
     },
     {
@@ -442,9 +396,7 @@
       "lineCount": 253,
       "declaredTestCount": 16,
       "status": "red",
-      "rustTests": [
-        "rust/tdd/workflow-builders/tests/write_if_changed.rs"
-      ],
+      "rustTests": ["rust/tdd/workflow-builders/tests/write_if_changed.rs"],
       "notes": "All 16 content comparison, conditional write, and generated-file declarations are translated. The Rust fixtures preserve missing, unreadable, directory, equal-length mismatch, UTF-8 byte-length, malformed-byte-versus-replacement-character, inode/mtime stability, temp-file cleanup, changed output, first write, and explicit opt-out behavior. The byte comparison cases are security-relevant because lossy text decoding must not hide a changed generated artifact."
     },
     {
@@ -455,9 +407,7 @@
       "lineCount": 439,
       "declaredTestCount": 12,
       "status": "red",
-      "rustTests": [
-        "rust/tdd/workflow-cli/tests/bulk_cancel.rs"
-      ],
+      "rustTests": ["rust/tdd/workflow-cli/tests/bulk_cancel.rs"],
       "notes": "All 12 TypeScript declarations are translated. Coverage preserves the 1..=500 integer limit, exact summary and per-run failure text, zero-result behavior, pending/running-only selection, round-robin page merging before truncation, single-call cancelMany behavior, bounded per-run fallback, has-more guidance, failure exit status, and confirmation decline without side effects. Security-relevant cases prove terminal runs cannot be pulled into an unpinned cancellation batch, an unconfirmed command cannot issue backend writes, and one status page cannot starve another before the global limit is applied. Final GREEN must use the real Rust World/CLI boundary and validate backend bulk results rather than manufacturing fixture observations."
     },
     {
@@ -468,9 +418,7 @@
       "lineCount": 33,
       "declaredTestCount": 1,
       "status": "red",
-      "rustTests": [
-        "rust/tdd/workflow-cli/tests/hydration.rs"
-      ],
+      "rustTests": ["rust/tdd/workflow-cli/tests/hydration.rs"],
       "notes": "The encrypted step-error display contract is translated end to end: an error is dehydrated for run_1 under a 32-byte key, remains an encrypted display reference without a key, and hydrates to an Error carrying the original message with the key. Final GREEN must use the real Rust serialization and authenticated-encryption implementation and must select the key by run ID; opaque fixture shortcuts are not sufficient."
     },
     {
@@ -498,9 +446,7 @@
       "lineCount": 89,
       "declaredTestCount": 9,
       "status": "red",
-      "rustTests": [
-        "rust/tdd/workflow-cli/tests/time_window.rs"
-      ],
+      "rustTests": ["rust/tdd/workflow-cli/tests/time_window.rs"],
       "notes": "All nine current declarations are translated with an injected fixed clock: minute/hour/day/week relative durations, absolute timestamps, flag-specific invalid-input errors, absent/default/inverted windows, and plan-window metadata extraction. Final GREEN must parse general inputs and produce exact UTC ISO timestamps rather than special-case the fixtures."
     },
     {
@@ -511,9 +457,7 @@
       "lineCount": 58,
       "declaredTestCount": 5,
       "status": "red",
-      "rustTests": [
-        "rust/tdd/workflow-cli/tests/vercel_api.rs"
-      ],
+      "rustTests": ["rust/tdd/workflow-cli/tests/vercel_api.rs"],
       "notes": "All five dashboard URL declarations are translated: production default, preview selection, run deep links, overview links, non-run query parameters, and explicit rejection of the legacy /observability path. Final GREEN must percent-encode untrusted path and query components while preserving these exact outputs for safe fixture values."
     },
     {
@@ -524,9 +468,7 @@
       "lineCount": 1448,
       "declaredTestCount": 10,
       "status": "red",
-      "rustTests": [
-        "rust/tdd/workflow-core/tests/benchmark.rs"
-      ],
+      "rustTests": ["rust/tdd/workflow-core/tests/benchmark.rs"],
       "notes": "All 10 benchmark scenario declarations are translated. The Rust contract preserves the in-deployment preflight and clientStart clock anchor, exact workflow names and arguments, sequential sampling, bounded retry budgets, three-attempt zero-success abort, exact step/chunk count validation, TTFS targets, CRTT index buckets, size and progress profiles, replay cadence identity, fan-out first/last completion metrics, destination-kind STSO splitting, and whole-run overhead. WF-RUST-090 records that security and measurement-integrity cases require malformed trigger responses and mismatched return counts to fail closed, prevent a remote target from consuming an unbounded retry budget, and retain semantic cadence hashes so a changed workload cannot inherit an unrelated baseline. Final GREEN must drive the real Rust runtime and workbench route; fabricated observations or local-only timestamps are insufficient."
     },
     {
@@ -537,9 +479,7 @@
       "lineCount": 302,
       "declaredTestCount": 3,
       "status": "red",
-      "rustTests": [
-        "rust/tdd/workflow-core/tests/build_errors.rs"
-      ],
+      "rustTests": ["rust/tdd/workflow-core/tests/build_errors.rs"],
       "notes": "All four executable TypeScript paths are translated, including the conditionally registered dual-entry package case that the manifest declaration counter currently undercounts. Coverage preserves direct Node.js-module diagnostics, top-level external-package attribution when only its ESM entry reaches a Node builtin, Bun-specific wording, file location, step-function guidance, documentation links, and reporting all fs/path/crypto violations in one build. Security-relevant behavior requires workflow sandbox violations to fail closed and aggregate every forbidden import instead of stopping after the first, while transitive diagnostics name the dependency the user can act on rather than silently selecting its safer CJS entry. Final GREEN must execute the real Rust compiler/build graph against temporary source and package fixtures; regex-only source scanning is insufficient."
     },
     {
@@ -550,9 +490,7 @@
       "lineCount": 1550,
       "declaredTestCount": 2,
       "status": "red",
-      "rustTests": [
-        "rust/tdd/workflow-core/tests/dev_hmr.rs"
-      ],
+      "rustTests": ["rust/tdd/workflow-core/tests/dev_hmr.rs"],
       "notes": "The generated declaration counter reports two plain test(...) calls, but the pinned source registers seven additional test.runIf(...) cases. All nine top-level cases are preserved, and the final HMR fuzz case is expanded into its 13 independently diagnosable mutations. The Rust suite also makes 12 load-bearing helper contracts explicit: configuration precedence, platform/canary timeout budgets, portable flow-route detection, UTF-16/UTF-8 log decoding, exact stable versus lower-bound canary log counts, quiescence before cursor windows, missing-output failure, stranded-step restoration, bounded poll diagnostics, and source conditionals. WF-RUST-091 records the shared-dev-server denial-of-service risk when a missed unlink leaves generated step registrations importing a deleted file. Final GREEN must drive the real Rust watcher, builder, generated artifacts, manifest, workflow execution, log stream, and failure-safe cleanup; returning the expected contract is insufficient."
     },
     {
@@ -619,9 +557,7 @@
       "lineCount": 261,
       "declaredTestCount": 1,
       "status": "red",
-      "rustTests": [
-        "rust/tdd/workflow-core/tests/local_build.rs"
-      ],
+      "rustTests": ["rust/tdd/workflow-core/tests/local_build.rs"],
       "notes": "The single describe.each declaration is expanded into all 13 workbench projects. Coverage preserves the SvelteKit import preflight, exact pnpm build invocation, Next Turbopack source-map fixture lifecycle, generic/source-map warning rejection, diagnostics manifests, native ESM import.meta output, and legacy step-route removal. WF-RUST-093 adds explicit hard process-tree deadlines, one shared 8 MiB output budget, interleaved stdout/stderr diagnostics, signal-aware failures, and non-ENOENT artifact-read propagation. Final GREEN must execute real Rust subprocess, builder, artifact, and cleanup paths; fabricated observations are insufficient."
     },
     {
@@ -632,9 +568,7 @@
       "lineCount": 368,
       "declaredTestCount": 6,
       "status": "red",
-      "rustTests": [
-        "rust/tdd/workflow-core/tests/manifest_e2e.rs"
-      ],
+      "rustTests": ["rust/tdd/workflow-core/tests/manifest_e2e.rs"],
       "notes": "All six parameterized TypeScript declarations are expanded into their 36 concrete project/scenario cases: structure across eight workbenches, dot-directory step/workflow discovery across two Next builders, and single-statement if/while/for extraction across all eight workbenches. Four additional Rust contract tests cover exact path routing, ID/graph validation, metadata validation, and WF-RUST-092. The TypeScript tryReadManifest helper catches every read and JSON error as null, so a malformed or unreadable manifest silently skips the suite. Rust preserves the intended missing-file skip but fails closed on parse and non-ENOENT I/O failures. Final GREEN must parse real generated JSON and validate the actual Rust builder output; fixture-only manifests are insufficient."
     },
     {
@@ -645,9 +579,7 @@
       "lineCount": 177,
       "declaredTestCount": 1,
       "status": "red",
-      "rustTests": [
-        "rust/tdd/workflow-core/tests/route_bundle_isolation.rs"
-      ],
+      "rustTests": ["rust/tdd/workflow-core/tests/route_bundle_isolation.rs"],
       "notes": "The isolated Next Turbopack hook-resume regression is translated with its exact build target, route bundle path, nonexistent token, 60-second harness deadline, forbidden dynamic-require/world-init failures, and healthy 500 Hook not found result. WF-RUST-094 strengthens the oracle: direct argv execution, Vercel and Node preload environment stripping, output caps, exact line-prefix marker parsing, bounded missing-result diagnostics, and duplicate/empty record rejection. Final GREEN must build and invoke the real route in a fresh sanitized Rust-managed process; fixture-only results are insufficient."
     },
     {
@@ -658,9 +590,7 @@
       "lineCount": 249,
       "declaredTestCount": 15,
       "status": "red",
-      "rustTests": [
-        "rust/tdd/workflow-core/tests/e2e_utils.rs"
-      ],
+      "rustTests": ["rust/tdd/workflow-core/tests/e2e_utils.rs"],
       "notes": "All 15 TypeScript declarations are translated: six source-map matrix cases, five pickup-watchdog cases, three warmup cases, and one interleaved task-local run-tracking case. The Rust suite preserves transient status retries, 500 ms exponential polling capped at 5 s, short-budget sleep clamping, stalled-probe cancellation and infra-event attribution, and per-test isolation. WF-RUST-095 requires the total warmup deadline to include probe creation and bounded cancellation, eliminating a late-probe status read after expiry. WF-RUST-096 replaces whole-URL substring matching with exact hostname classification so remote lookalikes cannot select local-only behavior. Final GREEN must exercise the real Rust runtime, timers, cancellation, infra recorder, and task-local state; scripted observations are insufficient."
     },
     {
@@ -671,9 +601,7 @@
       "lineCount": 755,
       "declaredTestCount": 23,
       "status": "red",
-      "rustTests": [
-        "rust/tdd/workflow-core/tests/abort_consistency.rs"
-      ],
+      "rustTests": ["rust/tdd/workflow-core/tests/abort_consistency.rs"],
       "notes": "All 22 executable TypeScript cases are translated. Coverage characterizes the dual hook/stream model across pre-aborted and late-aborted serialization, one-sided and two-sided transport failure, symbol identity, idempotent double abort, synchronous first-run listeners, replay listeners and durable reasons, cross-execution abort, fire-and-forget completion, and preservation of pending steps, hooks, and waits at suspension. WF-RUST-028 records the consistency and replay boundary. Final GREEN must exercise the production Rust serializer, event log, hook and stream transports, abort state machine, suspension collector, and replay scheduler."
     },
     {
@@ -684,9 +612,7 @@
       "lineCount": 738,
       "declaredTestCount": 19,
       "status": "red",
-      "rustTests": [
-        "rust/tdd/workflow-core/tests/abort_controller_step.rs"
-      ],
+      "rustTests": ["rust/tdd/workflow-core/tests/abort_controller_step.rs"],
       "notes": "All 19 executable TypeScript cases are translated. Coverage includes stream-reader setup, pre-aborted hydration, stream-delivered reasons and listeners, throw-if-aborted behavior, step-context stream writes, durable hook resume, synchronous local abort, post-context safety, multiple consumers, AbortSignal.any compatibility, fatal abort classification, retry suppression, and the production requirement that resumeHookDurable is queued in pre-completion work before step_completed. WF-RUST-027 records this cancellation ordering boundary. Final GREEN must use the real Rust serialization bridge, step context, stream backend, durable hook writer, and step executor."
     },
     {
@@ -697,9 +623,7 @@
       "lineCount": 483,
       "declaredTestCount": 22,
       "status": "red",
-      "rustTests": [
-        "rust/tdd/workflow-core/tests/abort_controller.rs"
-      ],
+      "rustTests": ["rust/tdd/workflow-core/tests/abort_controller.rs"],
       "notes": "All 22 TypeScript declarations are translated directly. Coverage preserves controller construction, durable hook registration, reason forwarding, double-abort idempotence, typed replay-token divergence, duplicate matching receipts, listener add/remove behavior, throwIfAborted, independent controller state, static abort signals, AbortSignal.any propagation, pre-aborted inputs, one-pass iterable materialization, listener cleanup, workflow timeout rejection, internal system-hook flags, abort queue mutation, and deterministic replay tokens. Security-relevant cases require mismatched durable tokens to fail as replay divergence rather than cross-wire state, and composite signals to detach captured listeners after abort so longer-lived inputs cannot retain the composite indefinitely. Final GREEN must exercise the real Rust VM context, event consumer, delivery ordering, hook queue, deterministic ID generator, and listener lifecycle; scenario-specific observations are insufficient."
     },
     {
@@ -710,9 +634,7 @@
       "lineCount": 172,
       "declaredTestCount": 2,
       "status": "red",
-      "rustTests": [
-        "rust/tdd/workflow-core/tests/abort_replay_ordering.rs"
-      ],
+      "rustTests": ["rust/tdd/workflow-core/tests/abort_replay_ordering.rs"],
       "notes": "Both deterministic TypeScript regression tests are translated with a delayed abort-reason hydration boundary. Coverage requires the in-flight abort to increment pendingDeliveries, keeps scheduleWhenIdle blocked until the reason is hydrated and _setAborted lands, preserves the reason, and releases the counter to zero. WF-RUST-019 records the security consequence: serializing a downstream signal as aborted=false can let work continue after cancellation. Final GREEN must exercise the real Rust event consumer, async payload hydration, idle gate, signal state, and decrement-on-error path; returning a precomputed observation is insufficient."
     },
     {
@@ -736,9 +658,7 @@
       "lineCount": 154,
       "declaredTestCount": 11,
       "status": "red",
-      "rustTests": [
-        "rust/tdd/workflow-core/tests/attribute_changes.rs"
-      ],
+      "rustTests": ["rust/tdd/workflow-core/tests/attribute_changes.rs"],
       "notes": "All 11 TypeScript declarations are translated as 14 executable Rust cases after expanding non-object inputs. Coverage preserves insertion order, undefined-to-null deletion, empty records, plain-object rejection with actionable type names, JavaScript UTF-16 key limits including astral Unicode boundaries, UTF-8 value byte limits, reserved-prefix opt-in, and exact 64-attribute batch boundaries. Security-relevant cases require malformed runtime values to fail before event creation and prevent Unicode or multibyte inputs from bypassing storage limits. Final GREEN must share the real Rust World validator and wrap validation failures in the Rust FatalError boundary rather than duplicating constants or messages."
     },
     {
@@ -749,9 +669,7 @@
       "lineCount": 378,
       "declaredTestCount": 30,
       "status": "red",
-      "rustTests": [
-        "rust/tdd/workflow-core/tests/bench_rtt_stats.rs"
-      ],
+      "rustTests": ["rust/tdd/workflow-core/tests/bench_rtt_stats.rs"],
       "notes": "All 30 TypeScript declarations are translated directly. Coverage preserves mechanism-based sequence buckets, chunk-count-independent progress bins, sparse input handling, exact mean-profile and histogram merges, doubling size bins, nearest-rank percentiles, one-decimal rounding, per-run delay maxima, steady-window rate trimming, skew-free CDV with duplicate/reorder/hole accounting, positive-CDV sequence padding, count-weighted averages, and percentile-of-percentiles aggregation. Final GREEN must share one production Rust implementation between the deployment reader and benchmark runner; fixture tables or precomputed summaries are insufficient."
     },
     {
@@ -762,9 +680,7 @@
       "lineCount": 541,
       "declaredTestCount": 17,
       "status": "red",
-      "rustTests": [
-        "rust/tdd/workflow-core/tests/byte_stream_framing.rs"
-      ],
+      "rustTests": ["rust/tdd/workflow-core/tests/byte_stream_framing.rs"],
       "notes": "All 17 TypeScript declarations are translated. Coverage preserves the four-byte big-endian envelope, empty-chunk suppression, large and empty streams, the 100 MB producer and consumer cap, split and coalesced transport reads, truncated-frame rejection, one-hundred-chunk boundary preservation, legacy raw references, framed-v1 references, and world-stream round trips. WF-RUST-024 records the memory-exhaustion and protocol-desynchronization boundary. Final GREEN must use the production incremental Rust parser and must reject an advertised oversized length before allocating or waiting for its body."
     },
     {
@@ -789,9 +705,7 @@
       "lineCount": 266,
       "declaredTestCount": 28,
       "status": "red",
-      "rustTests": [
-        "rust/tdd/workflow-core/tests/classify_error.rs"
-      ],
+      "rustTests": ["rust/tdd/workflow-core/tests/classify_error.rs"],
       "notes": "All 28 TypeScript declarations are translated directly. Coverage preserves stable terminal categories for replay corruption, event limits, divergence, runtime/deployment/user errors, backend contract failures, transport errors, throttling, native OperationError, and non-Error throws. Retry classification keeps 429, 5xx, TRANSPORT, and TIMEOUT retryable while making 4xx, parse/schema violations, TooEarly pacing, plain values, and permanently lost event payloads terminal. WF-RUST-020 records the read-amplification and availability consequence of retrying an unrecoverable payload. Final GREEN must dispatch on the real Rust error enum/typed World metadata and may not infer categories from untrusted message text."
     },
     {
@@ -802,9 +716,7 @@
       "lineCount": 243,
       "declaredTestCount": 12,
       "status": "red",
-      "rustTests": [
-        "rust/tdd/workflow-core/tests/context_errors.rs"
-      ],
+      "rustTests": ["rust/tdd/workflow-core/tests/context_errors.rs"],
       "notes": "All 12 TypeScript declarations are translated as 16 executable Rust tests after expanding the four-way FatalError gate. Coverage preserves exact context phrasing and docs framing, active-workflow naming, generic fallback, fatal/no-retry classification, redirected caller stacks, lazy pretty terminal rendering, one-copy detail lines, and plain ANSI-free stored message/stack data. WF-RUST-022 records the prior functionName enumeration and ANSI persistence regressions. Final GREEN must use the production Rust error type and formatter; prebuilt strings or hidden serializable function-name fields are insufficient."
     },
     {
@@ -815,9 +727,7 @@
       "lineCount": 111,
       "declaredTestCount": 3,
       "status": "red",
-      "rustTests": [
-        "rust/tdd/workflow-core/tests/define_hook.rs"
-      ],
+      "rustTests": ["rust/tdd/workflow-core/tests/define_hook.rs"],
       "notes": "All three TypeScript cases are translated. The Rust boundary preserves schema-free payload forwarding, schema normalization before resume, and aggregated actionable validation errors. Security-relevant behavior requires invalid payloads to fail before resumeHook sees the token or payload. Final GREEN must accept a real standard-schema adapter and call the production Rust hook resume path only after successful validation."
     },
     {
@@ -854,9 +764,7 @@
       "lineCount": 365,
       "declaredTestCount": 34,
       "status": "red",
-      "rustTests": [
-        "rust/tdd/workflow-core/tests/describe_error.rs"
-      ],
+      "rustTests": ["rust/tdd/workflow-core/tests/describe_error.rs"],
       "notes": "All 34 TypeScript declarations are translated directly. Coverage preserves live and persisted attribution for user, serialization, context, runtime, corruption, replay-timeout, max-delivery, max-event, World-contract, and deployment-mismatch failures; precomputed typed codes override live classification; missing or unknown persisted values default safely to USER_ERROR; and all eight snapshot payloads retain exact static hints. Security-relevant behavior requires classification from trusted enum/code/name boundaries rather than untrusted message text, and hints must remain static so attacker-controlled error messages cannot alter operator guidance. Final GREEN must share the production Rust classification enum and persisted-signal parser."
     },
     {
@@ -867,9 +775,7 @@
       "lineCount": 121,
       "declaredTestCount": 1,
       "status": "red",
-      "rustTests": [
-        "rust/tdd/workflow-core/tests/duplicate_event_fixtures.rs"
-      ],
+      "rustTests": ["rust/tdd/workflow-core/tests/duplicate_event_fixtures.rs"],
       "notes": "The single parameterized TypeScript declaration is expanded into all 16 shared fixture cases. Coverage preserves open-versus-closed entity consumers, retry attempts, terminal outcome classes, wait/hook/run duplicates, entityless step-body attributes, id-bearing workflow attributes, and sibling isolation. Security-relevant behavior requires duplicate classification to remain per entity and per event class so one entity cannot hide another's event and observability cannot conceal a divergence. Final GREEN must consume the same canonical fixture corpus as the Rust observability implementation rather than copying expected indices into runtime code."
     },
     {
@@ -880,9 +786,7 @@
       "lineCount": 266,
       "declaredTestCount": 6,
       "status": "red",
-      "rustTests": [
-        "rust/tdd/workflow-core/tests/duplicate_events.rs"
-      ],
+      "rustTests": ["rust/tdd/workflow-core/tests/duplicate_events.rs"],
       "notes": "All six TypeScript replay cases are translated. Coverage drives step, wait, hook, and attribute duplicates through a suspension/result observation, verifies the exact duplicate event and class, keeps the next legitimate step pending, leaves no stranded event after a duplicate workflow attribute write, and still reports an unrelated unconsumed event as divergence. Security-relevant behavior requires duplicate suppression to be scoped by entity and class so malformed events cannot hide unrelated log corruption. Final GREEN must use the real Rust event consumer and workflow primitives rather than returning scenario-specific observations."
     },
     {
@@ -893,9 +797,7 @@
       "lineCount": 131,
       "declaredTestCount": 7,
       "status": "red",
-      "rustTests": [
-        "rust/tdd/workflow-core/tests/encryption.rs"
-      ],
+      "rustTests": ["rust/tdd/workflow-core/tests/encryption.rs"],
       "notes": "All seven TypeScript encryption cases are translated. Coverage preserves exact 32-byte keys, AES-GCM nonce-plus-tag overhead, round trips, short-envelope rejection, authenticated tamper/wrong-key failure, OperationError cause capture, operation/byteLength context, omission of nonce bytes from formatPrefix, and encrypt-usage failures. WF-RUST-021 records the authenticated-encryption and error-classification boundary. Final GREEN must use the production Rust cryptographic provider and random nonces; deterministic or home-grown crypto implementations are prohibited."
     },
     {
@@ -917,9 +819,7 @@
       "lineCount": 581,
       "declaredTestCount": 16,
       "status": "red",
-      "rustTests": [
-        "rust/tdd/workflow-core/tests/flushable_stream.rs"
-      ],
+      "rustTests": ["rust/tdd/workflow-core/tests/flushable_stream.rs"],
       "notes": "All 16 TypeScript declarations are translated. Coverage includes handled pre-await rejection, writable and readable lock polling, natural close, write and source failures, concurrent and delayed writes, singleton pollers, drain-barrier adoption, early-ack completion ordering, barrier failure, accepted-prefix durability, plain sinks, ordered delivery, sink close, and pending-operation cleanup. WF-RUST-025 records the durability boundary. Final GREEN must exercise the production async Rust pipe and prove that neither success nor failure settles before every accepted byte is durable."
     },
     {
@@ -952,9 +852,7 @@
       "lineCount": 163,
       "declaredTestCount": 8,
       "status": "red",
-      "rustTests": [
-        "rust/tdd/workflow-core/tests/log_format.rs"
-      ],
+      "rustTests": ["rust/tdd/workflow-core/tests/log_format.rs"],
       "notes": "All eight TypeScript formatting cases are translated with exact plain-text output. Coverage preserves framing, known metadata rows, parsed machine names, framework-frame collapsing, sdk/user attribution, duplicate message suppression, malformed-name fallback, sorted unknown fields, and retry attempt summaries. Final GREEN must keep structured metadata separate from untrusted message text and must not execute terminal-control sequences from metadata values."
     },
     {
@@ -965,9 +863,7 @@
       "lineCount": 320,
       "declaredTestCount": 4,
       "status": "red",
-      "rustTests": [
-        "rust/tdd/workflow-core/tests/log_order_draws.rs"
-      ],
+      "rustTests": ["rust/tdd/workflow-core/tests/log_order_draws.rs"],
       "notes": "All four TypeScript regression cases are translated. The arrival-order control must still demonstrate a rebound, while default log-order draws preserve every shared correlation-id binding under prefix extension, remain stable across every dense prefix, and are deterministic for an identical prefix. WF-RUST-023 records the production corruption where one ordinal named a finalize step in a stale replay and a wait in a fresher replay. Final GREEN must mint identifiers inside the actual event-delivery cascade and replay the blocked-branch graph; precomputed binding tables are insufficient."
     },
     {
@@ -978,9 +874,7 @@
       "lineCount": 188,
       "declaredTestCount": 13,
       "status": "red",
-      "rustTests": [
-        "rust/tdd/workflow-core/tests/logger.rs"
-      ],
+      "rustTests": ["rust/tdd/workflow-core/tests/logger.rs"],
       "notes": "All 13 TypeScript logger cases are translated with exact console call arity and snapshot strings. Coverage preserves error/warn routing, quiet info/debug defaults, workflow:build DEBUG inclusion and exclusion, child metadata merging and call-site precedence, chained scopes, machine-name rendering, extra run metadata, no-metadata output, and exact step-failure/max-retry forms. Security-relevant behavior requires one preformatted string argument so log drains do not reinterpret multiline stacks or inspect attacker-controlled objects, and metadata conflict resolution must be deterministic. Final GREEN must use the production Rust logger and shared formatter."
     },
     {
@@ -991,9 +885,7 @@
       "lineCount": 30,
       "declaredTestCount": 1,
       "status": "red",
-      "rustTests": [
-        "rust/tdd/workflow-core/tests/module_scope_state.rs"
-      ],
+      "rustTests": ["rust/tdd/workflow-core/tests/module_scope_state.rs"],
       "notes": "The repository scan assertion is translated. Final GREEN must run the actual Rust lint over workflow-core and report no unguarded mutable module-scope state; a hard-coded empty vector is insufficient."
     },
     {
@@ -1055,9 +947,7 @@
       "lineCount": 241,
       "declaredTestCount": 9,
       "status": "green",
-      "rustTests": [
-        "crates/workflow-core/tests/replay_payload_cache.rs"
-      ],
+      "rustTests": ["crates/workflow-core/tests/replay_payload_cache.rs"],
       "notes": "All nine TypeScript declarations are covered by the production workflow-core replay payload cache. Coverage preserves exact in-flight preparation sharing; synchronous preparer normalization; speculative rejection retention until the ordered consumer observes it; retry only after observation; concurrent workflow/result/error/hook prewarming; cached decrypt/decompress work with fresh VM object revival; stale-snapshot resetScan behavior for events inserted below the scanned prefix; event-ID keyed reuse across rescans; legacy flattened-value bypass; missing event-data tolerance; memoization of share-safe primitives including undefined; the 4096-character cap; fresh hydration for mutable and oversized values; and retry after failed hydration. The permanent Rust core workflow builds and runs the TypeScript oracle first, then exercises the production Rust cache, all Rust targets, Rustfmt, Clippy with warnings denied, and differential conformance runners."
     },
     {
@@ -1079,9 +969,7 @@
       "lineCount": 12,
       "declaredTestCount": 1,
       "status": "red",
-      "rustTests": [
-        "rust/tdd/workflow-core/tests/runtime_import.rs"
-      ],
+      "rustTests": ["rust/tdd/workflow-core/tests/runtime_import.rs"],
       "notes": "The runtime-entrypoint import assertion is translated. Final GREEN must prove module evaluation does not load Vercel-only or other platform adapter code, preserving portability and preventing environment-specific initialization side effects."
     },
     {
@@ -1103,9 +991,7 @@
       "lineCount": 41,
       "declaredTestCount": 1,
       "status": "red",
-      "rustTests": [
-        "rust/tdd/workflow-core/tests/runtime_world_singleton.rs"
-      ],
+      "rustTests": ["rust/tdd/workflow-core/tests/runtime_world_singleton.rs"],
       "notes": "The World initialization assertion is translated. Coverage requires a 204 route response, the same World identity from getWorld after initialization, and exactly one local World construction. Final GREEN must exercise the real Rust singleton and concurrent-safe route initialization rather than fixture identity strings."
     },
     {
@@ -1944,9 +1830,7 @@
       "lineCount": 130,
       "declaredTestCount": 11,
       "status": "red",
-      "rustTests": [
-        "rust/tdd/workflow-errors/tests/ansi.rs"
-      ],
+      "rustTests": ["rust/tdd/workflow-errors/tests/ansi.rs"],
       "notes": "All 11 frame, inline annotation, code-token, hint, note, help, and docs snapshot declarations are translated. The test model keeps styled fragments readable as HTML-like tags, matching the TypeScript mock rather than embedding terminal escape bytes."
     },
     {
@@ -1957,9 +1841,7 @@
       "lineCount": 37,
       "declaredTestCount": 4,
       "status": "red",
-      "rustTests": [
-        "rust/tdd/workflow-errors/tests/build_error.rs"
-      ],
+      "rustTests": ["rust/tdd/workflow-errors/tests/build_error.rs"],
       "notes": "All four public-name, hierarchy, hint framing, native cause identity, and name-guard declarations are translated. Final GREEN requires the JavaScript binding to preserve Error subclass and cause identity."
     },
     {
@@ -1983,9 +1865,7 @@
       "lineCount": 43,
       "declaredTestCount": 5,
       "status": "red",
-      "rustTests": [
-        "rust/tdd/workflow-errors/tests/fatal_error.rs"
-      ],
+      "rustTests": ["rust/tdd/workflow-errors/tests/fatal_error.rs"],
       "notes": "All five retry-gate declarations are translated, including the security-sensitive requirement that only an Error with literal boolean fatal=true is treated as terminal."
     },
     {
@@ -1996,9 +1876,7 @@
       "lineCount": 30,
       "declaredTestCount": 1,
       "status": "red",
-      "rustTests": [
-        "rust/tdd/workflow-errors/tests/module_scope_state.rs"
-      ],
+      "rustTests": ["rust/tdd/workflow-errors/tests/module_scope_state.rs"],
       "notes": "The package-local module-scope-state sweep is translated separately so running only the error test crate retains the original safety signal."
     },
     {
@@ -2035,9 +1913,7 @@
       "lineCount": 56,
       "declaredTestCount": 6,
       "status": "red",
-      "rustTests": [
-        "rust/tdd/workflow-errors/tests/serialization_error.rs"
-      ],
+      "rustTests": ["rust/tdd/workflow-errors/tests/serialization_error.rs"],
       "notes": "All six hierarchy, bare-title, hint framing, cause identity, name-guard, and fatal retry-short-circuit declarations are translated."
     },
     {
@@ -2048,9 +1924,7 @@
       "lineCount": 22,
       "declaredTestCount": 2,
       "status": "red",
-      "rustTests": [
-        "rust/tdd/workflow-errors/tests/workflow_error.rs"
-      ],
+      "rustTests": ["rust/tdd/workflow-errors/tests/workflow_error.rs"],
       "notes": "Both base-error declarations are translated, including the prior WorkflowError.is regression and stable documentation framing. Final GREEN requires the JavaScript binding to expose the correct native Error name and guard behavior."
     },
     {
@@ -2259,9 +2133,7 @@
       "lineCount": 69,
       "declaredTestCount": 4,
       "status": "green",
-      "rustTests": [
-        "crates/workflow-utils/tests/check_data_dir_security.rs"
-      ],
+      "rustTests": ["crates/workflow-utils/tests/check_data_dir_security.rs"],
       "notes": "Four TypeScript regressions prove accessible files and raw suffix lookalikes are rejected. The production Rust suite adds the same object-type and component-boundary checks plus literal user-qualified tilde handling."
     },
     {
@@ -2314,9 +2186,7 @@
       "lineCount": 381,
       "declaredTestCount": 20,
       "status": "red",
-      "rustTests": [
-        "rust/tdd/workflow-utils/tests/get_port.rs"
-      ],
+      "rustTests": ["rust/tdd/workflow-utils/tests/get_port.rs"],
       "notes": "All 20 listener enumeration, deterministic ordering, restart, concurrency, workflow-health probing, timeout, IPv6, and Windows netstat assertions are translated."
     },
     {
@@ -2326,11 +2196,9 @@
       "kind": "unit",
       "lineCount": 110,
       "declaredTestCount": 9,
-      "status": "red",
-      "rustTests": [
-        "rust/tdd/workflow-utils/tests/global_singleton.rs"
-      ],
-      "notes": "All nine sharing, versioning, mutation, lookup, and reset assertions are represented against the planned process registry. Final GREEN additionally requires a JavaScript binding test proving globalThis and duplicated-module behavior."
+      "status": "green",
+      "rustTests": ["rust/tdd/workflow-utils/tests/global_singleton.rs"],
+      "notes": "All nine TypeScript sharing, factory-once, mutation, process-registry, shape-version, name-isolation, and reset declarations execute against production workflow-utils. Rust additionally proves concurrent callers run one factory and that a name/version reused with another concrete type fails closed. Verified by read-only utility workflow run 33578496332."
     },
     {
       "typescript": "packages/utils/src/module-scope-state.test.ts",
@@ -2340,9 +2208,7 @@
       "lineCount": 365,
       "declaredTestCount": 19,
       "status": "red",
-      "rustTests": [
-        "rust/tdd/workflow-utils/tests/module_scope_state.rs"
-      ],
+      "rustTests": ["rust/tdd/workflow-utils/tests/module_scope_state.rs"],
       "notes": "All 19 package-discovery and static-analysis assertions are translated, including cross-file empty collections, static fields, this resolution, .mts sources, and per-copy annotations."
     },
     {
@@ -2353,9 +2219,7 @@
       "lineCount": 48,
       "declaredTestCount": 3,
       "status": "green",
-      "rustTests": [
-        "crates/workflow-utils/tests/parse_name_security.rs"
-      ],
+      "rustTests": ["crates/workflow-utils/tests/parse_name_security.rs"],
       "notes": "The pre-fix TypeScript implementation is observed RED. Fixed TypeScript and Rust format parsed and fallback names as one logical line by escaping C0, DEL/C1, CR, LF, tab, U+2028, and U+2029 without reflecting controls into logs."
     },
     {
@@ -2380,9 +2244,7 @@
       "lineCount": 28,
       "declaredTestCount": 4,
       "status": "green",
-      "rustTests": [
-        "rust/tdd/workflow-utils/tests/pluralize.rs"
-      ],
+      "rustTests": ["rust/tdd/workflow-utils/tests/pluralize.rs"],
       "notes": "All four translated test functions and eleven concrete assertions execute against the production workflow-utils pluralize implementation, preserving the exact TypeScript count === 1 contract."
     },
     {
@@ -2392,11 +2254,9 @@
       "kind": "unit",
       "lineCount": 48,
       "declaredTestCount": 5,
-      "status": "red",
-      "rustTests": [
-        "rust/tdd/workflow-utils/tests/promise.rs"
-      ],
-      "notes": "All five one-shot resolver and lazy memoization assertions are represented. Final GREEN additionally requires the JavaScript binding to expose native Promise behavior."
+      "status": "green",
+      "rustTests": ["rust/tdd/workflow-utils/tests/promise.rs"],
+      "notes": "All five TypeScript resolver, resolve, reject, call-once, and memoization declarations execute against production workflow-utils. Rust additionally proves first-settlement-wins behavior, cloned cross-thread resolution, and retry after an initializer panic. Verified by read-only utility workflow run 33578496332."
     },
     {
       "typescript": "packages/utils/src/re-exports.test.ts",
@@ -2420,9 +2280,7 @@
       "lineCount": 56,
       "declaredTestCount": 9,
       "status": "green",
-      "rustTests": [
-        "crates/workflow-world/tests/time_typescript_port.rs"
-      ],
+      "rustTests": ["crates/workflow-world/tests/time_typescript_port.rs"],
       "notes": "All nine TypeScript assertions pass in Rust, including differential behavior for relative and absolute durations, invalid dates, TimeClip truncation, and overflow rejection. Verified by Rust port workflow run 33455424866 at 3ab297fa184b92991d3ce616353e40050df11f9f."
     },
     {
@@ -2433,9 +2291,7 @@
       "lineCount": 36,
       "declaredTestCount": 3,
       "status": "red",
-      "rustTests": [
-        "rust/tdd/workflow-utils/tests/workflow_routes.rs"
-      ],
+      "rustTests": ["rust/tdd/workflow-utils/tests/workflow_routes.rs"],
       "notes": "All three route assertions are translated, including configured base paths and rejection of the retired standalone step route."
     },
     {
@@ -3648,9 +3504,7 @@
       "lineCount": 78,
       "declaredTestCount": 5,
       "status": "red",
-      "rustTests": [
-        "rust/tdd/workflow-world/tests/analytics.rs"
-      ],
+      "rustTests": ["rust/tdd/workflow-world/tests/analytics.rs"],
       "notes": "All five provenance-field and UTC date-coercion declarations are translated. The expected-RED API keeps timezone-naive, timezone-aware, timestamp-object, and nullable behavior explicit before implementation."
     },
     {
@@ -3713,9 +3567,7 @@
       "lineCount": 148,
       "declaredTestCount": 11,
       "status": "red",
-      "rustTests": [
-        "rust/tdd/workflow-world/tests/events.rs"
-      ],
+      "rustTests": ["rust/tdd/workflow-world/tests/events.rs"],
       "notes": "All 11 token-retention, owner-message, cancellation-reason, stored-event, and backend-only noop declarations are translated before the event schema implementation is added."
     },
     {
@@ -3740,9 +3592,7 @@
       "lineCount": 37,
       "declaredTestCount": 3,
       "status": "red",
-      "rustTests": [
-        "rust/tdd/workflow-world/tests/node_http_flag.rs"
-      ],
+      "rustTests": ["rust/tdd/workflow-world/tests/node_http_flag.rs"],
       "notes": "All three default, explicit override, and implicit process-environment declarations are translated. Final GREEN additionally requires an isolated JavaScript binding test for live process.env mutation."
     },
     {
@@ -3753,9 +3603,7 @@
       "lineCount": 465,
       "declaredTestCount": 23,
       "status": "red",
-      "rustTests": [
-        "rust/tdd/workflow-world/tests/node_http.rs"
-      ],
+      "rustTests": ["rust/tdd/workflow-world/tests/node_http.rs"],
       "notes": "All 23 GET/POST, content-length, compression, streaming, abort, timeout, socket-reset, cancellation, queueing, and keep-alive declarations are translated against the planned Rust client contract. Final GREEN requires the same assertions against real loopback sockets rather than only a scripted contract harness."
     },
     {
@@ -3766,9 +3614,7 @@
       "lineCount": 254,
       "declaredTestCount": 32,
       "status": "green",
-      "rustTests": [
-        "crates/workflow-world/tests/queue_typescript_port.rs"
-      ],
+      "rustTests": ["crates/workflow-world/tests/queue_typescript_port.rs"],
       "notes": "All 32 prefix, queue-name, payload-discriminator, binary step-input, unknown-field, and creator-environment declarations pass in the direct Rust mirror. Verified by Rust port workflow run 33455424866."
     },
     {
@@ -3779,9 +3625,7 @@
       "lineCount": 98,
       "declaredTestCount": 5,
       "status": "red",
-      "rustTests": [
-        "rust/tdd/workflow-world/tests/recovery.rs"
-      ],
+      "rustTests": ["rust/tdd/workflow-world/tests/recovery.rs"],
       "notes": "All five namespace precedence, silent-success, debug-reporting, and always-visible enqueue-failure declarations are translated before recovery implementation."
     },
     {
@@ -3805,9 +3649,7 @@
       "lineCount": 155,
       "declaredTestCount": 11,
       "status": "green",
-      "rustTests": [
-        "crates/workflow-world/tests/runs_typescript_port.rs"
-      ],
+      "rustTests": ["crates/workflow-world/tests/runs_typescript_port.rs"],
       "notes": "All 11 request-boundary, outcome-variant, required-field, unknown-outcome, and aggregate declarations pass in Rust. Verified by Rust port workflow run 33455424866."
     },
     {
@@ -3818,9 +3660,7 @@
       "lineCount": 29,
       "declaredTestCount": 1,
       "status": "red",
-      "rustTests": [
-        "rust/tdd/workflow-world/tests/shared.rs"
-      ],
+      "rustTests": ["rust/tdd/workflow-world/tests/shared.rs"],
       "notes": "The optional analytics page-metadata declaration is translated, including UTC coercion of both lookback-window timestamps."
     },
     {

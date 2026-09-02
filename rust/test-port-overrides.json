@@ -33,15 +33,15 @@
     },
     {
       "typescript": "packages/utils/src/global-singleton.test.ts",
-      "status": "red",
+      "status": "green",
       "rustTests": ["rust/tdd/workflow-utils/tests/global_singleton.rs"],
-      "notes": "All nine sharing, versioning, mutation, lookup, and reset assertions are represented against the planned process registry. Final GREEN additionally requires a JavaScript binding test proving globalThis and duplicated-module behavior."
+      "notes": "All nine TypeScript sharing, factory-once, mutation, process-registry, shape-version, name-isolation, and reset declarations execute against production workflow-utils. Rust additionally proves concurrent callers run one factory and that a name/version reused with another concrete type fails closed. Verified by read-only utility workflow run 33578496332."
     },
     {
       "typescript": "packages/utils/src/promise.test.ts",
-      "status": "red",
+      "status": "green",
       "rustTests": ["rust/tdd/workflow-utils/tests/promise.rs"],
-      "notes": "All five one-shot resolver and lazy memoization assertions are represented. Final GREEN additionally requires the JavaScript binding to expose native Promise behavior."
+      "notes": "All five TypeScript resolver, resolve, reject, call-once, and memoization declarations execute against production workflow-utils. Rust additionally proves first-settlement-wins behavior, cloned cross-thread resolution, and retry after an initializer panic. Verified by read-only utility workflow run 33578496332."
     },
     {
       "typescript": "packages/utils/src/re-exports.test.ts",

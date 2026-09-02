@@ -53,3 +53,10 @@ Status meanings:
 | --- | --- | --- |
 | Workflow world-target resolution | PROVEN | 10 translated TypeScript tests plus direct exact-match regressions; read-only workflow run `33560481078` |
 | Parse-name crate-root re-exports | PROVEN | 3 translated TypeScript tests plus direct production re-export tests; read-only workflow run `33560481078` |
+
+## Utility singleton and deferred promotions
+
+| Contract | Status | Evidence |
+| --- | --- | --- |
+| Process-wide versioned singleton registry | PROVEN | 9 translated TypeScript tests plus concurrent initialization and type-confusion regressions; read-only workflow run `33578496332` |
+| Deferred resolver and lazy once value | PROVEN | 5 translated TypeScript tests plus settlement-race, cross-thread, and panic-retry regressions; read-only workflow run `33578496332` |
