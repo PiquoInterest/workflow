@@ -1,0 +1,115 @@
+name: Rust errors promote once
+
+on:
+  push:
+    branches:
+      - pro/rust-repository-port
+    paths:
+      - '.github/workflows/rust-errors-promote-once.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  promote:
+    name: Promote verified error suites
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout migration branch
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: pro/rust-repository-port
+          fetch-depth: 0
+
+      - name: Promote the eight verified suites
+        shell: python
+        run: |
+          import collections
+          import json
+          from pathlib import Path
+
+          verified = {
+              "packages/errors/src/ansi.test.ts",
+              "packages/errors/src/build-error.test.ts",
+              "packages/errors/src/corrupted-event-log-error.test.ts",
+              "packages/errors/src/fatal-error.test.ts",
+              "packages/errors/src/replay-divergence-error.test.ts",
+              "packages/errors/src/runtime-decryption-error.test.ts",
+              "packages/errors/src/serialization-error.test.ts",
+              "packages/errors/src/workflow-error.test.ts",
+          }
+          evidence = (
+              " GREEN verified against the TypeScript compatibility oracle, production Rust "
+              "crate, translated Rust suite, Rustfmt, and Clippy in GitHub Actions run "
+              "33582056933 at 63c1eae22b98e4cd81f7f3a876b9462401425adb."
+          )
+
+          manifest_path = Path("rust/test-port-manifest.json")
+          manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+          selected = {
+              entry["typescript"]: entry
+              for entry in manifest["entries"]
+              if entry["typescript"] in verified
+          }
+          if set(selected) != verified:
+              raise SystemExit(f"manifest selection mismatch: {sorted(verified - set(selected))}")
+          stale = {
+              name: entry["status"]
+              for name, entry in selected.items()
+              if entry["status"] != "red"
+          }
+          if stale:
+              raise SystemExit(f"expected RED entries before promotion: {stale}")
+
+          for entry in selected.values():
+              entry["status"] = "green"
+              if not entry["notes"].endswith("."):
+                  entry["notes"] += "."
+              entry["notes"] += evidence
+
+          counts = collections.Counter(entry["status"] for entry in manifest["entries"])
+          manifest["statusCounts"] = {
+              "unported": counts.get("unported", 0),
+              "partial": counts.get("partial", 0),
+              "red": counts.get("red", 0),
+              "green": counts.get("green", 0),
+              "blocked": counts.get("blocked", 0),
+          }
+          if manifest["statusCounts"] != {
+              "unported": 224,
+              "partial": 0,
+              "red": 81,
+              "green": 37,
+              "blocked": 0,
+          }:
+              raise SystemExit(f"unexpected promoted counts: {manifest['statusCounts']}")
+          manifest_path.write_text(
+              json.dumps(manifest, indent=2, ensure_ascii=False) + "\n",
+              encoding="utf-8",
+          )
+
+          red_path = Path("rust/tdd-red.json")
+          red = json.loads(red_path.read_text(encoding="utf-8"))
+          present = {
+              case["typescript"] for case in red["cases"] if case["typescript"] in verified
+          }
+          if present != verified:
+              raise SystemExit(f"expected-RED selection mismatch: {sorted(verified - present)}")
+          red["cases"] = [
+              case for case in red["cases"] if case["typescript"] not in verified
+          ]
+          red_path.write_text(
+              json.dumps(red, indent=2, ensure_ascii=False) + "\n",
+              encoding="utf-8",
+          )
+
+      - name: Commit promotion
+        run: |
+          git diff --check
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add rust/test-port-manifest.json rust/tdd-red.json
+          git diff --cached --quiet && { echo 'promotion produced no changes' >&2; exit 1; }
+          git commit -m 'test(rust-errors): promote eight suites to GREEN'
+          git push origin HEAD:pro/rust-repository-port
