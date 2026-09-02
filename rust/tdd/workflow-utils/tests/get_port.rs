@@ -4,7 +4,7 @@ use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::{Arc, Mutex, MutexGuard, OnceLock};
 use std::thread::{self, JoinHandle};
 use std::time::{Duration, Instant};
-use workflow_utils_tdd::{
+use workflow_utils::{
     WorkflowPortOptions, get_all_ports, get_port, get_workflow_port,
     parse_windows_netstat_ports_for_pid,
 };
@@ -279,6 +279,7 @@ fn get_workflow_port_respects_a_custom_timeout() {
     let start = Instant::now();
     let result = get_workflow_port(WorkflowPortOptions {
         timeout: Duration::from_millis(100),
+        ..WorkflowPortOptions::default()
     });
     assert_eq!(result, Some(workflow.port));
     assert!(start.elapsed() < Duration::from_secs(5));
@@ -312,4 +313,30 @@ fn windows_netstat_parser_only_returns_listeners_owned_by_the_requested_pid() {
         parse_windows_netstat_ports_for_pid(&output, 55_812),
         vec![3000, 3001]
     );
+}
+
+#[test]
+fn windows_netstat_parser_rejects_partial_or_out_of_range_ports() {
+    let output = [
+        "TCP 127.0.0.1:3000junk 0.0.0.0:0 LISTENING 55812",
+        "TCP 127.0.0.1:65536 0.0.0.0:0 LISTENING 55812",
+        "TCP 127.0.0.1:3002 0.0.0.0:0 LISTENING 55812",
+    ]
+    .join("\n");
+    assert_eq!(
+        parse_windows_netstat_ports_for_pid(&output, 55_812),
+        vec![3002]
+    );
+}
+
+#[test]
+fn unsafe_custom_probe_endpoints_are_rejected_before_network_use() {
+    let _guard = port_test_lock();
+    let first = TestHttpServer::start(ServerMode::NotWorkflow);
+    let _workflow = TestHttpServer::start(ServerMode::Workflow);
+    let result = get_workflow_port(WorkflowPortOptions {
+        endpoint: Some("/.well-known/workflow/v1/flow?__health\r\nX-Test: injected".to_owned()),
+        timeout: Duration::from_millis(100),
+    });
+    assert_eq!(result, Some(first.port));
 }
