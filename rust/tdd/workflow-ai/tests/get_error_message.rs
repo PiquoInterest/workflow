@@ -1,4 +1,4 @@
-use workflow_ai::{ErrorValue, get_error_message};
+use workflow_ai_tdd::{ErrorValue, get_error_message};
 
 #[test]
 fn returns_message_from_error_instances() {
