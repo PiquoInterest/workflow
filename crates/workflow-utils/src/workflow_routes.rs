@@ -70,13 +70,8 @@ impl WorkflowRoutes {
         };
 
         Ok(format!(
-            "{}{}{}{}{}{}",
-            parsed.scheme,
-            parsed.scheme_separator,
-            parsed.authority,
-            path,
-            WORKFLOW_ROUTE_BASE,
-            format_args!("/{endpoint}{search}")
+            "{}://{}{}{WORKFLOW_ROUTE_BASE}/{endpoint}{search}",
+            parsed.scheme, parsed.authority, path
         ))
     }
 
@@ -129,7 +124,6 @@ pub fn create_workflow_health_endpoint() -> String {
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 struct ParsedAbsoluteUrl<'a> {
     scheme: &'a str,
-    scheme_separator: &'static str,
     authority: &'a str,
     path: &'a str,
 }
@@ -152,7 +146,6 @@ impl<'a> ParsedAbsoluteUrl<'a> {
 
         Ok(Self {
             scheme,
-            scheme_separator: "://",
             authority,
             path,
         })
@@ -168,12 +161,13 @@ fn validate_absolute_url(value: &str) -> Result<(), String> {
         .ok_or_else(|| invalid_url(value))?;
     let mut chars = scheme.chars();
     let first = chars.next().ok_or_else(|| invalid_url(value))?;
+    let starts_with_delimiter = matches!(rest.as_bytes().first(), Some(b'/' | b'?' | b'#'));
     if !first.is_ascii_alphabetic()
         || !chars.all(|character| {
             character.is_ascii_alphanumeric() || matches!(character, '+' | '-' | '.')
         })
         || rest.is_empty()
-        || rest.starts_with(['/', '?', '#'])
+        || starts_with_delimiter
     {
         return Err(invalid_url(value));
     }
@@ -188,7 +182,10 @@ fn encode_uri_component(value: &str) -> String {
     let mut encoded = String::with_capacity(value.len());
     for byte in value.bytes() {
         if byte.is_ascii_alphanumeric()
-            || matches!(byte, b'-' | b'_' | b'.' | b'!' | b'~' | b'*' | b'\'' | b'(' | b')')
+            || matches!(
+                byte,
+                b'-' | b'_' | b'.' | b'!' | b'~' | b'*' | b'\'' | b'(' | b')'
+            )
         {
             encoded.push(char::from(byte));
         } else {
