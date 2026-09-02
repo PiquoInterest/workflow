@@ -19,6 +19,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
+      # Keep generated dependencies and build output out of the migration snapshot.
       - name: Create source archive
         run: tar --exclude=.git --exclude=node_modules --exclude=target -czf /tmp/workflow-source.tar.gz .
 
