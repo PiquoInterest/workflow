@@ -13,6 +13,9 @@ on:
       - 'packages/utils/src/debug-log.ts'
       - 'packages/utils/src/debug-log.test.ts'
       - 'packages/utils/src/debug-log-security.test.ts'
+      - 'packages/utils/src/get-port.ts'
+      - 'packages/utils/src/get-port-internals.ts'
+      - 'packages/utils/src/get-port.test.ts'
       - 'packages/utils/src/global-singleton.ts'
       - 'packages/utils/src/global-singleton.test.ts'
       - 'packages/utils/src/parse-name.ts'
@@ -47,6 +50,9 @@ on:
       - 'packages/utils/src/debug-log.ts'
       - 'packages/utils/src/debug-log.test.ts'
       - 'packages/utils/src/debug-log-security.test.ts'
+      - 'packages/utils/src/get-port.ts'
+      - 'packages/utils/src/get-port-internals.ts'
+      - 'packages/utils/src/get-port.test.ts'
       - 'packages/utils/src/global-singleton.ts'
       - 'packages/utils/src/global-singleton.test.ts'
       - 'packages/utils/src/parse-name.ts'
@@ -113,6 +119,9 @@ jobs:
             packages/utils/src/debug-log.ts \
             packages/utils/src/debug-log.test.ts \
             packages/utils/src/debug-log-security.test.ts \
+            packages/utils/src/get-port.ts \
+            packages/utils/src/get-port-internals.ts \
+            packages/utils/src/get-port.test.ts \
             packages/utils/src/global-singleton.ts \
             packages/utils/src/global-singleton.test.ts \
             packages/utils/src/parse-name.ts \
@@ -138,6 +147,7 @@ jobs:
           cargo test --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test check_data_dir
           cargo test --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test debug_log
           cargo test --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test debug_log_security
+          cargo test --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test get_port
           cargo test --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test global_singleton
           cargo test --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test parse_name
           cargo test --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test pluralize
@@ -154,6 +164,7 @@ jobs:
           cargo clippy --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test check_data_dir -- -D warnings
           cargo clippy --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test debug_log -- -D warnings
           cargo clippy --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test debug_log_security -- -D warnings
+          cargo clippy --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test get_port -- -D warnings
           cargo clippy --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test global_singleton -- -D warnings
           cargo clippy --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test parse_name -- -D warnings
           cargo clippy --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test pluralize -- -D warnings
@@ -169,6 +180,7 @@ jobs:
             packages/utils/src/check-data-dir-security.test.ts \
             packages/utils/src/debug-log.test.ts \
             packages/utils/src/debug-log-security.test.ts \
+            packages/utils/src/get-port.test.ts \
             packages/utils/src/global-singleton.test.ts \
             packages/utils/src/parse-name.test.ts \
             packages/utils/src/parse-name-security.test.ts \
