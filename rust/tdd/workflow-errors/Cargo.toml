@@ -10,6 +10,9 @@ description = "Expected-RED Rust tests translated from @workflow/errors before i
 [lib]
 path = "src/lib.rs"
 
+[dependencies]
+workflow-errors = { path = "../../../crates/workflow-errors" }
+
 [workspace]
 
 [lints.rust]
