@@ -13,11 +13,15 @@ on:
       - 'packages/utils/src/debug-log.ts'
       - 'packages/utils/src/debug-log.test.ts'
       - 'packages/utils/src/debug-log-security.test.ts'
+      - 'packages/utils/src/global-singleton.ts'
+      - 'packages/utils/src/global-singleton.test.ts'
       - 'packages/utils/src/parse-name.ts'
       - 'packages/utils/src/parse-name.test.ts'
       - 'packages/utils/src/parse-name-security.test.ts'
       - 'packages/utils/src/pluralize.ts'
       - 'packages/utils/src/pluralize.test.ts'
+      - 'packages/utils/src/promise.ts'
+      - 'packages/utils/src/promise.test.ts'
       - 'packages/utils/src/re-exports.test.ts'
       - 'packages/utils/src/world-target.ts'
       - 'packages/utils/src/world-target.test.ts'
@@ -41,11 +45,15 @@ on:
       - 'packages/utils/src/debug-log.ts'
       - 'packages/utils/src/debug-log.test.ts'
       - 'packages/utils/src/debug-log-security.test.ts'
+      - 'packages/utils/src/global-singleton.ts'
+      - 'packages/utils/src/global-singleton.test.ts'
       - 'packages/utils/src/parse-name.ts'
       - 'packages/utils/src/parse-name.test.ts'
       - 'packages/utils/src/parse-name-security.test.ts'
       - 'packages/utils/src/pluralize.ts'
       - 'packages/utils/src/pluralize.test.ts'
+      - 'packages/utils/src/promise.ts'
+      - 'packages/utils/src/promise.test.ts'
       - 'packages/utils/src/re-exports.test.ts'
       - 'packages/utils/src/world-target.ts'
       - 'packages/utils/src/world-target.test.ts'
@@ -101,8 +109,12 @@ jobs:
             packages/utils/src/debug-log.ts \
             packages/utils/src/debug-log.test.ts \
             packages/utils/src/debug-log-security.test.ts \
+            packages/utils/src/global-singleton.ts \
+            packages/utils/src/global-singleton.test.ts \
             packages/utils/src/parse-name.ts \
             packages/utils/src/parse-name-security.test.ts \
+            packages/utils/src/promise.ts \
+            packages/utils/src/promise.test.ts \
             packages/utils/src/re-exports.test.ts \
             packages/utils/src/world-target.ts \
             packages/utils/src/world-target.test.ts
@@ -120,8 +132,10 @@ jobs:
           cargo test --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test check_data_dir
           cargo test --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test debug_log
           cargo test --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test debug_log_security
+          cargo test --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test global_singleton
           cargo test --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test parse_name
           cargo test --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test pluralize
+          cargo test --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test promise
           cargo test --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test re_exports
           cargo test --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test world_target
 
@@ -133,8 +147,10 @@ jobs:
           cargo clippy --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test check_data_dir -- -D warnings
           cargo clippy --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test debug_log -- -D warnings
           cargo clippy --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test debug_log_security -- -D warnings
+          cargo clippy --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test global_singleton -- -D warnings
           cargo clippy --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test parse_name -- -D warnings
           cargo clippy --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test pluralize -- -D warnings
+          cargo clippy --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test promise -- -D warnings
           cargo clippy --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test re_exports -- -D warnings
           cargo clippy --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test world_target -- -D warnings
 
@@ -145,8 +161,10 @@ jobs:
             packages/utils/src/check-data-dir-security.test.ts \
             packages/utils/src/debug-log.test.ts \
             packages/utils/src/debug-log-security.test.ts \
+            packages/utils/src/global-singleton.test.ts \
             packages/utils/src/parse-name.test.ts \
             packages/utils/src/parse-name-security.test.ts \
             packages/utils/src/pluralize.test.ts \
+            packages/utils/src/promise.test.ts \
             packages/utils/src/re-exports.test.ts \
             packages/utils/src/world-target.test.ts
