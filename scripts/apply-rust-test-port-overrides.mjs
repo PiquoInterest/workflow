@@ -81,3 +81,5 @@ manifest.declaredTestCount = manifest.entries.reduce(
 );
 
 writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
+
+await import('./promote-ai-error-normalization-once.mjs');
