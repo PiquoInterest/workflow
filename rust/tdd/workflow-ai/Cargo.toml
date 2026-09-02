@@ -12,6 +12,9 @@ description = "Expected-RED Rust tests translated from @workflow/ai before imple
 [lib]
 path = "src/lib.rs"
 
+[dependencies]
+workflow-ai = { path = "../../../crates/workflow-ai" }
+
 [workspace]
 
 [lints.rust]
