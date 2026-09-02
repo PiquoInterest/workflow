@@ -23,6 +23,8 @@ on:
       - 'packages/utils/src/promise.ts'
       - 'packages/utils/src/promise.test.ts'
       - 'packages/utils/src/re-exports.test.ts'
+      - 'packages/utils/src/workflow-routes.ts'
+      - 'packages/utils/src/workflow-routes.test.ts'
       - 'packages/utils/src/world-target.ts'
       - 'packages/utils/src/world-target.test.ts'
       - 'rust/tdd-red.json'
@@ -55,6 +57,8 @@ on:
       - 'packages/utils/src/promise.ts'
       - 'packages/utils/src/promise.test.ts'
       - 'packages/utils/src/re-exports.test.ts'
+      - 'packages/utils/src/workflow-routes.ts'
+      - 'packages/utils/src/workflow-routes.test.ts'
       - 'packages/utils/src/world-target.ts'
       - 'packages/utils/src/world-target.test.ts'
       - 'rust/tdd-red.json'
@@ -116,6 +120,8 @@ jobs:
             packages/utils/src/promise.ts \
             packages/utils/src/promise.test.ts \
             packages/utils/src/re-exports.test.ts \
+            packages/utils/src/workflow-routes.ts \
+            packages/utils/src/workflow-routes.test.ts \
             packages/utils/src/world-target.ts \
             packages/utils/src/world-target.test.ts
 
@@ -137,6 +143,7 @@ jobs:
           cargo test --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test pluralize
           cargo test --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test promise
           cargo test --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test re_exports
+          cargo test --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test workflow_routes
           cargo test --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test world_target
 
       - name: Lint production Rust utilities
@@ -152,6 +159,7 @@ jobs:
           cargo clippy --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test pluralize -- -D warnings
           cargo clippy --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test promise -- -D warnings
           cargo clippy --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test re_exports -- -D warnings
+          cargo clippy --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test workflow_routes -- -D warnings
           cargo clippy --locked --manifest-path rust/tdd/workflow-utils/Cargo.toml --test world_target -- -D warnings
 
       - name: Run TypeScript utility oracles
@@ -167,4 +175,5 @@ jobs:
             packages/utils/src/pluralize.test.ts \
             packages/utils/src/promise.test.ts \
             packages/utils/src/re-exports.test.ts \
+            packages/utils/src/workflow-routes.test.ts \
             packages/utils/src/world-target.test.ts
