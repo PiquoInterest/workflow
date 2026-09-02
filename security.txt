@@ -294,3 +294,16 @@ Acknowledgments: https://github.com/PiquoInterest/workflow/blob/main/docs/rust-p
 # and permanent GREEN run 33558964834 cover six compatibility, two translated
 # security, and three direct production security tests. Full analysis is in
 # docs/rust-port/findings/WF-RUST-102.md.
+
+#
+# WF-RUST-103: TypeScript AI error normalization delegates arbitrary
+# non-nullish values to JSON.stringify. That executes an object-controlled
+# toJSON hook and throws for cyclic objects and BigInts while another failure is
+# already being handled. The TypeScript characterization keeps all three legacy
+# behaviors reproducible. Rust preserves ordinary JSON compatibility but treats
+# callable fields as inert data, tracks shared-object identity, bounds recursive
+# traversal, canonicalizes BigInts, and returns fixed placeholders for cycles,
+# released references, excessive depth, and invalid BigInt text. Expected-RED
+# run 33583543050 and permanent GREEN run 33584024158 cover the TypeScript
+# oracles, translated Rust suites, direct production regressions, Rustfmt, and
+# Clippy. Full analysis is in docs/rust-port/findings/WF-RUST-103.md.

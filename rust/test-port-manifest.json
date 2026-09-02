@@ -5,8 +5,8 @@
   "statusCounts": {
     "unported": 223,
     "partial": 0,
-    "red": 82,
-    "green": 37,
+    "red": 80,
+    "green": 39,
     "blocked": 0
   },
   "entries": [
@@ -110,12 +110,12 @@
       "kind": "unit",
       "lineCount": 29,
       "declaredTestCount": 3,
-      "status": "red",
+      "status": "green",
       "rustTests": [
         "rust/tdd/workflow-ai/tests/get_error_message_security.rs",
         "crates/workflow-ai/tests/get_error_message_security.rs"
       ],
-      "notes": "All three legacy JSON-normalization hazards are translated as a differential security contract: object-supplied toJSON callbacks must remain inert, cyclic object graphs must not panic, and BigInt values must produce a stable diagnostic string. The TypeScript characterization intentionally preserves the unsafe behavior while the Rust implementation is still RED."
+      "notes": "All three legacy JSON-normalization hazards are translated as a differential security contract: object-supplied toJSON callbacks must remain inert, cyclic object graphs must not panic, and BigInt values must produce a stable diagnostic string. The TypeScript characterization intentionally preserves the unsafe behavior while the Rust implementation is still RED. GREEN verified by the permanent read-only AI lane in workflow run 33584024158 at 31426849bbd4e67771a7bc3fa6c2e915ae963f06. That run passed the TypeScript oracles, production and translated Rust tests, Rustfmt, and Clippy with warnings denied."
     },
     {
       "typescript": "packages/ai/src/get-error-message.test.ts",
@@ -124,11 +124,11 @@
       "kind": "unit",
       "lineCount": 58,
       "declaredTestCount": 11,
-      "status": "red",
+      "status": "green",
       "rustTests": [
         "rust/tdd/workflow-ai/tests/get_error_message.rs"
       ],
-      "notes": "All 11 Error, string, object, nested object, nullish, number, boolean, array, empty-string, and subclass normalization declarations are translated."
+      "notes": "All 11 Error, string, object, nested object, nullish, number, boolean, array, empty-string, and subclass normalization declarations are translated. GREEN verified by the permanent read-only AI lane in workflow run 33584024158 at 31426849bbd4e67771a7bc3fa6c2e915ae963f06. That run passed the TypeScript oracles, production and translated Rust tests, Rustfmt, and Clippy with warnings denied."
     },
     {
       "typescript": "packages/ai/src/module-scope-state.test.ts",

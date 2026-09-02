@@ -404,3 +404,36 @@ selector precedence, a zero-call disabled path, and payload-redacting `Debug`
 implementations. The pre-implementation Rust target is observed RED and the
 permanent utility lane is GREEN in run `33558964834`. Full evidence is in
 `docs/rust-port/findings/WF-RUST-102.md`.
+
+## WF-RUST-103: Error normalization executed hooks and could mask failures
+
+**Status:** Closed at the production Rust AI boundary; TypeScript remains the
+legacy compatibility and security oracle.
+
+**Affected code:** `packages/ai/src/get-error-message.ts` and the Rust
+`workflow-ai` error-normalization contract.
+
+**Old behavior:** Every non-nullish, non-string, non-Error value was passed to
+`JSON.stringify`. An object-supplied `toJSON` callback executed during failure
+handling, while cyclic values and BigInts threw a second `TypeError`.
+
+**Impact:** Diagnostic normalization could perform re-entrant side effects,
+replace the original diagnostic, or mask it with a secondary availability
+failure. This does not claim code injection: the callback is already executable
+inside the process, but normalization invoked it implicitly.
+
+**Fix:** Rust uses an inert typed value model, cycle detection, a depth bound,
+canonical BigInt diagnostics, and fixed non-reflective placeholders. Ordinary
+objects, arrays, primitives, escaping, and nested `undefined` retain the
+TypeScript compatibility contract.
+
+**Regression evidence:**
+
+- `packages/ai/src/get-error-message.test.ts`
+- `packages/ai/src/get-error-message-security.test.ts`
+- `rust/tdd/workflow-ai/tests/get_error_message.rs`
+- `rust/tdd/workflow-ai/tests/get_error_message_security.rs`
+- `crates/workflow-ai/tests/get_error_message_security.rs`
+- expected-RED workflow run `33583543050`
+- permanent GREEN workflow run `33584024158`
+- `docs/rust-port/findings/WF-RUST-103.md`
