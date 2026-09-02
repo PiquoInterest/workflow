@@ -53,7 +53,7 @@ jobs:
             | sha256sum --check -
           tar -xzf /tmp/module-scope-implementation.tar.gz
 
-      - name: Apply parser-boundary fixes found by the first GREEN attempt
+      - name: Apply parser-boundary fixes found by GREEN attempts
         shell: bash
         run: |
           set -euo pipefail
@@ -166,12 +166,21 @@ jobs:
           expression_replacement = r'''fn expression_end(tokens: &[Token], start: usize) -> usize {
               let mut depths = (0_i32, 0_i32, 0_i32);
               for (index, token) in tokens.iter().enumerate().skip(start) {
+                  let opens_unparenthesized_block_after_value = token.is_punctuation('{')
+                      && index > start
+                      && tokens.get(index - 1).is_some_and(|previous| {
+                          previous.identifier().is_some()
+                              || previous.is_punctuation(')')
+                              || previous.is_punctuation(']')
+                              || matches!(previous.operator(), Some(">" | ">>" | ">>>"))
+                      });
                   if depths == (0, 0, 0)
                       && (token.is_punctuation(',')
                           || token.is_punctuation(';')
                           || token.is_punctuation(')')
                           || token.is_punctuation(']')
-                          || token.is_punctuation('}'))
+                          || token.is_punctuation('}')
+                          || opens_unparenthesized_block_after_value)
                   {
                       return index;
                   }
@@ -183,6 +192,41 @@ jobs:
           '''
           source = source[:expression_start] + expression_replacement + source[expression_end:]
           path.write_text(source)
+
+          test_path = Path('crates/workflow-utils/tests/module_scope_state.rs')
+          tests = test_path.read_text()
+          regression = r'''
+
+          #[test]
+          fn ignores_typescript_function_type_arrows_when_locating_runtime_regions() {
+              let findings = scan(&[(
+                  "src/hardened.ts",
+                  r#"
+          const uncurryThis = Function.prototype.bind.bind(Function.prototype.call) as <
+            T,
+            A extends unknown[],
+            R,
+          >(
+            fn: (this: T, ...args: A) => R
+          ) => (thisArg: T, ...args: A) => R;
+
+          function protoGetter<T>(
+            prototype: object,
+            key: PropertyKey
+          ): (value: unknown) => T {
+            const getter = Object.getOwnPropertyDescriptor(prototype, key)?.get;
+            return uncurryThis(getter) as (value: unknown) => T;
+          }
+
+          export const dateGetDate = uncurryThis(Date.prototype.getDate);
+          "#,
+              )]);
+
+              assert!(findings.is_empty(), "{findings:#?}");
+          }
+          '''
+          if 'ignores_typescript_function_type_arrows_when_locating_runtime_regions' not in tests:
+              test_path.write_text(tests + regression)
           PY
 
       - name: Verify production implementation
