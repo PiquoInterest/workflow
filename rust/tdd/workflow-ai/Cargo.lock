@@ -3,5 +3,12 @@
 version = 4
 
 [[package]]
+name = "workflow-ai"
+version = "0.1.0"
+
+[[package]]
 name = "workflow-ai-tdd"
 version = "0.1.0"
+dependencies = [
+ "workflow-ai",
+]
