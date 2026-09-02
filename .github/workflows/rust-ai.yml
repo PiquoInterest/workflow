@@ -1,0 +1,90 @@
+name: Rust AI parity
+
+on:
+  push:
+    branches:
+      - pro/rust-repository-port
+    paths:
+      - 'crates/workflow-ai/**'
+      - 'rust/tdd/workflow-ai/**'
+      - 'packages/ai/src/get-error-message.ts'
+      - 'packages/ai/src/get-error-message.test.ts'
+      - 'rust/tdd-red.json'
+      - 'rust/test-port-manifest.json'
+      - 'rust/test-port-overrides.json'
+      - 'docs/rust-port/**'
+      - 'security.txt'
+      - '.github/workflows/rust-ai.yml'
+  pull_request:
+    paths:
+      - 'crates/workflow-ai/**'
+      - 'rust/tdd/workflow-ai/**'
+      - 'packages/ai/src/get-error-message.ts'
+      - 'packages/ai/src/get-error-message.test.ts'
+      - 'rust/tdd-red.json'
+      - 'rust/test-port-manifest.json'
+      - 'rust/test-port-overrides.json'
+      - 'docs/rust-port/**'
+      - 'security.txt'
+      - '.github/workflows/rust-ai.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  error-normalization:
+    name: AI error normalization parity
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Install Rust 1.87
+        uses: actions-rust-lang/setup-rust-toolchain@46268bd060767258de96ed93c1251119784f2ab6 # v1.16.1
+        with:
+          toolchain: 1.87.0
+          components: clippy,rustfmt
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v5.0.0
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 22.x
+          cache: pnpm
+
+      - name: Install JavaScript dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Check TypeScript oracle formatting and lint
+        run: |
+          pnpm exec biome ci \
+            packages/ai/src/get-error-message.ts \
+            packages/ai/src/get-error-message.test.ts
+
+      - name: Check Rust formatting
+        run: |
+          cargo fmt --manifest-path crates/workflow-ai/Cargo.toml -- --check
+          cargo fmt --manifest-path rust/tdd/workflow-ai/Cargo.toml -- --check
+
+      - name: Run production Rust AI tests
+        run: cargo test --locked --manifest-path crates/workflow-ai/Cargo.toml --all-targets
+
+      - name: Run translated TypeScript suite in Rust
+        run: cargo test --locked --manifest-path rust/tdd/workflow-ai/Cargo.toml --test get_error_message
+
+      - name: Lint production Rust AI crate
+        run: cargo clippy --locked --manifest-path crates/workflow-ai/Cargo.toml --all-targets -- -D warnings
+
+      - name: Lint translated Rust suite
+        run: cargo clippy --locked --manifest-path rust/tdd/workflow-ai/Cargo.toml --test get_error_message -- -D warnings
+
+      - name: Run TypeScript compatibility oracle
+        run: pnpm exec vitest run packages/ai/src/get-error-message.test.ts
