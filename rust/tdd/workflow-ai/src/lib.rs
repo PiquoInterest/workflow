@@ -7,6 +7,8 @@ pub mod telemetry;
 pub mod workflow_chat_transport;
 
 use std::marker::PhantomData;
+use std::sync::atomic::{AtomicUsize, Ordering};
+use std::sync::{Arc, Weak};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct WeatherTool;
@@ -45,12 +47,63 @@ pub fn durable_agent_type_contract() {
     panic!("TDD RED: packages/ai/src/agent/durable-agent-types.test.ts implementation pending")
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone)]
+pub struct CallableProbe {
+    name: String,
+    calls: Arc<AtomicUsize>,
+}
+
+impl CallableProbe {
+    #[must_use]
+    pub fn new(name: impl Into<String>) -> Self {
+        Self {
+            name: name.into(),
+            calls: Arc::new(AtomicUsize::new(0)),
+        }
+    }
+
+    #[must_use]
+    pub fn name(&self) -> &str {
+        &self.name
+    }
+
+    #[must_use]
+    pub fn call_count(&self) -> usize {
+        self.calls.load(Ordering::SeqCst)
+    }
+
+    pub fn invoke(&self) {
+        self.calls.fetch_add(1, Ordering::SeqCst);
+    }
+}
+
+#[derive(Debug)]
+pub struct SharedErrorObject {
+    entries: Vec<(String, ErrorValue)>,
+}
+
+impl SharedErrorObject {
+    #[must_use]
+    pub fn new(entries: Vec<(String, ErrorValue)>) -> Self {
+        Self { entries }
+    }
+
+    #[must_use]
+    pub fn entries(&self) -> &[(String, ErrorValue)] {
+        &self.entries
+    }
+}
+
+#[derive(Debug, Clone)]
 pub enum ErrorValue {
     Error(String),
     CustomError(String),
     String(String),
     Object(Vec<(String, ErrorValue)>),
+    SharedObject(Arc<SharedErrorObject>),
+    ObjectReference(Weak<SharedErrorObject>),
+    Callable(CallableProbe),
+    BigInt(String),
     Null,
     Undefined,
     Number(i64),
@@ -60,7 +113,10 @@ pub enum ErrorValue {
 
 pub fn get_error_message(value: &ErrorValue) -> String {
     let _ = value;
-    panic!("TDD RED: packages/ai/src/get-error-message.test.ts implementation pending")
+    panic!(
+        "TDD RED: packages/ai/src/get-error-message.test.ts implementation pending; \
+TDD RED: packages/ai/src/get-error-message-security.test.ts implementation pending"
+    )
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
