@@ -72,9 +72,9 @@
     },
     {
       "typescript": "packages/utils/src/get-port.test.ts",
-      "status": "red",
+      "status": "green",
       "rustTests": ["rust/tdd/workflow-utils/tests/get_port.rs"],
-      "notes": "All 20 listener enumeration, deterministic ordering, restart, concurrency, workflow-health probing, timeout, IPv6, and Windows netstat assertions are translated."
+      "notes": "All 20 TypeScript listener discovery, deterministic ordering, restart, concurrency, workflow-health probing, timeout, IPv6, fallback, and Windows netstat declarations execute against production workflow-utils. Rust additionally rejects partial or out-of-range Windows ports and control-byte injection in custom HTTP probe endpoints before network use. Verified by read-only utility workflow run 33580063231."
     },
     {
       "typescript": "packages/utils/src/module-scope-state.test.ts",

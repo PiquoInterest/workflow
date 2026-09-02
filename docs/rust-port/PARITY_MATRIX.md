@@ -66,3 +66,9 @@ Status meanings:
 | Contract | Status | Evidence |
 | --- | --- | --- |
 | Workflow URL, health, manifest, and webhook construction | PROVEN | 3 translated TypeScript declarations plus route-normalization and token-encoding regressions; read-only workflow run `33579321645` |
+
+## Utility process-port discovery promotion
+
+| Contract | Status | Evidence |
+| --- | --- | --- |
+| Process listener discovery and workflow endpoint probing | PROVEN | 20 translated TypeScript declarations plus strict port parsing and request-target injection regressions; read-only workflow run `33580063231` |

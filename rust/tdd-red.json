@@ -2,19 +2,6 @@
   "schemaVersion": 1,
   "cases": [
     {
-      "typescript": "packages/utils/src/get-port.test.ts",
-      "command": [
-        "cargo",
-        "test",
-        "--locked",
-        "--manifest-path",
-        "rust/tdd/workflow-utils/Cargo.toml",
-        "--test",
-        "get_port"
-      ],
-      "failureMarker": "TDD RED: packages/utils/src/get-port.test.ts implementation pending"
-    },
-    {
       "typescript": "packages/utils/src/module-scope-state.test.ts",
       "command": [
         "cargo",
